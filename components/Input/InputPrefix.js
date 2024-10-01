@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput, View } from "react-native";
 import { HelperText, Icon } from "react-native-paper";
+import { ThemeTextColors } from "../../theme/theme";
 
 export const InputPrefix = ({
   iconName,
@@ -14,7 +15,7 @@ export const InputPrefix = ({
           styles.inputContainer,
           props.style,
           {
-            borderColor: error ? "red" : "#403f2b",
+            borderColor: error ? "red" : "#E8ECF4",
           },
         ]}
       >
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "#403f2b",
+    borderColor: "#E8ECF4",
     borderWidth: 1,
     borderRadius: 0,
     paddingHorizontal: 10,
@@ -48,9 +49,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
-    fontSize: 16,
-    color: "#403f2b",
-    marginLeft: 5,
+    fontSize: 14,
+    marginLeft: 1,
   },
   error: {
     color: "red",

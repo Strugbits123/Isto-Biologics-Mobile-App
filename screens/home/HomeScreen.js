@@ -1,68 +1,59 @@
-import {
-  Animated,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  View,
-} from "react-native";
-import { Toast } from "../../components/Toast/Toast";
-import { HeroSection } from "../../components/Hero/HeroSection";
-import { styles } from "../../styles/home/styles";
-import { MainAnimatedBar } from "../../components/Header/MainAnimatedBar";
-import { ShopCollectionsHome } from "../../components/ShopCollectionsHome/ShopCollectionsHome";
-import { MissionSectionHome } from "../../components/MissionSectionHome/MissionSectionHome";
-import { FollowUsHome } from "../../components/FollowUsHome/FollowUsHome";
-import { Footer } from "../../components/Footer/Footer";
-import { useEffect, useRef } from "react";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
+import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
+import CMHeader from "../../components/CMHeader/CMHeader";
+import CMHomeCard from "../../components/CMHomeCard";
+import { useFonts } from "expo-font";
+import { LoadingIndicator } from "../../components/LoadingIndicator/LoadingIndicator";
 
-export const HomeScreen = ({ navigation }) => {
-  const searchRef = useRef(null);
-  const scrollY = new Animated.Value(0);
-  const diffClamp = Animated.diffClamp(scrollY, 0, 200);
-  const translateY = diffClamp.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, -200],
-    extrapolate: "clamp",
+const HomeScreen = () => {
+  
+  const [fontsLoaded] = useFonts({
+    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
 
-  useEffect(() => {
-    navigation.addListener("focus", () => {
-      Platform.OS === "android" &&
-        StatusBar.setBackgroundColor("#FEFBEF", false);
-      StatusBar.setBarStyle("dark-content", false);
-    });
-  }, [navigation]);
+  if (!fontsLoaded) {
+    return <LoadingIndicator />;
+  }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={styles.screen}>
-        <MainAnimatedBar translateY={translateY} searchRef={searchRef} />
-        <ScrollView
-          style={styles.scrollView}
-          alwaysBounceVertical={false}
-          bounces={false}
-          bouncesZoom={false}
-          showsVerticalScrollIndicator={false}
-          onScroll={(e) => {
-            scrollY.setValue(e.nativeEvent.contentOffset.y);
-          }}
-          scrollEventThrottle={16}
-        >
-          <View style={styles.spacer} />
-          <Toast
-            message={`Free shipping on all\ninternational orders over 35$ 📦`}
-          />
-          <HeroSection navigation={navigation} />
-          <ShopCollectionsHome navigation={navigation} />
-          <MissionSectionHome />
-          <FollowUsHome />
-          <Footer />
-        </ScrollView>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+    <View style={styles.mainContainer}>
+      <View style={styles.headerContainer}>
+        <CMHomeHeader />
+      </View>
+      <View style={styles.headingContainer}>
+        <Text style={styles.headingText} >Statistics</Text>
+      </View>
+      <View style={styles.cardContainer}>
+        {/* <Text style={styles.headingText} >Statistics</Text> */}
+        <CMHomeCard/>
+      </View>
+    </View>
   );
 };
+
+export default HomeScreen;
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: ThemeBgColors.mainBg,
+  },
+  headerContainer:{
+    top:75
+  },
+  headingContainer:{
+    paddingHorizontal:27,
+    top:110
+  },
+  headingText:{
+    fontFamily:"Jakarta-Sans-bold",
+    fontSize:28,
+    color:ThemeTextColors.darkGray1 
+   },
+   cardContainer:{
+    paddingHorizontal:29,
+    top:150
+   }
+});

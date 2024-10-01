@@ -15,7 +15,11 @@ import { tabs } from "./data/tabs/data";
 import { TabBar } from "./components/Tabs/Tabs";
 import { useFonts } from "expo-font";
 import { LoadingIndicator } from "./components/LoadingIndicator/LoadingIndicator";
-import { Text, View, StyleSheet} from "react-native"
+import { Text, View, StyleSheet } from "react-native";
+import { ThemeBgColors, ThemeTextColors } from "./theme/theme";
+import SplashScreen from "./screens/splash/SplashScreen";
+import LoginScreen from "./screens/login/LoginScreen";
+import HomeScreen from "./screens/home/HomeScreen";
 
 const Tab = createBottomTabNavigator();
 const queryClient = new QueryClient();
@@ -24,6 +28,7 @@ function App() {
   const [fontsLoaded] = useFonts({
     "Fraunces-Regular": require("./assets/fonts/static/Fraunces_144pt-Regular.ttf"),
     "Fraunces-Bold": require("./assets/fonts/static/Fraunces_144pt-Bold.ttf"),
+    "Jakarta-Sans": require("./assets/fonts/static/PlusJakartaSans-Regular.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -94,25 +99,11 @@ function App() {
     //   </QueryClientProvider>
     // </PaperProvider>
     <>
-    <View style={styles.container}>
-      <Text style={styles.hello}>Hello, Mallah</Text>
-    </View>
+      {/* <LoginScreen /> */}
+      {/* <SplashScreen /> */}
+      <HomeScreen/>
     </>
   );
 }
 
 export default App;
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  hello: {
-    fontSize: 30,
-    textAlign: 'center',
-    margin: 10,
-    fontWeight:"bold"
-  },
-});
