@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image,ScrollView  } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
@@ -74,15 +74,19 @@ const styles = StyleSheet.create({
   bottomContainer: {
     top: 80,
     backgroundColor: ThemeBgColors.white,
-    height: "100%",
     width: "100%",
+    height:"68%",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 30,
     paddingHorizontal: 30,
+    justifyContent:"space-between"
   },
   IndicatorContainer:{
     alignItems:"center",
-    marginTop:50
+    marginTop:50,
+    bottom:10
   }
 });
+
+

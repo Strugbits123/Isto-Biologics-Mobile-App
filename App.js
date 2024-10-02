@@ -20,6 +20,7 @@ import { ThemeBgColors, ThemeTextColors } from "./theme/theme";
 import SplashScreen from "./screens/splash/SplashScreen";
 import LoginScreen from "./screens/login/LoginScreen";
 import HomeScreen from "./screens/home/HomeScreen";
+import App_Navigation from "./config/App_Navigation";
 
 const Tab = createBottomTabNavigator();
 const queryClient = new QueryClient();
@@ -101,7 +102,8 @@ function App() {
     <>
       {/* <LoginScreen /> */}
       {/* <SplashScreen /> */}
-      <HomeScreen/>
+      {/* <HomeScreen/> */}
+      <App_Navigation/>
     </>
   );
 }

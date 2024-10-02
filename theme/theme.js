@@ -9,11 +9,13 @@ export const ThemeTextColors = {
     lightGray: "#6C7278",
     extraLightGray: "#8391A1",
     placeholder:"#8391A1",
-    darkBlue: "#14141C"
+    darkBlue: "#14141C",
+    lineColor:"#E7EFF6"
 }
 
 export const ThemeBgColors = {
     white: "#ffffff",
     lightGrayPlaceholders:"#F7F8F9",
-    mainBg: "#EFF8FE"
+    mainBg: "#EFF8FE",
+    lightOrange:"#F2603A1A"
 }

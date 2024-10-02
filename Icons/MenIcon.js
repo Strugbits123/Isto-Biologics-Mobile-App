@@ -1,6 +1,6 @@
-import * as React from "react"
-import Svg, { Ellipse } from "react-native-svg"
-const MenIcon = ({width, height}) => (
+import * as React from "react";
+import Svg, { Ellipse } from "react-native-svg";
+const MenIcon = ({ width, height }) => (
   <Svg
     viewBox="0 0 21 23"
     fill="none"
@@ -27,5 +27,5 @@ const MenIcon = ({width, height}) => (
       strokeLinejoin="round"
     />
   </Svg>
-)
-export default MenIcon
+);
+export default MenIcon;

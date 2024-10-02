@@ -5,7 +5,7 @@ import { Avatar } from "react-native-paper";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import { useFonts } from "expo-font";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
-import MenIcon from "../../Icons/menIcon";
+import MenIcon from "../../Icons/MenIcon"
 import BackIcon from "../../Icons/BackIcon";
 const CMHeader = () => {
   const [fontsLoaded] = useFonts({
