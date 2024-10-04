@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
@@ -11,6 +19,7 @@ import { Button, HelperText, TextInput } from "react-native-paper";
 import { InputPrefix } from "../../components/Input/InputPrefix";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
+import CMLoader from "../../components/CMLoader";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -23,30 +32,43 @@ const LoginScreen = () => {
   });
 
   if (!fontsLoaded) {
-    return <LoadingIndicator />;
+    return <CMLoader size={20} />;
   }
 
   return (
-    <LinearGradient colors={["#00293F", "#006BA5"]} style={styles.container}>
-      <View style={styles.topContainer}>
-        <View style={{ height: 225 }}>
-          <Image style={{ height: 214, width: "100%" }} source={LoginDesign} />
-          <View style={styles.LogoTextContainer}>
-            {/* <Image source={LoginLogo} /> */}
-            <LoginIcon />
-            <Text style={styles.text}>Welcome back!</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <LinearGradient
+          colors={["#00293F", "#006BA5"]}
+          style={styles.container}
+        >
+          <View style={styles.topContainer}>
+            <View style={{ height: 225 }}>
+              <Image
+                style={{ height: 214, width: "100%" }}
+                source={LoginDesign}
+              />
+              <View style={styles.LogoTextContainer}>
+                {/* <Image source={LoginLogo} /> */}
+                <LoginIcon />
+                <Text style={styles.text}>Welcome back!</Text>
+              </View>
+            </View>
+            <View style={styles.bottomContainer}>
+              <View style={styles.LoginContainer}>
+                <CMLoginForm />
+              </View>
+              <View style={styles.IndicatorContainer}>
+                <Image source={homeIndicator} />
+              </View>
+            </View>
           </View>
-        </View>
-        <View style={styles.bottomContainer}>
-          <View style={styles.LoginContainer}>
-            <CMLoginForm />
-          </View>
-          <View style={styles.IndicatorContainer}>
-            <Image source={homeIndicator} />
-          </View>
-        </View>
-      </View>
-    </LinearGradient>
+        </LinearGradient>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -89,3 +111,4 @@ const styles = StyleSheet.create({
     bottom: 10,
   },
 });
+

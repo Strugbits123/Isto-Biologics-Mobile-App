@@ -7,6 +7,7 @@ import CMHomeCard from "../../components/CMHomeCard";
 import { useFonts } from "expo-font";
 import { LoadingIndicator } from "../../components/LoadingIndicator/LoadingIndicator";
 import CMModal from "../../components/CMModal";
+import CMLoader from "../../components/CMLoader";
 
 const HomeScreen = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -14,7 +15,7 @@ const HomeScreen = ({ navigation }) => {
   });
 
   if (!fontsLoaded) {
-    return <LoadingIndicator />;
+    return <CMLoader size={20} />;
   }
 
   return (
@@ -23,16 +24,20 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <CMHomeHeader useInScreen={"home"} />
       </View>
-      <ScrollView style={{top:90}} contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
-      {/*  heading of main home page  */}
-      <View style={styles.headingContainer}>
-        <Text style={styles.headingText}>Statistics</Text>
-      </View>
-      <View style={styles.cardContainer}>
-      {/*  Main Card Component  */}
-        {/* <Text style={styles.headingText} >Statistics</Text> */}
-        <CMHomeCard />
-      </View>
+      <ScrollView
+        style={{ top: 90 }}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/*  heading of main home page  */}
+        <View style={styles.headingContainer}>
+          <Text style={styles.headingText}>Statistics</Text>
+        </View>
+        <View style={styles.cardContainer}>
+          {/*  Main Card Component  */}
+          {/* <Text style={styles.headingText} >Statistics</Text> */}
+          <CMHomeCard />
+        </View>
       </ScrollView>
     </View>
   );
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 29,
     top: 30,
   },
-   scrollViewContent: {
+  scrollViewContent: {
     paddingBottom: 190, // Add some bottom padding to prevent content being hidden
   },
 });

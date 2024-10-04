@@ -5,8 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ToastAndroid,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DismissKeyboardSafeAreaView } from "./DismissKeyboardHOC/DismissKeyboardSafeAreaView";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
@@ -20,170 +21,200 @@ import Checkbox from "expo-checkbox";
 import { Link, useNavigation } from "@react-navigation/native";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { token } from "../utils/constants";
+import CMLoader from "./CMLoader";
 
 const CMLoginForm = () => {
+  const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
   const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
   });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("Check error");
-  const [errorMessagePassword, setErrorMessagePassword] =
-    useState("Check error");
-  const [isChecked, setChecked] = useState(false);
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
 
-  const CLIENT_ID = process.env.WIX_CLIENT_ID || "";
+  //Inputfields handleOnChange
+  const handle_onChange_Text = (field, value) => {
+    setData((pre) => ({ ...pre, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: null }));
+  };
 
+  //Wix headless create client method for auth clientId
   const myWixClient = createClient({
     auth: OAuthStrategy({
       clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-      // tokens: {
-      //   accessToken: {
-      //     value: "<ACCESS_TOKEN_VALUE>",
-      //     expiresAt: "<ACCESS_TOKEN_EXPIRY_DATE>",
-      //   },
-      //   refreshToken: {
-      //     value: "<REFRESH_TOKEN_VALUE>",
-      //   },
-      // },
     }),
   });
 
+  // Centralized validation
+  const validateInputs = () => {
+    let valid = true;
+    let tempErrors = {};
+
+    // Email validation
+    if (!data.email || data.email.trim() === "") {
+      tempErrors.email = "Email is required.";
+      valid = false;
+    }
+
+    // Password validation
+    if (!data.password || data.password.trim() === "") {
+      tempErrors.password = "Password is required.";
+      valid = false;
+    }
+    setErrors(tempErrors);
+    return valid;
+  };
+
+  // Function to load stored email from AsyncStorage
+  const loadStoredEmail = async () => {
+    try {
+      const storedEmail = await AsyncStorage.getItem("userEmail");
+      console.log("storedEmail", storedEmail);
+      if (storedEmail) {
+        setData((prev) => ({ ...prev, email: storedEmail }));
+        setIsChecked(true); // Check the "Remember Me" checkbox if email is found
+      }
+    } catch (error) {
+      console.log("Failed to load email from storage", error);
+    }
+  };
+
+  useEffect(() => {
+    loadStoredEmail(); // Load stored email when component mounts
+  }, []);
+
+  //handle login when user submit the login form
   const handleLogin = async () => {
+    if (!validateInputs()) return;
+    setIsLoading(true);
     try {
       let response = await myWixClient.auth.login({
-        email: email,
-        password: password,
+        email: data.email,
+        password: data.password,
       });
       console.log("response", response);
-      await AsyncStorage.setItem("token", response.data.sessionToken);
-      if (response) {
-        // navigation.navigate("Bottom_Navigation");
-        navigation.navigate("Bottom_Navigation", {
-          screen: "home",
-        });
+      if (response.loginState === "SUCCESS") {
+        await AsyncStorage.setItem(token, response.data.sessionToken);
+
+        // Save email if "Remember Me" is checked
+        if (isChecked) {
+          await AsyncStorage.setItem("userEmail", data.email);
+        } else {
+          await AsyncStorage.removeItem("userEmail"); // Remove email if unchecked
+        }
+
+        ToastAndroid.show("Login Successfully!", ToastAndroid.SHORT);
+        // Clear input fields
+        setData({ email: "", password: "" });
+        setTimeout(() => {
+          navigation.replace("Bottom_Navigation", {
+            screen: "home",
+          });
+        }, 1000);
+      }
+      console.log("Error", response.errorCode);
+      if (response.loginState === "FAILURE") {
+        ToastAndroid.show(response.errorCode, ToastAndroid.SHORT);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100}>
-      <View style={styles.container}>
-        <Text style={styles.LoginText}>Login</Text>
-        {/* inputs under this container */}
-        <View>
-          {/* This is container of email input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Email</Text>
+    <View style={styles.container}>
+      <Text style={styles.LoginText}>Login</Text>
+      {/* inputs under this container */}
+      <View>
+        {/* This is container of email input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputTitle}>Email</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => {
+              handle_onChange_Text("email", text);
+            }}
+            value={data.email}
+            placeholderTextColor={ThemeTextColors.placeholder}
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder={"Enter your email"}
+          />
+          {errors.email && (
+            <HelperText type="error" visible={true}>
+              {errors.email}
+            </HelperText>
+          )}
+        </View>
+        {/* This is container of password input  */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputTitle}>Password</Text>
+          <View style={{ justifyContent: "center", alignItems: "flex-end" }}>
             <TextInput
               style={styles.input}
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-                setError(false);
-              }}
+              secureTextEntry={isPasswordVisible}
+              value={data.password}
               placeholderTextColor={ThemeTextColors.placeholder}
+              onChangeText={(text) => {
+                handle_onChange_Text("password", text);
+              }}
               autoCorrect={false}
               autoCapitalize="none"
-              placeholder={"Enter your email"}
+              placeholder={"Enter your password"}
             />
-            {error && (
-              <HelperText type="error" visible={error}>
-                {errorMessage}
-              </HelperText>
-            )}
+            {/* input icon of eye close and open */}
+            <TouchableOpacity
+              style={{ position: "absolute", paddingHorizontal: 17 }}
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            >
+              {isPasswordVisible ? (
+                <OpenEyeIcon width={20} height={12} />
+              ) : (
+                <ClosedEyeIcon width={20} height={15} />
+              )}
+            </TouchableOpacity>
           </View>
-          {/* This is container of password input  */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Password</Text>
-            <View style={{ justifyContent: "center", alignItems: "flex-end" }}>
-              <TextInput
-                style={styles.input}
-                secureTextEntry={isPasswordVisible}
-                value={password}
-                placeholderTextColor={ThemeTextColors.placeholder}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  setError(false);
-                }}
-                autoCorrect={false}
-                autoCapitalize="none"
-                placeholder={"Enter your password"}
-              />
-              {/* input icon of eye close and open */}
-              <TouchableOpacity
-                style={{ position: "absolute", paddingHorizontal: 17 }}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              >
-                {isPasswordVisible ? (
-                  <OpenEyeIcon width={20} height={17} />
-                ) : (
-                  <ClosedEyeIcon width={20} height={20} />
-                )}
-              </TouchableOpacity>
-            </View>
-            {error && (
-              <HelperText type="error" visible={error}>
-                {errorMessagePassword}
-              </HelperText>
-            )}
-          </View>
+          {errors.password && (
+            <HelperText type="error" visible={true}>
+              {errors.password}
+            </HelperText>
+          )}
         </View>
-        {/* This is the container of Remember me checkbox and forgot password */}
-        <View style={styles.forgotPasswordAndCheckboxConatiner}>
-          <View style={styles.checkboxContainer}>
-            <Checkbox
-              value={isChecked}
-              onValueChange={setChecked}
-              style={styles.checkbox}
-              color={isChecked ? ThemeTextColors.darkOrange : undefined}
-            />
-            <Text style={styles.checkboxlabel}>Remember me</Text>
-          </View>
-          {/* This link tag for forgot password */}
-          <Text style={styles.forgotPasswordText}> Forgot Password ?</Text>
-        </View>
-        <CMThemedButton
-          title="Login"
-          onPress={handleLogin}
-          icon={<ArrowRight width={20} height={20} />}
-        />
-        {/* <Button
-          style={styles.loginButton}
-          mode="contained"
-          onPress={loginHandler}
-          loading={sessionLoading}
-        >
-          Login
-        </Button>
-        {!sessionLoading && (
-          <HelperText type="error" visible={error}>
-            {errorMessage}
-          </HelperText>
-        )}
-        <Text style={{ textAlign: "center", color: "#403F2B" }}>
-          Or login with Wix Managed Login
-        </Text>
-        <Button
-          style={styles.wixLoginButton}
-          mode="outlined"
-          icon={"login"}
-          loading={loading}
-          disabled={disabled}
-          onPress={onWixLogin}
-          theme={{ colors: { primary: "#403F2B" } }}
-        >
-          Wix Managed Login
-        </Button> */}
       </View>
-    </KeyboardAvoidingView>
+      {/* This is the container of Remember me checkbox and forgot password */}
+      <View style={styles.forgotPasswordAndCheckboxConatiner}>
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            value={isChecked}
+            onValueChange={() => {
+              setIsChecked(!isChecked);
+            }}
+            style={styles.checkbox}
+            color={isChecked ? ThemeTextColors.darkOrange : undefined}
+          />
+          <Text style={styles.checkboxlabel}>Remember me</Text>
+        </View>
+        {/* This link tag for forgot password */}
+        <Text style={styles.forgotPasswordText}> Forgot Password ?</Text>
+      </View>
+      <CMThemedButton
+        title="Login"
+        icon={<ArrowRight width={20} height={20} />}
+        loading={isLoading}
+        onPress={handleLogin}
+      />
+    </View>
   );
 };
 
@@ -212,8 +243,9 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
+    fontFamily: "Jakarta-Sans-Semi-bold",
     fontSize: 16,
-    color: ThemeTextColors.darkGray,
+    color: ThemeTextColors.darkGray1,
     marginBottom: 10,
   },
   forgotPasswordAndCheckboxConatiner: {
@@ -222,6 +254,9 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    left: 5,
   },
   checkbox: {
     alignSelf: "center",
@@ -230,9 +265,12 @@ const styles = StyleSheet.create({
   },
   checkboxlabel: {
     paddingHorizontal: 8,
+    paddingBottom: 4,
     fontFamily: "Jakarta-Sans",
     fontSize: 14,
     color: ThemeTextColors.gray1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   forgotPasswordText: {
     fontSize: 14,

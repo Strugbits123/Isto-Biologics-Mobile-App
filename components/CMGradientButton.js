@@ -12,17 +12,13 @@ const CMGradientButton = ({
   gradientColors = ["#F87655", "#EF5128"],
 }) => {
   return (
-    <LinearGradient colors={gradientColors} style={[styles.button, style]}>
-      <View style={styles.content}>
-        <TouchableOpacity
-          onPress={onPress}
-          activeOpacity={0.8}
-          disabled={disabled}
-        >
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]} disabled={disabled}>
+      <LinearGradient colors={gradientColors} style={[styles.button, style]}>
+        <View style={styles.content}>
           <Text style={[styles.buttonText, textStyle]}>{title}</Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+        </View>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 };
 

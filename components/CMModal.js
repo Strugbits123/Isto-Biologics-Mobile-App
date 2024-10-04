@@ -2,13 +2,14 @@ import { useFonts } from 'expo-font';
 import React, { useState } from 'react';
 import {  Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { LoadingIndicator } from './LoadingIndicator/LoadingIndicator';
+import CMLoader from './CMLoader';
 const CMModal = ({ options, modalStyle }) => {
     const [fontsLoaded] = useFonts({
         "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
       });
     
       if (!fontsLoaded) {
-        return <LoadingIndicator />;
+        return <CMLoader size={20} />;
       }
   return (
         <View style={[styles.modalContent , modalStyle]}>

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, TextInput } from "react-native";
+import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CameraIcon from "../Icons/CameraIcon";
 import BagdeHomeCardIcon from "../Icons/BagdeHomeCardIcon";
@@ -12,8 +12,14 @@ import CMGradientButton from "./CMGradientButton";
 import { max } from "date-fns/max";
 import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
 import ArrowRight from "../Icons/ArrowRight";
+import CMLoader from "./CMLoader";
 
 const CMProfileCard = () => {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Check error");
+
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -24,7 +30,7 @@ const CMProfileCard = () => {
   });
 
   if (!fontsLoaded) {
-    return <LoadingIndicator />;
+    return <CMLoader size={20} />;
   }
 
   return (
@@ -42,11 +48,50 @@ const CMProfileCard = () => {
         <Text style={styles.nameText}>Change photo</Text>
       </View>
 
-      {/* Container of Points Information for doctor and hospital in card*/}
-      <View style={{ width: "100%", gap: 15, paddingHorizontal: 2 }}></View>
+      {/* Container of Input fields in card*/}
+      <View style={{ width: "100%", gap: 0, paddingHorizontal: 2 }}>
+        {/* This is container of full name or team name input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputTitle}>Full Name</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={(text) => {
+              setName(text);
+              setError(false)
+            }}
+            placeholderTextColor={ThemeTextColors.placeholder}
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder={name  ? name : "Enter your name"}
+          />
+           {error && (
+              <HelperText type="error" visible={error}>
+                {errorMessage}
+              </HelperText>
+            )}
+        </View>
+        {/* This is container of email input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputTitle}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
+            placeholderTextColor={ThemeTextColors.placeholder}
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder={"Your email"}
+            editable={false}
+          />
+        </View>
+      </View>
       {/* Container of Buttons in card add Data btn & View Entires btn & Leaderboard */}
       <View style={{ width: "100%", height: 45 }}>
         <CMThemedButton
+        gradientStyle={{paddingVertical: 10,}}
           title="Update"
           onPress={() => console.log("update btn pressed")}
           icon={<ArrowRight width={20} height={20} />}
@@ -64,10 +109,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: "100%",
     height: 500,
-    paddingVertical: 20,
+    paddingVertical: 45,
     paddingHorizontal: 30,
     alignItems: "center",
-    gap: 15,
+    gap: 20,
   },
   profileContainer: {
     justifyContent: "center",
@@ -89,54 +134,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: ThemeTextColors.extraLightGray,
   },
-  pointsInfoHeading: {
-    fontFamily: "Jakarta-Sans-Medium",
+  inputContainer: {
+    marginTop: 10,
+  },
+  input: {
+    fontFamily: "Jakarta-Sans",
+    minWidth: "100%",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderColor: "#E8ECF4",
+    borderWidth: 1,
     fontSize: 14,
-    color: ThemeTextColors.darkGray1,
+    borderRadius: 8,
+    backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
-  pointsTextInfo: {
-    fontFamily: "Jakarta-Sans-Medium",
-    fontSize: 14,
-    color: ThemeTextColors.extraLightGray,
-  },
-  pointsNumber: {
-    fontFamily: "Jakarta-Sans-Extra-bold",
-    fontSize: 14,
-    color: ThemeTextColors.extraLightGray,
-  },
-  pointsInfoContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  pointsText: {
-    color: ThemeTextColors.white,
+  inputTitle: {
+    fontFamily:"Jakarta-Sans-Semi-bold",
     fontSize: 16,
-    fontFamily: "Jakarta-Sans-Italic-bold",
-  },
-  themeButton: {
-    flex: 1,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignContent: "center",
-  },
-  themeButtonText: {
-    fontFamily: "Jakarta-Sans-Medium",
-    fontSize: 14,
-    color: ThemeTextColors.white,
-  },
-  buttonText: {
-    fontFamily: "Jakarta-Sans-Medium",
-    fontSize: 14,
-    color: ThemeTextColors.orange,
-  },
-  simpleButton: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  LeaderBoardButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+    color: ThemeTextColors.darkGray1,
+    marginBottom: 10,
   },
 });

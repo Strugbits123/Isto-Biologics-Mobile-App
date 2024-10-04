@@ -11,7 +11,6 @@ export const ThemeTextColors = {
     placeholder:"#8391A1",
     darkBlue: "#14141C",
     lineColor:"#E7EFF6"
-
 }
 
 export const ThemeBgColors = {

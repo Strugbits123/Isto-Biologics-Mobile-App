@@ -11,8 +11,11 @@ import CMButton from "./CMButton";
 import CMGradientButton from "./CMGradientButton";
 import { max } from "date-fns/max";
 import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
+import CMLoader from "./CMLoader";
+import { useNavigation } from "@react-navigation/native";
 
 const CMHomeCard = () => {
+  const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -23,7 +26,7 @@ const CMHomeCard = () => {
   });
 
   if (!fontsLoaded) {
-    return <LoadingIndicator />;
+    return <CMLoader size={20} />;
   }
 
   return (
@@ -73,7 +76,7 @@ const CMHomeCard = () => {
         <View style={styles.buttonsContainer}>
           <CMGradientButton
             title="Add Data "
-            onPress={() => alert("Button Pressed!")}
+            onPress={() => navigation.navigate("add_data")}
             style={styles.themeButton}
             textStyle={styles.themeButtonText}
           />

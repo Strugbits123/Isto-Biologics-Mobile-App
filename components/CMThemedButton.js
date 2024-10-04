@@ -1,11 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import CMLoader from "./CMLoader";
 
 const CMThemedButton = ({
   title = "Button", // default title if none is passed
   onPress, // function to handle button press
   style, // custom style for button
+  gradientStyle,
+  loading,
   textStyle, // custom style for text
   disabled = false, // disabled state
   icon = null, // icon component (optional)
@@ -21,11 +24,17 @@ const CMThemedButton = ({
         colors={disabled ? ["#999", "#aaa"] : ["#F87655", "#EF5128"]}
         start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 1 }}
-        style={styles.gradient}
+        style={[styles.gradient, gradientStyle]}
       >
         <View style={styles.content}>
-          <Text style={[styles.buttonText, textStyle]}>{title}</Text>
-          {icon && <View style={styles.iconContainer}>{icon}</View>}
+          {loading ? (
+            <CMLoader size={22} color="#ffffff" />
+          ) : (
+            <View style={styles.content}>
+              <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+              {icon && <View style={styles.iconContainer}>{icon}</View>}
+            </View>
+          )}
         </View>
       </LinearGradient>
     </TouchableOpacity>

@@ -9,8 +9,10 @@ import MenIcon from "../../Icons/MenIcon";
 import CMModal from "../CMModal";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../Icons/BackIcon";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { token } from "../../utils/constants";
 
-const CMHomeHeader = ({useInScreen}) => {
+const CMHomeHeader = ({ useInScreen }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = useFonts({
@@ -22,20 +24,25 @@ const CMHomeHeader = ({useInScreen}) => {
     return <LoadingIndicator />;
   }
 
-  // const handleLogout = () => {
-  //   navigation.navigate("login");
-  //   // console.log("logout")
-  // };
-
   const handleProfilePress = () => {
     setModalVisible(!modalVisible); // Open modal on profile press
   };
 
   const options = [
-    { label: "Profile", onPress: () => navigation.navigate("profile") },
+    {
+      label: "Profile",
+      onPress: () => {
+        navigation.navigate("profile");
+        setModalVisible(!modalVisible);
+      },
+    },
     {
       label: "Logout",
-      onPress: () => navigation.navigate("login"),
+      onPress: () => {
+        navigation.replace("login");
+        AsyncStorage.setItem(token, "");
+        setModalVisible(!modalVisible);
+      },
       textStyle: { color: "red" },
     },
   ];
@@ -55,7 +62,7 @@ const CMHomeHeader = ({useInScreen}) => {
           </TouchableOpacity>
         </View>
       )}
-{/* this is the container of profile image container at right side of header */}
+      {/* this is the container of profile image container at right side of header */}
       <View style={styles.imageContainer}>
         {/* when this condition got true so render image and must size is 50 50  */}
         <TouchableOpacity
@@ -76,8 +83,8 @@ const CMHomeHeader = ({useInScreen}) => {
           isVisible={modalVisible}
           modalStyle={{
             position: "absolute",
-            right: 50,
-            top: 40,
+            right: 80,
+            top: 10,
           }}
         />
       )}
