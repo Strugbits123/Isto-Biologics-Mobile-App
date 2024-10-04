@@ -18,3 +18,4 @@ const ArrowRight = ({ width, height }) => (
 </Svg>
 )
 export default ArrowRight
+

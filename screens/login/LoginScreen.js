@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image,ScrollView  } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
@@ -13,10 +13,10 @@ import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
 
 const LoginScreen = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -29,18 +29,20 @@ const LoginScreen = () => {
   return (
     <LinearGradient colors={["#00293F", "#006BA5"]} style={styles.container}>
       <View style={styles.topContainer}>
-        <Image style={{ height: 214, width: "100%" }} source={LoginDesign} />
-        <View style={styles.LogoTextContainer}>
-          {/* <Image source={LoginLogo} /> */}
-          <LoginIcon/>
-          <Text style={styles.text}>Welcome back!</Text>
+        <View style={{ height: 225 }}>
+          <Image style={{ height: 214, width: "100%" }} source={LoginDesign} />
+          <View style={styles.LogoTextContainer}>
+            {/* <Image source={LoginLogo} /> */}
+            <LoginIcon />
+            <Text style={styles.text}>Welcome back!</Text>
+          </View>
         </View>
         <View style={styles.bottomContainer}>
           <View style={styles.LoginContainer}>
-            <CMLoginForm/>
+            <CMLoginForm />
           </View>
           <View style={styles.IndicatorContainer}>
-            <Image source={homeIndicator}/>
+            <Image source={homeIndicator} />
           </View>
         </View>
       </View>
@@ -58,7 +60,6 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flexDirection: "column",
-    position: "relative",
   },
   text: {
     fontFamily: "Jakarta-Sans-bold",
@@ -75,18 +76,16 @@ const styles = StyleSheet.create({
     top: 80,
     backgroundColor: ThemeBgColors.white,
     width: "100%",
-    height:"68%",
+    height: "100%",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 30,
     paddingHorizontal: 30,
-    justifyContent:"space-between"
+    justifyContent: "space-between",
   },
-  IndicatorContainer:{
-    alignItems:"center",
-    marginTop:50,
-    bottom:10
-  }
+  IndicatorContainer: {
+    alignItems: "center",
+    marginTop: 50,
+    bottom: 10,
+  },
 });
-
-

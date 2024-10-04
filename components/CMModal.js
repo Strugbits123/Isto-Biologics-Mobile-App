@@ -1,8 +1,8 @@
 import { useFonts } from 'expo-font';
 import React, { useState } from 'react';
 import {  Text, TouchableOpacity, View, StyleSheet } from 'react-native';
-
-const CMModal = ({ options }) => {
+import { LoadingIndicator } from './LoadingIndicator/LoadingIndicator';
+const CMModal = ({ options, modalStyle }) => {
     const [fontsLoaded] = useFonts({
         "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
       });
@@ -11,7 +11,7 @@ const CMModal = ({ options }) => {
         return <LoadingIndicator />;
       }
   return (
-        <View style={styles.modalContent}>
+        <View style={[styles.modalContent , modalStyle]}>
           {options.map((option, index) => (
             <TouchableOpacity key={index} onPress={option.onPress}>
               <Text style={[styles.modalText, option.textStyle]}>{option.label}</Text>
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
       padding: 2,
       borderRadius: 10,
       justifyContent:"center",
-      maxWidth:90
+      maxWidth:90,
     },
     modalText: {
         fontFamily:"Jakarta-Sans-Medium",
@@ -39,3 +39,4 @@ const styles = StyleSheet.create({
       paddingVertical:5
     },
   });
+

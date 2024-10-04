@@ -4,7 +4,7 @@ import { ThemeBgColors } from '../../theme/theme'
 
 const DocsScreen = () => {
   return (
-    <View style={{flex:1,justifyContent:"center", alignItems:"center"}}>
+    <View style={styles.mainContainer}>
     <Text style={{fontSize:15}}>Docs</Text>
   </View>
   )
@@ -13,8 +13,10 @@ const DocsScreen = () => {
 export default DocsScreen
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  mainContainer: { 
     flex: 1,
+    justifyContent:"center",
+     alignItems:"center",
     backgroundColor: ThemeBgColors.mainBg,
   },
 })

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
@@ -8,7 +8,7 @@ import { useFonts } from "expo-font";
 import { LoadingIndicator } from "../../components/LoadingIndicator/LoadingIndicator";
 import CMModal from "../../components/CMModal";
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
@@ -21,17 +21,19 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.mainContainer}>
       {/*  Header component */}
       <View style={styles.headerContainer}>
-        <CMHomeHeader />
+        <CMHomeHeader useInScreen={"home"} />
       </View>
+      <ScrollView style={{top:90}} contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
       {/*  heading of main home page  */}
       <View style={styles.headingContainer}>
         <Text style={styles.headingText}>Statistics</Text>
       </View>
-      {/*  Main Card Component  */}
       <View style={styles.cardContainer}>
+      {/*  Main Card Component  */}
         {/* <Text style={styles.headingText} >Statistics</Text> */}
         <CMHomeCard />
       </View>
+      </ScrollView>
     </View>
   );
 };
@@ -44,11 +46,11 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.mainBg,
   },
   headerContainer: {
-    top: 75,
+    top: 60,
   },
   headingContainer: {
+    flexDirection: "row",
     paddingHorizontal: 27,
-    top: 90,
   },
   headingText: {
     fontFamily: "Jakarta-Sans-bold",
@@ -57,6 +59,9 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     paddingHorizontal: 29,
-    top: 120,
+    top: 30,
+  },
+   scrollViewContent: {
+    paddingBottom: 190, // Add some bottom padding to prevent content being hidden
   },
 });

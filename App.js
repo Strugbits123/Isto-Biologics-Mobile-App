@@ -36,7 +36,7 @@ function App() {
     return <LoadingIndicator />;
   }
 
-  const clientId = process.env.EXPO_PUBLIC_WIX_CLIENT_ID || "";
+  const clientId = process.env.WIX_CLIENT_ID || "";
 
   return (
     // <PaperProvider>

@@ -8,6 +8,8 @@ import HomeTabIcon from "../../Icons/HomeTabIcon";
 import LeaderboardTabIcon from "../../Icons/LeaderboardTabIcon";
 import DocsTabIcon from "../../Icons/DocsTabIcon";
 import Leaderboard from "../../screens/leaderboard/Leaderboard";
+import { ThemeBgColors } from "../../theme/theme";
+import ProfileScreen from "../../screens/profile/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +21,7 @@ const Bottom_Navigation = () => {
         headerShown: false,
         tabBarStyle: {
           height: 80, // Set tab bar height to 80px
-          paddingHorizontal:40
+          paddingHorizontal: 40,
         },
       }}
     >
@@ -57,12 +59,18 @@ const Bottom_Navigation = () => {
         name="docs"
         component={DocsScreen}
       />
+       <Tab.Screen
+        options={{
+            tabBarButton: () => null, // Hide this tab from the tab bar
+        }}
+        name="profile"
+        component={ProfileScreen}
+      />
     </Tab.Navigator>
   );
 };
 
 export default Bottom_Navigation;
-
 
 // import { StyleSheet, Text, View } from "react-native";
 // import React from "react";

@@ -17,9 +17,12 @@ import ClosedEyeIcon from "../Icons/ClosedEyeIcon";
 import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import Checkbox from "expo-checkbox";
-import { Link } from "@react-navigation/native";
+import { Link, useNavigation } from "@react-navigation/native";
+import { createClient, OAuthStrategy } from "@wix/sdk";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CMLoginForm = () => {
+  const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
@@ -28,9 +31,47 @@ const CMLoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [errorMessage, setErrorMessage] = useState("Check error");
+  const [errorMessagePassword, setErrorMessagePassword] =
+    useState("Check error");
   const [isChecked, setChecked] = useState(false);
+
+  const CLIENT_ID = process.env.WIX_CLIENT_ID || "";
+
+  const myWixClient = createClient({
+    auth: OAuthStrategy({
+      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
+      // tokens: {
+      //   accessToken: {
+      //     value: "<ACCESS_TOKEN_VALUE>",
+      //     expiresAt: "<ACCESS_TOKEN_EXPIRY_DATE>",
+      //   },
+      //   refreshToken: {
+      //     value: "<REFRESH_TOKEN_VALUE>",
+      //   },
+      // },
+    }),
+  });
+
+  const handleLogin = async () => {
+    try {
+      let response = await myWixClient.auth.login({
+        email: email,
+        password: password,
+      });
+      console.log("response", response);
+      await AsyncStorage.setItem("token", response.data.sessionToken);
+      if (response) {
+        // navigation.navigate("Bottom_Navigation");
+        navigation.navigate("Bottom_Navigation", {
+          screen: "home",
+        });
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   return (
     <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100}>
@@ -90,7 +131,7 @@ const CMLoginForm = () => {
             </View>
             {error && (
               <HelperText type="error" visible={error}>
-                {errorMessage}
+                {errorMessagePassword}
               </HelperText>
             )}
           </View>
@@ -111,7 +152,7 @@ const CMLoginForm = () => {
         </View>
         <CMThemedButton
           title="Login"
-          onPress={() => alert("Button Pressed!")}
+          onPress={handleLogin}
           icon={<ArrowRight width={20} height={20} />}
         />
         {/* <Button
