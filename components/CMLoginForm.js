@@ -31,6 +31,7 @@ const CMLoginForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const navigation = useNavigation();
+
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
@@ -115,11 +116,9 @@ const CMLoginForm = () => {
         ToastAndroid.show("Login Successfully!", ToastAndroid.SHORT);
         // Clear input fields
         setData({ email: "", password: "" });
-        setTimeout(() => {
-          navigation.replace("Bottom_Navigation", {
-            screen: "home",
-          });
-        }, 1000);
+        navigation.replace("Bottom_Navigation", {
+          screen: "home",
+        });
       }
       console.log("Error", response.errorCode);
       if (response.loginState === "FAILURE") {

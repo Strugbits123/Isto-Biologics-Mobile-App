@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/datetimepicker": "^8.0.1",
+    "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.17",
@@ -40,6 +42,7 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "^0.74.2",
+    "react-native-date-picker": "^5.0.7",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.20.0",
     "react-native-input-spinner": "^1.8.1",

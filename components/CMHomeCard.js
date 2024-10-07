@@ -13,6 +13,7 @@ import { max } from "date-fns/max";
 import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
 import CMLoader from "./CMLoader";
 import { useNavigation } from "@react-navigation/native";
+import CMline from "./CMline";
 
 const CMHomeCard = () => {
   const navigation = useNavigation();
@@ -64,12 +65,7 @@ const CMHomeCard = () => {
           <Text style={styles.pointsTextInfo}>New Hospital</Text>
           <Text style={styles.pointsNumber}>5</Text>
         </View>
-        <View
-          style={{
-            borderBottomColor: ThemeTextColors.lineColor,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
+          <CMline/>
       </View>
       {/* Container of Buttons in card add Data btn & View Entires btn & Leaderboard */}
       <View style={{ gap: 8 }}>
@@ -84,7 +80,9 @@ const CMHomeCard = () => {
             title="View Entries "
             style={styles.simpleButton}
             textStyle={styles.buttonText}
-            onPress={() => alert("Button Pressed!")}
+            onPress={()=>{
+              navigation.navigate("entries");
+            }}
           />
         </View>
         <View style={styles.buttonsContainer}>
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeTextColors.white,
     borderRadius: 20,
     width: "100%",
-    height: 500,
+    height: "auto",
     paddingVertical: 20,
     paddingHorizontal: 30,
     alignItems: "center",

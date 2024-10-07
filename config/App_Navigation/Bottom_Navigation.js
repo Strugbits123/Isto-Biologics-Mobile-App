@@ -10,6 +10,8 @@ import DocsTabIcon from "../../Icons/DocsTabIcon";
 import Leaderboard from "../../screens/leaderboard/Leaderboard";
 import { ThemeBgColors } from "../../theme/theme";
 import ProfileScreen from "../../screens/profile/ProfileScreen";
+import Entries from "../../screens/Entries/Entries";
+import DetailedEntry from "../../screens/DetailedEntry/DetailedEntry";
 import AddData from "../../screens/addData/AddData";
 
 const Tab = createBottomTabNavigator();
@@ -73,6 +75,20 @@ const Bottom_Navigation = () => {
         }}
         name="add_data"
         component={AddData}
+      />
+       <Tab.Screen
+        options={{
+            tabBarButton: () => null, // Hide this tab from the tab bar
+        }}
+        name="entries"
+        component={Entries}
+      />
+       <Tab.Screen
+        options={{
+            tabBarButton: () => null, // Hide this tab from the tab bar
+        }}
+        name="detailed_entry"
+        component={DetailedEntry}
       />
     </Tab.Navigator>
      

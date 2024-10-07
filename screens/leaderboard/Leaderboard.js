@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { ThemeBgColors } from '../../theme/theme'
+import CMProductLine from '../../components/CMProductLine'
 
 const Leaderboard = () => {
   return (

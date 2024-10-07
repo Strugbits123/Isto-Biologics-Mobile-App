@@ -18,7 +18,7 @@ const AddData = () => {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of profile page  */}
+        {/*  heading of Add data */}
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Add Data</Text>
         </View>
