@@ -25,22 +25,18 @@ import { token } from "../utils/constants";
 import CMLoader from "./CMLoader";
 
 const CMLoginForm = () => {
+  const navigation = useNavigation();
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
-  const navigation = useNavigation();
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
   });
-
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
 
   //Inputfields handleOnChange
   const handle_onChange_Text = (field, value) => {
@@ -132,91 +128,98 @@ const CMLoginForm = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.LoginText}>Login</Text>
-      {/* inputs under this container */}
-      <View>
-        {/* This is container of email input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputTitle}>Email</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={(text) => {
-              handle_onChange_Text("email", text);
-            }}
-            value={data.email}
-            placeholderTextColor={ThemeTextColors.placeholder}
-            autoCorrect={false}
-            autoCapitalize="none"
-            placeholder={"Enter your email"}
-          />
-          {errors.email && (
-            <HelperText type="error" visible={true}>
-              {errors.email}
-            </HelperText>
-          )}
-        </View>
-        {/* This is container of password input  */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputTitle}>Password</Text>
-          <View style={{ justifyContent: "center", alignItems: "flex-end" }}>
-            <TextInput
-              style={styles.input}
-              secureTextEntry={isPasswordVisible}
-              value={data.password}
-              placeholderTextColor={ThemeTextColors.placeholder}
-              onChangeText={(text) => {
-                handle_onChange_Text("password", text);
-              }}
-              autoCorrect={false}
-              autoCapitalize="none"
-              placeholder={"Enter your password"}
-            />
-            {/* input icon of eye close and open */}
-            <TouchableOpacity
-              style={{ position: "absolute", paddingHorizontal: 17 }}
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-            >
-              {isPasswordVisible ? (
-                <OpenEyeIcon width={20} height={12} />
-              ) : (
-                <ClosedEyeIcon width={20} height={15} />
+    <>
+      {!fontsLoaded ? (
+        <CMLoader size={20} />
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.LoginText}>Login</Text>
+          {/* inputs under this container */}
+          <View>
+            {/* This is container of email input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Email</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => {
+                  handle_onChange_Text("email", text);
+                }}
+                value={data.email}
+                placeholderTextColor={ThemeTextColors.placeholder}
+                autoCorrect={false}
+                autoCapitalize="none"
+                placeholder={"Enter your email"}
+              />
+              {errors.email && (
+                <HelperText type="error" visible={true}>
+                  {errors.email}
+                </HelperText>
               )}
-            </TouchableOpacity>
+            </View>
+            {/* This is container of password input  */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Password</Text>
+              <View
+                style={{ justifyContent: "center", alignItems: "flex-end" }}
+              >
+                <TextInput
+                  style={styles.input}
+                  secureTextEntry={isPasswordVisible}
+                  value={data.password}
+                  placeholderTextColor={ThemeTextColors.placeholder}
+                  onChangeText={(text) => {
+                    handle_onChange_Text("password", text);
+                  }}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  placeholder={"Enter your password"}
+                />
+                {/* input icon of eye close and open */}
+                <TouchableOpacity
+                  style={{ position: "absolute", paddingHorizontal: 17 }}
+                  onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                >
+                  {isPasswordVisible ? (
+                    <OpenEyeIcon width={20} height={12} />
+                  ) : (
+                    <ClosedEyeIcon width={20} height={15} />
+                  )}
+                </TouchableOpacity>
+              </View>
+              {errors.password && (
+                <HelperText type="error" visible={true}>
+                  {errors.password}
+                </HelperText>
+              )}
+            </View>
           </View>
-          {errors.password && (
-            <HelperText type="error" visible={true}>
-              {errors.password}
-            </HelperText>
-          )}
-        </View>
-      </View>
-      {/* This is the container of Remember me checkbox and forgot password */}
-      <View style={styles.forgotPasswordAndCheckboxConatiner}>
-        <View style={styles.checkboxContainer}>
-          <Checkbox
-            value={isChecked}
-            onValueChange={() => {
-              setIsChecked(!isChecked);
-            }}
-            style={styles.checkbox}
-            color={isChecked ? ThemeTextColors.darkOrange : undefined}
+          {/* This is the container of Remember me checkbox and forgot password */}
+          <View style={styles.forgotPasswordAndCheckboxConatiner}>
+            <View style={styles.checkboxContainer}>
+              <Checkbox
+                value={isChecked}
+                onValueChange={() => {
+                  setIsChecked(!isChecked);
+                }}
+                style={styles.checkbox}
+                color={isChecked ? ThemeTextColors.darkOrange : undefined}
+              />
+              <Text style={styles.checkboxlabel}>Remember me</Text>
+            </View>
+            {/* This link tag for forgot password */}
+            <Text style={styles.forgotPasswordText}> Forgot Password ?</Text>
+          </View>
+          <CMThemedButton
+            title="Login"
+            icon={<ArrowRight width={20} height={20} />}
+            loading={isLoading}
+            onPress={handleLogin}
           />
-          <Text style={styles.checkboxlabel}>Remember me</Text>
         </View>
-        {/* This link tag for forgot password */}
-        <Text style={styles.forgotPasswordText}> Forgot Password ?</Text>
-      </View>
-      <CMThemedButton
-        title="Login"
-        icon={<ArrowRight width={20} height={20} />}
-        loading={isLoading}
-        onPress={handleLogin}
-      />
-    </View>
+      )}
+    </>
   );
 };
-
 export default CMLoginForm;
 
 const styles = StyleSheet.create({

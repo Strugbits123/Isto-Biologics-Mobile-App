@@ -65,7 +65,7 @@ const CMHomeCard = () => {
           <Text style={styles.pointsTextInfo}>New Hospital</Text>
           <Text style={styles.pointsNumber}>5</Text>
         </View>
-          <CMline/>
+        <CMline />
       </View>
       {/* Container of Buttons in card add Data btn & View Entires btn & Leaderboard */}
       <View style={{ gap: 8 }}>
@@ -80,7 +80,7 @@ const CMHomeCard = () => {
             title="View Entries "
             style={styles.simpleButton}
             textStyle={styles.buttonText}
-            onPress={()=>{
+            onPress={() => {
               navigation.navigate("entries");
             }}
           />
@@ -90,7 +90,7 @@ const CMHomeCard = () => {
             title="Leaderboard"
             style={styles.LeaderBoardButton}
             textStyle={styles.buttonText}
-            onPress={() => alert("Button Pressed!")}
+            onPress={() => navigation.navigate("leaderboard")}
           />
         </View>
       </View>

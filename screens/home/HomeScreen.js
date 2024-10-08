@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHeader from "../../components/CMHeader/CMHeader";
@@ -18,11 +18,12 @@ const HomeScreen = ({ navigation }) => {
     return <CMLoader size={20} />;
   }
 
+
   return (
-    <View style={styles.mainContainer}>
+    <View style={styles.mainContainer} >
       {/*  Header component */}
       <View style={styles.headerContainer}>
-        <CMHomeHeader useInScreen={"home"} />
+        <CMHomeHeader useInScreen={"home"}/>
       </View>
       <ScrollView
         style={{ top: 90 }}

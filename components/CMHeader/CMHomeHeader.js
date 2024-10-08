@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import menAvatar from "../../assets/Images/menAvatar.png";
 import { Avatar } from "react-native-paper";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
@@ -48,7 +48,7 @@ const CMHomeHeader = ({ useInScreen }) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} >
       {/* this condition shows header dynamic which screen shows which things  */}
       {useInScreen === "home" ? (
         <View>

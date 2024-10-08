@@ -4,11 +4,11 @@ import { useFonts } from "expo-font";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 import BackIcon from "../../Icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
-const CMHeader = ({headerTitle}) => {
+const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-SemiBold":require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf")
+    "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -17,38 +17,36 @@ const CMHeader = ({headerTitle}) => {
 
   return (
     <View style={styles.container}>
-      <View >
-        <TouchableOpacity onPress={()=> navigation.goBack()}>
-          <BackIcon width={10} height={17}/>
+      <View>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <BackIcon color={iconColor} width={10} height={17} />
         </TouchableOpacity>
       </View>
       <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>leaderboard</Text>
+        <Text style={[styles.headerText, titleStyle]}>{headerTitle}</Text>
       </View>
-    
     </View>
   );
 };
 
-export default CMHeader
+export default CMHeader;
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent:"space-between",
-    alignItems:"center",
+    justifyContent: "space-between",
+    alignItems: "center",
     height: 52,
     width: "100%",
-    paddingHorizontal:29
+    paddingHorizontal: 29,
   },
-  headerTitleContainer:{
-    flex:1,
-    justifyContent:"center",
-    alignItems:"center",
+  headerTitleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  headerTitle:{
-    fontFamily:"Jakarta-Sans-SemiBold",
-    fontSize:28
-  }
-
+  headerText: {
+    fontFamily: "Jakarta-Sans-SemiBold",
+    fontSize: 28,
+  },
 });

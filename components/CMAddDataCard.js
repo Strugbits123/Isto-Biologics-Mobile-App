@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     fontFamily: "Jakarta-Sans-bold",
     fontSize: 21,
     marginBottom: 20,
+    color:ThemeTextColors.darkGray1
   },
   selectionContainer: {
     fontFamily: "Jakarta-Sans-Medium",

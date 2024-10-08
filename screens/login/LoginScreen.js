@@ -10,23 +10,13 @@ import {
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
-import LoginLogo from "../../assets/Images/LoginLogo.png";
-import homeIndicator from "../../assets/Images/homeIndicator.png";
 import { useFonts } from "expo-font";
-import { LoadingIndicator } from "../../components/LoadingIndicator/LoadingIndicator";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-import { Button, HelperText, TextInput } from "react-native-paper";
-import { InputPrefix } from "../../components/Input/InputPrefix";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
 import CMLoader from "../../components/CMLoader";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
@@ -58,12 +48,14 @@ const LoginScreen = () => {
               </View>
             </View>
             <View style={styles.bottomContainer}>
-              <View style={styles.LoginContainer}>
-                <CMLoginForm />
-              </View>
-              <View style={styles.IndicatorContainer}>
-                <Image source={homeIndicator} />
-              </View>
+              <ScrollView
+                contentContainerStyle={styles.scrollableContent}
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={styles.LoginContainer}>
+                  <CMLoginForm />
+                </View>
+              </ScrollView>
             </View>
           </View>
         </LinearGradient>
@@ -105,10 +97,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     justifyContent: "space-between",
   },
-  IndicatorContainer: {
-    alignItems: "center",
-    marginTop: 50,
-    bottom: 10,
-  },
 });
-

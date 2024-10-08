@@ -62,7 +62,7 @@ const CMEntryCard = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} >
       <View style={styles.headerContainer}>
         <View style={styles.EntryTitleIcon}>
           {true ? (

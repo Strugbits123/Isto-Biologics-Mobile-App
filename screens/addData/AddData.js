@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React from 'react'
 import { ThemeBgColors, ThemeTextColors } from '../../theme/theme'
 import CMHomeHeader from '../../components/CMHeader/CMHomeHeader'
-import CMProfileCard from '../../components/CMProfileCard'
 import CMAddDataCard from '../../components/CMAddDataCard'
 
 const AddData = () => {
