@@ -24,9 +24,9 @@ const SplashScreen = () => {
           {/* <Image source={splashLogo} /> */}
           <SplashLogo/>
         </View>
-        <View style={styles.imageContainer}>
+        {/* <View style={styles.imageContainer}>
           <Image source={splashIndicator} />
-        </View>
+        </View> */}
       </View>
     </LinearGradient>
   );

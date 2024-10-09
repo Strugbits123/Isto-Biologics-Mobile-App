@@ -52,7 +52,7 @@ const CMEntryCard = () => {
       },
     },
     {
-      label: "delete",
+      label: "Delete",
       onPress: () => {
         setDeleteModal(true);
         setModalVisible(!modalVisible);

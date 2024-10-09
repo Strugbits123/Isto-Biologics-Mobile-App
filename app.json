@@ -8,8 +8,8 @@
     "userInterfaceStyle": "light",
     "scheme": "wixmobileheadless",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/splashScreen.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],

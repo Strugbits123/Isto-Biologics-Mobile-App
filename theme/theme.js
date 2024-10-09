@@ -18,6 +18,7 @@ export const ThemeBgColors = {
   lightGrayPlaceholders: "#F7F8F9",
   mainBg: "#EFF8FE",
   lightOrange: "#F2603A1A",
+  docsBg:"#E9F2F8"
 };
 
 export const productsBgColors = {

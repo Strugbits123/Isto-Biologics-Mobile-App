@@ -20,12 +20,14 @@ const Bottom_Navigation = () => {
   return (
     <Tab.Navigator
       screenOptions={{
+        
         tabBarActiveTintColor: "#FCC34A",
         headerShown: false,
         tabBarStyle: {
           height: 80, // Set tab bar height to 80px
           paddingHorizontal: 40,
         },
+        tabBarHideOnKeyboard:true
       }}
     >
       <Tab.Screen

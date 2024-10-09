@@ -1,10 +1,8 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-import CMButton from "../../components/CMButton";
-import CMToast from "../../components/CMToast";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
-import CMDocsCard from "../../components/CMDocsCard";
+import CMDocsCard from "../../components/CMDocs/CMDocsCard";
 
 const DocsScreen = () => {
   return (

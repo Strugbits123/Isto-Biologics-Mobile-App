@@ -28,12 +28,29 @@ const CMAddDataCard = () => {
     return <CMLoader size={20} />;
   }
 
+  // const handleCheckboxChange = (type) => {
+  //   setCheckedState((prevState) => ({
+  //     ...prevState,
+  //     [`${type}Checked`]: !prevState[`${type}Checked`],
+  //   }));
+  // };
   const handleCheckboxChange = (type) => {
-    setCheckedState({
-      doctorChecked: type === "doctor",
-      hospitalChecked: type === "hospital",
+    setCheckedState((prevState) => {
+      const updatedState = {
+        ...prevState,
+        [`${type}Checked`]: !prevState[`${type}Checked`],
+      };
+
+      // Ensure at least one checkbox remains checked
+      if (!updatedState.doctorChecked && !updatedState.hospitalChecked) {
+        return prevState; // Don't update state if both are unchecked
+      }
+
+      return updatedState;
     });
   };
+
+  console.log("check", checkedState);
 
   return (
     <View style={styles.container}>
@@ -43,7 +60,7 @@ const CMAddDataCard = () => {
 
       <View style={styles.selectionContainer}>
         <View style={styles.insideSelectionContainer}>
-          {/* this is checkbox container with lable custom component redered here  */}
+          {/* Hospital Checkbox */}
           <CMCheckbox
             lable={"Hospital/Facility"}
             value={checkedState.hospitalChecked}
@@ -55,7 +72,7 @@ const CMAddDataCard = () => {
         </View>
         <CMline />
         <View style={styles.insideSelectionContainer}>
-          {/* this is checkbox container with lable custom component redered here  */}
+          {/* Doctor Checkbox */}
           <CMCheckbox
             lable={"Doctor"}
             value={checkedState.doctorChecked}
@@ -67,10 +84,12 @@ const CMAddDataCard = () => {
         </View>
         <CMline />
       </View>
-      {/* this is form for add data of hospital or doctor */}
+      {/* Always render the Doctor form */}
       <View>
-        {/* {checkedState.hospitalChecked ? <CMHospitalForm /> : <CMDoctorForm />} */}
-        <CMAddDataForm submisionType={checkedState.hospitalChecked ? "hospital" : "doctor"} />
+        <CMAddDataForm
+          checkedForms={checkedState}
+          submisionType={checkedState.doctorChecked ? "doctor" : "hospital"}
+        />
       </View>
     </View>
   );
@@ -91,7 +110,7 @@ const styles = StyleSheet.create({
     fontFamily: "Jakarta-Sans-bold",
     fontSize: 21,
     marginBottom: 20,
-    color:ThemeTextColors.darkGray1
+    color: ThemeTextColors.darkGray1,
   },
   selectionContainer: {
     fontFamily: "Jakarta-Sans-Medium",

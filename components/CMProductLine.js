@@ -6,8 +6,14 @@ import CMCheckbox from "./CMCheckbox";
 import DownArrowIcon from "../Icons/DownArrowIcon";
 import CMline from "./CMline";
 import { ThemeTextColors } from "../theme/theme";
+import { HelperText } from "react-native-paper";
 
-const CMProductLine = ({ checkboxes, onCheckboxChange }) => {
+const CMProductLine = ({
+  checkboxes,
+  onCheckboxChange,
+  error,
+  errorMessage,
+}) => {
   // State to manage which category's products are visible
   const [visibleCategory, setVisibleCategory] = useState(null);
 
@@ -78,6 +84,12 @@ const CMProductLine = ({ checkboxes, onCheckboxChange }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titleHeading}>Product Line</Text>
+      {/* Display error message if validation fails */}
+      {error && (
+        <HelperText type="error" visible={error}>
+          {errorMessage}
+        </HelperText>
+      )}
 
       {/* Dynamically render categories and their products */}
       {categories.map((category) => (

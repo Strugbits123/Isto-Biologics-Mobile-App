@@ -13,7 +13,7 @@ const ProfileScreen = () => {
       </View>
 
       <ScrollView
-        style={{ top: 80}}
+        style={{ top: 80 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
@@ -22,10 +22,10 @@ const ProfileScreen = () => {
           <Text style={styles.headingText}>Profile</Text>
         </View>
 
-      {/*  Profile Card Component  */}
+        {/*  Profile Card Component  */}
         <View style={styles.cardContainer}>
-        <CMProfileCard />
-      </View>
+          <CMProfileCard />
+        </View>
       </ScrollView>
     </View>
   );

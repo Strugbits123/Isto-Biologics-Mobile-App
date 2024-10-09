@@ -66,12 +66,20 @@
 //   },
 // });
 
-
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Modal, Platform } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CalenderIcon from "../Icons/CalenderIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { HelperText } from "react-native-paper";
 
 const CMDateInput = ({
   title,
@@ -88,7 +96,7 @@ const CMDateInput = ({
   const [date, setDate] = useState(value ? new Date(value) : new Date());
 
   const onChangeDate = (event, selectedDate) => {
-    setShowPicker(Platform.OS === 'ios');
+    setShowPicker(Platform.OS === "ios");
     if (selectedDate) {
       setDate(selectedDate);
       onChange(selectedDate.toDateString()); // Formatting the date as per your needs
@@ -104,7 +112,10 @@ const CMDateInput = ({
   return (
     <View style={styles.inputContainer}>
       <Text style={[styles.inputTitle, titleStyle]}>{title}</Text>
-      <TouchableOpacity onPress={showDatePicker} style={{ justifyContent: "center", alignItems: "flex-end" }}>
+      <TouchableOpacity
+        onPress={showDatePicker}
+        style={{ justifyContent: "center", alignItems: "flex-end" }}
+      >
         <TextInput
           style={[styles.input, inputStyle]}
           value={value ? value : date.toDateString()}
