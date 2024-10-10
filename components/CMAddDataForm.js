@@ -5,6 +5,8 @@ import CMDateInput from "./CMDateInput";
 import CMProductLine from "./CMProductLine";
 import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
+import { createClient, OAuthStrategy } from "@wix/sdk";
+import { items } from "@wix/data";
 
 const CMAddDataForm = ({ submisionType, checkedForms }) => {
   const [data, setData] = useState({});
@@ -19,6 +21,14 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
     InQu: [],
     Fibrant: [],
     ProteiOS: [],
+  });
+
+  const myWixClient = createClient({
+    modules: { items },
+    auth: OAuthStrategy({
+      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
+    }),
+    // Include the auth strategy and host as relevant
   });
 
   // Input fields handleOnChange
@@ -47,7 +57,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
     });
   };
 
-  //form validations
+  //form validations function
   const validateFields = () => {
     let validationErrors = {};
 
@@ -56,9 +66,9 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       if (!data.doctorFirstName) {
         validationErrors.doctorFirstName = "Doctor's first name is required";
       }
-      if (!data.doctorLastName) {
-        validationErrors.doctorLastName = "Doctor's last name is required";
-      }
+      // if (!data.doctorLastName) {
+      //   validationErrors.doctorLastName = "Doctor's last name is required";
+      // }
     }
 
     // Hospital name is required for both doctor and hospital submission
@@ -84,7 +94,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
   };
 
   // Handle form submission
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsLoading(true);
 
     // Validate form fields
@@ -94,19 +104,113 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       setIsLoading(false);
       return;
     }
+    try {
+      //De Structure data
+      const { doctorFirstName, doctorLastName, firstCaseDate, hospitalName } =
+        data;
 
-    // Combine all data into one object
-    const submitData = {
-      ...data,
-      selectedProducts, // This will include the structured state of checkboxes
-    };
+      // const dateString = firstCaseDate;
+      // const dateObject = new Date(dateString);
 
-    console.log("checkedForms", checkedForms);
-    console.log("Submitted Data: ", submitData);
+      // const optionValue = {
+      //   day: "numeric",
+      //   month: "short",
+      //   year: "numeric",
+      // };
+      // const firstCaseFormattedDate = dateObject.toLocaleDateString(
+      //   "en-US",
+      //   optionValue,
+      // );
 
-    // Add your submit logic here (e.g., API call)
+      //de structure products
+      const { Magellan, Influx, SPARC, InQu, Fibrant, ProteiOS } =
+        selectedProducts;
+      //de structure points for hospital or doctor
+      // console.log("checkedForms", checkedForms);
+      const { doctorChecked, hospitalChecked } = checkedForms;
+      //Points distributions
+      const doctorPoints = doctorChecked ? 3 : 0;
+      const hospitalPoints = hospitalChecked ? 5 : 0;
 
-    setIsLoading(false);
+      const magellanPoints = Magellan.length;
+      const influxPoints = Influx.length;
+      const sparcPoints = SPARC.length;
+      const inQuPoints = InQu.length;
+      const fibrantPoints = Fibrant.length;
+      const proteiOSPoints = ProteiOS.length;
+
+      //total points
+      let totalEntryPoints = 0;
+      if (doctorChecked && hospitalChecked) {
+        totalEntryPoints =
+          doctorPoints +
+          hospitalPoints +
+          magellanPoints +
+          influxPoints +
+          sparcPoints +
+          inQuPoints +
+          fibrantPoints +
+          proteiOSPoints;
+      } else if (doctorChecked) {
+        totalEntryPoints =
+          doctorPoints +
+          magellanPoints +
+          influxPoints +
+          sparcPoints +
+          inQuPoints +
+          fibrantPoints +
+          proteiOSPoints;
+      } else if (hospitalChecked) {
+        totalEntryPoints =
+          hospitalPoints +
+          magellanPoints +
+          influxPoints +
+          sparcPoints +
+          inQuPoints +
+          fibrantPoints +
+          proteiOSPoints;
+      }
+
+      // Combine all data into one object
+      const dataToSend = {
+        user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+        doctor_firstname: doctorFirstName,
+        doctor_lastname: doctorLastName,
+        hospital_name: hospitalName,
+        first_case_date: firstCaseDate,
+        magellan_category: Magellan,
+        magellan_points: magellanPoints,
+        influx_category: Influx,
+        influx_points: influxPoints,
+        sparc_category: SPARC,
+        sparc_points: sparcPoints,
+        inqu_category: InQu,
+        inqu_points: inQuPoints,
+        fibrant_category: Fibrant,
+        fibrant_points: fibrantPoints,
+        proteios_category: ProteiOS,
+        proteios_points: proteiOSPoints,
+        doctor_points: doctorPoints,
+        hospital_points: hospitalPoints,
+        total_entry_points: totalEntryPoints,
+      };
+
+      console.log("run");
+      console.log("dataItem==>: ", dataToSend);
+
+      const options = {
+        dataCollectionId: "entries",
+        dataItem: {
+          data: dataToSend,
+        },
+      };
+      const response = await myWixClient.items.insertDataItem(options);
+      console.log("response", response);
+    } catch (error) {
+      console.log("error in handle submit", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
