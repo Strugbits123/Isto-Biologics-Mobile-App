@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { token } from "../utils/constants";
 import CMLoader from "./CMLoader";
 import Cookies from "js-cookie";
+import { members } from "@wix/members";
 // import { myWixClient } from "../utils/createClient";
 
 const CMLoginForm = () => {
@@ -51,9 +52,6 @@ const CMLoginForm = () => {
     auth: OAuthStrategy({
       clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
     }),
-    tokens: JSON.parse(
-      Cookies.get("session") || '{"accessToken": {}, "refreshToken": {}}',
-    ),
   });
 
   // Centralized validation
@@ -105,9 +103,18 @@ const CMLoginForm = () => {
       });
       console.log("response==>", response);
 
+      // const { items } = await myWixClient.members.queryMembers().eq("loginEmail", data.email).find();
+
+      // console.log("items", items);
+
+      // const memberTokens = await myWixClient.auth.getMemberTokensForExternalLogin("ad951362-37c8-4d01-a214-46cafa628440", "e1975cd0-7e77-48df-8b36-4520fb892347" );
+
+      // console.log("memberTokens", memberTokens);
+
       // const myTokens = await myWixClient.auth.generateVisitorTokens();
       // console.log("myTokens==>", myTokens);
       // let tokens = await myWixClient.auth.getMemberTokensForDirectLogin(response.data.sessionToken);
+      // let tokens = myWixClient.auth.s();
 
       // console.log("check token for set in wix==>", tokens);
       // myWixClient.auth.setTokens(tokens);
@@ -124,7 +131,7 @@ const CMLoginForm = () => {
         } else {
           await AsyncStorage.removeItem("userEmail"); // Remove email if unchecked
         }
-
+        //toast for showing message
         ToastAndroid.show("Login Successfully!", ToastAndroid.SHORT);
         // Clear input fields
         setData({ email: "", password: "" });

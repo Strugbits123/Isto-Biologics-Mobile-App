@@ -21,20 +21,57 @@ import CMLoader from "../../components/CMLoader";
 import { useFonts } from "expo-font";
 import CrownIcon from "../../Icons/CrownIcon";
 import CMline from "../../components/CMline";
+import { createClient, OAuthStrategy } from "@wix/sdk";
+import { items } from "@wix/data";
 
 const Leaderboard = () => {
   const [headerData, setHeaderData] = useState({});
   const [productCategory, setProductCategory] = useState("Leaderboard");
+  const [LeaderboardData, setLeaderboardData] = useState([]);
+
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
     "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
   });
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
+  const myWixClient = createClient({
+    modules: { items },
+    auth: OAuthStrategy({
+      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
+    }),
+    // Include the auth strategy and host as relevant
+  });
+  // let leaderboardData = [];
+  const getLeaderboardData = async () => {
+    try {
+      const options = {
+        dataCollectionId: "leaderboard",
+        referencedItemOptions: [
+          {
+            fieldName: "user_id",
+            limit: 100,
+          },
+        ],
+      };
+      //get all leaderboard data
+      const getLeaderboardData = await myWixClient.items
+        .queryDataItems(options)
+        .find();
+      console.log("getLeaderboardData", getLeaderboardData._items);
 
+      setLeaderboardData(getLeaderboardData._items);
+      //  leaderboardData = getLeaderboardData._items;
+    } catch (error) {
+      console.log("error in queryDataItems", error);
+    }
+  };
+
+  useEffect(() => {
+    getLeaderboardData();
+  }, []);
+
+  //product categories for filter or navigation in screen
   const productCategories = [
     "Leaderboard",
     "Magellan",
@@ -44,7 +81,6 @@ const Leaderboard = () => {
     "Fibrant",
     "ProteiOS",
   ];
-
   useEffect(() => {
     // Function to set header data based on productCategory
     const updateHeaderData = () => {
@@ -133,135 +169,127 @@ const Leaderboard = () => {
           break;
       }
     };
-
     updateHeaderData();
   }, [productCategory]); // useEffect will run when productCategory changes
 
   //leaderboard random data
-  const leaderboardData = [
-    {
-      id: "1",
-      name: "Alice Warren",
-      score: 323,
-      rank: "01",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    {
-      id: "2",
-      name: "Alan Walter",
-      score: 300,
-      rank: "02",
-      image: "https://randomuser.me/api/portraits/men/34.jpg",
-    },
-    {
-      id: "3",
-      name: "Nial Anderson",
-      score: 295,
-      rank: "03",
-      image: "https://randomuser.me/api/portraits/men/14.jpg",
-    },
-    {
-      id: "4",
-      name: "Arlene McCoy",
-      score: 223,
-      rank: "04",
-      image: "https://randomuser.me/api/portraits/women/24.jpg",
-    },
-    {
-      id: "5",
-      name: "Jessica Kemp",
-      score: 220,
-      rank: "05",
-      image: "https://randomuser.me/api/portraits/women/34.jpg",
-    },
-    {
-      id: "6",
-      name: "Jessica",
-      score: 500,
-      rank: "06",
-      image: "https://randomuser.me/api/portraits/men/34.jpg",
-    },
-  ];
+  // const leaderboardData = [
+  //   {
+  //     id: "1",
+  //     name: "Alice Warren",
+  //     score: 323,
+  //     rank: "01",
+  //     image: "https://randomuser.me/api/portraits/women/44.jpg",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Alan Walter",
+  //     score: 300,
+  //     rank: "02",
+  //     image: "https://randomuser.me/api/portraits/men/34.jpg",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Nial Anderson",
+  //     score: 295,
+  //     rank: "03",
+  //     image: "https://randomuser.me/api/portraits/men/14.jpg",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Arlene McCoy",
+  //     score: 223,
+  //     rank: "04",
+  //     image: "https://randomuser.me/api/portraits/women/24.jpg",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "Jessica Kemp",
+  //     score: 220,
+  //     rank: "05",
+  //     image: "https://randomuser.me/api/portraits/women/34.jpg",
+  //   },
+  //   {
+  //     id: "6",
+  //     name: "Jessica",
+  //     score: 500,
+  //     rank: "06",
+  //     image: "https://randomuser.me/api/portraits/men/34.jpg",
+  //   },
+  // ];
   // Render a single leaderboard item
-  const renderItem = ({ item }) => {
-    const myRank = "05"; // Example: Your rank is 02
-    const isMyRank = item.rank === myRank;
 
+  console.log("leaderboardData==>", LeaderboardData);
+  const renderItem = ({ item }) => {
+    // const myRank = "05"; // Example: Your rank is 02
+    // const isMyRank = item.rank === myRank;
+    let myRank = item.data.user_id._id = "af0ee3cb-1403-486c-a239-338b6f740759"
+    console.log("item==>", item);
     return (
       <>
-        {/* <LinearGradient
-          colors={["#F05025", "#F05025"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={[
-            styles.itemContainer,
-            isMyRank && styles.myRankContainer, // Apply special styling if it's my rank
-          ]}
-        >
-          <Text
+        {/* Apply gradient only if it's my rank */}
+        {myRank ? (
+          <LinearGradient
+            colors={["rgba(240, 80, 37, 0.2)", "rgba(240, 80, 37, 0.03)"]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 1 }}
             style={[
-              styles.rankText,
-              isMyRank && styles.myRankText, // Change text color for rank
+              styles.itemContainer,
+              styles.myRankContainer, // Special styling for my rank
             ]}
           >
-            {item.rank}
-          </Text>
-          <Image source={{ uri: item.image }} style={styles.profileImage} />
-          <Text
-            style={[
-              styles.nameText,
-              isMyRank && styles.myRankText, // Change text color for name
-            ]}
-          >
-            {item.name}
-          </Text>
-          <Text
-            style={[
-              styles.scoreText,
-              isMyRank && styles.myRankText, // Change text color for score
-            ]}
-          >
-            {item.score}
-          </Text>
-        </LinearGradient> */}
-        <>
-          {/* Apply gradient only if it's my rank */}
-          {isMyRank ? (
-            <LinearGradient
-              colors={["rgba(240, 80, 37, 0.2)", "rgba(240, 80, 37, 0.03)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 1, y: 1 }}
-              style={[
-                styles.itemContainer,
-                styles.myRankContainer, // Special styling for my rank
-              ]}
-            >
-              <Text style={[styles.rankText, styles.myRankText]}>
-                {item.rank}
-              </Text>
-              <Image source={{ uri: item.image }} style={styles.profileImage} />
-              <Text style={[styles.nameText, styles.myRankText]}>
-                {item.name}
-              </Text>
-              <Text style={[styles.scoreText, styles.myRankText]}>
-                {item.score}
-              </Text>
-            </LinearGradient>
-          ) : (
-            // Default item layout for other ranks
-            <View style={styles.itemContainer}>
-              <Text style={styles.rankText}>{item.rank}</Text>
-              <Image source={{ uri: item.image }} style={styles.profileImage} />
-              <Text style={styles.nameText}>{item.name}</Text>
-              <Text style={styles.scoreText}>{item.score}</Text>
-            </View>
-          )}
-          <CMline />
-        </>
+            <Text style={[styles.rankText, styles.myRankText]}>
+              {item.total_entries_points}
+            </Text>
+            {item.data.user_id.profilePhoto ? (
+              <Image
+                source={{ uri: item.data.user_id.profilePhoto }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <View style={styles.profileImage}>
+                <MenIcon width={25} height={21} />
+              </View>
+            )}
+            <Text style={[styles.nameText, styles.myRankText]}>
+              {item.data.user_id.firstName
+                ? item.data.user_id.firstName
+                : item.data.user_id.nickname}
+            </Text>
+            <Text style={[styles.scoreText, styles.myRankText]}>
+              {item.data.total_entries_points}
+            </Text>
+          </LinearGradient>
+        ) : (
+          // Default item layout for other ranks
+          <View style={styles.itemContainer}>
+            <Text style={styles.rankText}>
+              {item.data.total_entries_points}
+            </Text>
+            {item.data.user_id.profilePhoto ? (
+              <Image
+                source={{ uri: item.data.user_id.profilePhoto }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <View style={styles.profileImage}>
+                <MenIcon width={25} height={21} />
+              </View>
+            )}
+            <Text style={styles.nameText}>{item.data.user_id.firstName}</Text>
+            <Text style={styles.scoreText}>
+              {item.data.total_entries_points}
+            </Text>
+          </View>
+        )}
         <CMline />
       </>
     );
   };
+
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
 
   return (
     <LinearGradient
@@ -284,7 +312,7 @@ const Leaderboard = () => {
         />
       </View>
 
-      {/* container for ranking  */}
+      {/* container for ranking 1 2 3  */}
       <View
         style={{
           flexDirection: "row",
@@ -418,28 +446,6 @@ const Leaderboard = () => {
       {/* bottom container for ranking list */}
       <View style={styles.bottomContainer}>
         {/* category navigations list */}
-        {/* <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categorylistContainer}
-        >
-          {productCategories.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setProductCategory(category)}
-            >
-              <Text
-                style={{
-                  fontFamily: "Jakarta-Sans-Semi-bold",
-                  fontSize: 16,
-                  color: ThemeTextColors.extraLightGray,
-                }}
-              >
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView> */}
         <View>
           <ScrollView
             horizontal={true}
@@ -469,7 +475,7 @@ const Leaderboard = () => {
         </View>
         <View style={{ flex: 1 }}>
           <FlatList
-            data={leaderboardData}
+            data={LeaderboardData}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             contentContainerStyle={styles.listContainer}
@@ -601,6 +607,8 @@ const styles = StyleSheet.create({
     color: "#FF6B6B", // Different color for top ranks
   },
   profileImage: {
+    justifyContent: "center",
+    alignItems: "center",
     width: 50,
     height: 50,
     borderRadius: 25,

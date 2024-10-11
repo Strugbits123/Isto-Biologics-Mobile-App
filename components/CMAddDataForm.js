@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import React, { useState } from "react";
 import CMInput from "./CMInput";
 import CMDateInput from "./CMDateInput";
@@ -109,18 +109,8 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       const { doctorFirstName, doctorLastName, firstCaseDate, hospitalName } =
         data;
 
-      // const dateString = firstCaseDate;
-      // const dateObject = new Date(dateString);
-
-      // const optionValue = {
-      //   day: "numeric",
-      //   month: "short",
-      //   year: "numeric",
-      // };
-      // const firstCaseFormattedDate = dateObject.toLocaleDateString(
-      //   "en-US",
-      //   optionValue,
-      // );
+      const dateString = firstCaseDate;
+      const firstCaseDateObject = new Date(dateString);
 
       //de structure products
       const { Magellan, Influx, SPARC, InQu, Fibrant, ProteiOS } =
@@ -173,11 +163,11 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
 
       // Combine all data into one object
       const dataToSend = {
-        user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+        user_id: "cbf5c30a-c6b4-4624-9e84-5806d6c618e9",
         doctor_firstname: doctorFirstName,
         doctor_lastname: doctorLastName,
         hospital_name: hospitalName,
-        first_case_date: firstCaseDate,
+        first_case_date: firstCaseDateObject,
         magellan_category: Magellan,
         magellan_points: magellanPoints,
         influx_category: Influx,
@@ -194,18 +184,108 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
         hospital_points: hospitalPoints,
         total_entry_points: totalEntryPoints,
       };
-
-      console.log("run");
-      console.log("dataItem==>: ", dataToSend);
-
-      const options = {
+      // console.log("dataItem==>: ", dataToSend);
+      const addEntriesOptions = {
         dataCollectionId: "entries",
         dataItem: {
           data: dataToSend,
         },
       };
-      const response = await myWixClient.items.insertDataItem(options);
+
+      const response =
+        await myWixClient.items.insertDataItem(addEntriesOptions);
       console.log("response", response);
+
+      const leaderboardOptions = {
+        dataCollectionId: "leaderboard",
+      };
+
+      //query for checking if user is available in leaderboard or not
+      const response2 = await myWixClient.items
+        .queryDataItems(leaderboardOptions)
+        .eq("user_id", response.dataItem.data.user_id)
+        .find();
+      console.log("response2", response2);
+
+      //condition for if this users is first time adding a product so leaderboard accept new entry otherwise update the old entry
+      if (response2._items.length === 0) {
+        console.log("item not found");
+        const dataToSendInLeaderboard = {
+          user_id: "cbf5c30a-c6b4-4624-9e84-5806d6c618e9",
+          total_magellan_points: response.dataItem.data.magellan_points,
+          total_influx_points: response.dataItem.data.influx_points,
+          total_sparc_points: response.dataItem.data.sparc_points,
+          total_inqu_points: response.dataItem.data.inqu_points,
+          total_fibrant_points: response.dataItem.data.fibrant_points,
+          total_proteios_points: response.dataItem.data.proteios_points,
+          total_entries_points: response.dataItem.data.total_entry_points,
+        };
+
+        const addLeaderboardOptions = {
+          dataCollectionId: "leaderboard",
+          dataItem: {
+            data: dataToSendInLeaderboard,
+          },
+        };
+        const resLeaderboardNewEntry = await myWixClient.items.insertDataItem(
+          addLeaderboardOptions,
+        );
+        console.log("resLeaderboardNewEntry", resLeaderboardNewEntry);
+      } else {
+        console.log("item found");
+        const dataToSendInLeaderboardForUpdate = {
+          user_id: "cbf5c30a-c6b4-4624-9e84-5806d6c618e9",
+          total_magellan_points:
+            response.dataItem.data.magellan_points +
+            response2._items[0].data.total_magellan_points,
+          total_influx_points:
+            response.dataItem.data.influx_points +
+            response2._items[0].data.total_influx_points,
+          total_sparc_points:
+            response.dataItem.data.sparc_points +
+            response2._items[0].data.total_sparc_points,
+          total_inqu_points:
+            response.dataItem.data.inqu_points +
+            response2._items[0].data.total_inqu_points,
+          total_fibrant_points:
+            response.dataItem.data.fibrant_points +
+            response2._items[0].data.total_fibrant_points,
+          total_proteios_points:
+            response.dataItem.data.proteios_points +
+            response2._items[0].data.total_proteios_points,
+          total_entries_points:
+            response.dataItem.data.total_entry_points +
+            response2._items[0].data.total_entries_points,
+        };
+        console.log(
+          "dataToSendInLeaderboardForUpdate",
+          dataToSendInLeaderboardForUpdate,
+        );
+        const updateLeaderboardOptions = {
+          dataCollectionId: "leaderboard",
+          dataItem: {
+            data: dataToSendInLeaderboardForUpdate,
+          },
+        };
+        console.log("response2._items[0]._id", response2._items[0]._id);
+        const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
+          response2._items[0]._id,
+          updateLeaderboardOptions,
+        );
+      }
+
+      ToastAndroid.show("Data Added Successfully!", ToastAndroid.SHORT);
+      // // Reset all fields and uncheck products
+      // setData({});
+      // setSelectedProducts({
+      //   Magellan: [],
+      //   Influx: [],
+      //   SPARC: [],
+      //   InQu: [],
+      //   Fibrant: [],
+      //   ProteiOS: [],
+      // });
+      // setErrors({});
     } catch (error) {
       console.log("error in handle submit", error);
     } finally {

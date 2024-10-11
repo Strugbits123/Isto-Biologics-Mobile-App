@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
@@ -10,9 +10,12 @@ import ThreeDotIcon from "../Icons/ThreeDotIcon";
 import CMModal from "./CMModal";
 import { useNavigation } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
+import { createClient, OAuthStrategy } from "@wix/sdk";
+import { items } from "@wix/data";
 
 const CMEntryCard = () => {
   const navigation = useNavigation();
+  const [entriesData, setEntriesData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
@@ -24,6 +27,33 @@ const CMEntryCard = () => {
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
+
+  const myWixClient = createClient({
+    modules: { items },
+    auth: OAuthStrategy({
+      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
+    }),
+    // Include the auth strategy and host as relevant
+  });
+
+  //method for get all entries of user
+  const getUserEntries = async () => {
+    try {
+      const options = {
+        dataCollectionId: "entries",
+      };
+      //get all entries by user
+      const response = await myWixClient.items.queryDataItems(options).find();
+      console.log("response", response);
+      setEntriesData(response.items);
+    } catch (error) {
+      console.log("error in getUserEntries", error);
+    }
+  };
+
+  useEffect(() => {
+    getUserEntries();
+  }, []);
 
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
@@ -61,53 +91,59 @@ const CMEntryCard = () => {
     },
   ];
 
+  console.log("entriesData", entriesData);
   return (
-    <View style={styles.container} >
-      <View style={styles.headerContainer}>
-        <View style={styles.EntryTitleIcon}>
-          {true ? (
-            <>
-              <DoctorIcon width={40} height={40} />
-              <Text style={styles.EntryTitleText}>Doctor</Text>
-            </>
-          ) : (
-            <>
-              <HospitalIcon width={40} height={40} />
-              <Text style={styles.EntryTitleText}>Hospital/Facility</Text>
-            </>
-          )}
-        </View>
-        <TouchableOpacity onPress={hanleThreeDotPress}>
-          <ThreeDotIcon width={8} height={20} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ paddingTop: 10 }}>
-        {true ? (
-          <>
-            <View style={{ paddingVertical: 12, gap: 5 }}>
-              <Text style={styles.fieldTitle}>Doctor First Name</Text>
-              <Text style={styles.fieldValue}>Smith</Text>
+    <View style={styles.container}>
+      {entriesData.map((entry, index) => (
+        <View key={index}>
+          <View style={styles.headerContainer}>
+            <View style={styles.EntryTitleIcon}>
+              {entry.data.doctor_first_name ? (
+                <>
+                  <DoctorIcon width={40} height={40} />
+                  <Text style={styles.EntryTitleText}>Doctor</Text>
+                </>
+              ) : (
+                <>
+                  <HospitalIcon width={40} height={40} />
+                  <Text style={styles.EntryTitleText}>Hospital/Facility</Text>
+                </>
+              )}
             </View>
+            <TouchableOpacity onPress={hanleThreeDotPress}>
+              <ThreeDotIcon width={8} height={20} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ paddingTop: 10 }}>
+            {true ? (
+              <>
+                <View style={{ paddingVertical: 12, gap: 5 }}>
+                  <Text style={styles.fieldTitle}>Doctor First Name</Text>
+                  <Text style={styles.fieldValue}>Smith</Text>
+                </View>
+                <CMline />
+                <View style={{ paddingVertical: 12, gap: 5 }}>
+                  <Text style={styles.fieldTitle}>Doctor Last Name</Text>
+                  <Text style={styles.fieldValue}>Walter</Text>
+                </View>
+              </>
+            ) : (
+              <View style={{ paddingVertical: 12, gap: 5 }}>
+                <Text style={styles.fieldTitle}>Hospital/Facility</Text>
+                <Text style={styles.fieldValue}>Mayo Clinic - Rochester</Text>
+              </View>
+            )}
+
             <CMline />
             <View style={{ paddingVertical: 12, gap: 5 }}>
-              <Text style={styles.fieldTitle}>Doctor Last Name</Text>
-              <Text style={styles.fieldValue}>Walter</Text>
+              <Text style={styles.fieldTitle}>First Case Date</Text>
+              <Text style={styles.fieldValue}>22/5/2024</Text>
             </View>
-          </>
-        ) : (
-          <View style={{ paddingVertical: 12, gap: 5 }}>
-            <Text style={styles.fieldTitle}>Hospital/Facility</Text>
-            <Text style={styles.fieldValue}>Mayo Clinic - Rochester</Text>
           </View>
-        )}
-
-        <CMline />
-        <View style={{ paddingVertical: 12, gap: 5 }}>
-          <Text style={styles.fieldTitle}>First Case Date</Text>
-          <Text style={styles.fieldValue}>22/5/2024</Text>
         </View>
-      </View>
+      ))}
+
       {/* Modal only opens when modalVisible is true */}
       {modalVisible && (
         <CMModal
