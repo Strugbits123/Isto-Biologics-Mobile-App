@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
@@ -33,16 +33,14 @@ const CMEntryCard = () => {
     auth: OAuthStrategy({
       clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
     }),
-    // Include the auth strategy and host as relevant
   });
 
-  //method for get all entries of user
+  // Method to get all entries of user
   const getUserEntries = async () => {
     try {
       const options = {
         dataCollectionId: "entries",
       };
-      //get all entries by user
       const response = await myWixClient.items.queryDataItems(options).find();
       console.log("response", response);
       setEntriesData(response.items);
@@ -60,8 +58,9 @@ const CMEntryCard = () => {
   }
 
   const hanleThreeDotPress = () => {
-    setModalVisible(!modalVisible); // Open modal on profile press
+    setModalVisible(!modalVisible);
   };
+
   const handleCloseModal = () => {
     setDeleteModal(false);
   };
@@ -91,58 +90,72 @@ const CMEntryCard = () => {
     },
   ];
 
-  console.log("entriesData", entriesData);
-  return (
-    <View style={styles.container}>
-      {entriesData.map((entry, index) => (
-        <View key={index}>
-          <View style={styles.headerContainer}>
-            <View style={styles.EntryTitleIcon}>
-              {entry.data.doctor_first_name ? (
-                <>
-                  <DoctorIcon width={40} height={40} />
-                  <Text style={styles.EntryTitleText}>Doctor</Text>
-                </>
-              ) : (
-                <>
-                  <HospitalIcon width={40} height={40} />
-                  <Text style={styles.EntryTitleText}>Hospital/Facility</Text>
-                </>
-              )}
+  const renderItem = ({ item }) => (
+    <View style={styles.cardContainer}>
+      <View style={styles.headerContainer}>
+        <View style={styles.EntryTitleIcon}>
+          {item.data.doctor_firstname ? (
+            <>
+              <DoctorIcon width={40} height={40} />
+              <Text style={styles.EntryTitleText}>Doctor</Text>
+            </>
+          ) : (
+            <>
+              <HospitalIcon width={40} height={40} />
+              <Text style={styles.EntryTitleText}>Hospital/Facility</Text>
+            </>
+          )}
+        </View>
+        <TouchableOpacity onPress={hanleThreeDotPress}>
+          <ThreeDotIcon width={8} height={20} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ paddingTop: 10 }}>
+        {item.data.doctor_firstname ? (
+          <>
+            <View style={{ paddingVertical: 12, gap: 5 }}>
+              <Text style={styles.fieldTitle}>Doctor First Name</Text>
+              <Text style={styles.fieldValue}>
+                {item.data.doctor_firstname}
+              </Text>
             </View>
-            <TouchableOpacity onPress={hanleThreeDotPress}>
-              <ThreeDotIcon width={8} height={20} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ paddingTop: 10 }}>
-            {true ? (
-              <>
-                <View style={{ paddingVertical: 12, gap: 5 }}>
-                  <Text style={styles.fieldTitle}>Doctor First Name</Text>
-                  <Text style={styles.fieldValue}>Smith</Text>
-                </View>
-                <CMline />
-                <View style={{ paddingVertical: 12, gap: 5 }}>
-                  <Text style={styles.fieldTitle}>Doctor Last Name</Text>
-                  <Text style={styles.fieldValue}>Walter</Text>
-                </View>
-              </>
-            ) : (
-              <View style={{ paddingVertical: 12, gap: 5 }}>
-                <Text style={styles.fieldTitle}>Hospital/Facility</Text>
-                <Text style={styles.fieldValue}>Mayo Clinic - Rochester</Text>
-              </View>
-            )}
-
             <CMline />
             <View style={{ paddingVertical: 12, gap: 5 }}>
-              <Text style={styles.fieldTitle}>First Case Date</Text>
-              <Text style={styles.fieldValue}>22/5/2024</Text>
+              <Text style={styles.fieldTitle}>Doctor Last Name</Text>
+              <Text style={styles.fieldValue}>
+                {item.data.doctor_lastname}
+              </Text>
             </View>
+          </>
+        ) : (
+          <View style={{ paddingVertical: 12, gap: 5 }}>
+            <Text style={styles.fieldTitle}>Hospital/Facility</Text>
+            <Text style={styles.fieldValue}>
+              {item.data.hospital_name}
+            </Text>
           </View>
+        )}
+
+        <CMline />
+        <View style={{ paddingVertical: 12, gap: 5 }}>
+          <Text style={styles.fieldTitle}>First Case Date</Text>
+          <Text style={styles.fieldValue}>
+            {item.data.first_case_date}
+          </Text>
         </View>
-      ))}
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={entriesData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
 
       {/* Modal only opens when modalVisible is true */}
       {modalVisible && (
@@ -173,12 +186,18 @@ export default CMEntryCard;
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 20,
+    width: "100%",
+    height: "auto",
+  },
+  cardContainer: {
     backgroundColor: ThemeTextColors.white,
     borderRadius: 20,
     width: "100%",
     height: "auto",
     paddingVertical: 25,
     paddingHorizontal: 30,
+    marginVertical: 10,
   },
   headerContainer: {
     flexDirection: "row",
@@ -206,3 +225,4 @@ const styles = StyleSheet.create({
     color: ThemeTextColors.placeholder,
   },
 });
+
