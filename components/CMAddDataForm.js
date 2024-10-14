@@ -163,7 +163,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
 
       // Combine all data into one object
       const dataToSend = {
-        user_id: "cbf5c30a-c6b4-4624-9e84-5806d6c618e9",
+        user_id: "ee0eeaf5-663b-4c35-aeee-c1f504b91dc8",
         doctor_firstname: doctorFirstName,
         doctor_lastname: doctorLastName,
         hospital_name: hospitalName,
@@ -201,17 +201,17 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       };
 
       //query for checking if user is available in leaderboard or not
-      const response2 = await myWixClient.items
+      const getLeaderboardUsers = await myWixClient.items
         .queryDataItems(leaderboardOptions)
         .eq("user_id", response.dataItem.data.user_id)
         .find();
-      console.log("response2", response2);
+      console.log("getLeaderboardUsers", getLeaderboardUsers);
 
       //condition for if this users is first time adding a product so leaderboard accept new entry otherwise update the old entry
-      if (response2._items.length === 0) {
+      if (getLeaderboardUsers._items.length === 0) {
         console.log("item not found");
         const dataToSendInLeaderboard = {
-          user_id: "cbf5c30a-c6b4-4624-9e84-5806d6c618e9",
+          user_id: "ee0eeaf5-663b-4c35-aeee-c1f504b91dc8",
           total_magellan_points: response.dataItem.data.magellan_points,
           total_influx_points: response.dataItem.data.influx_points,
           total_sparc_points: response.dataItem.data.sparc_points,
@@ -234,28 +234,28 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       } else {
         console.log("item found");
         const dataToSendInLeaderboardForUpdate = {
-          user_id: "cbf5c30a-c6b4-4624-9e84-5806d6c618e9",
+          user_id: "ee0eeaf5-663b-4c35-aeee-c1f504b91dc8",
           total_magellan_points:
             response.dataItem.data.magellan_points +
-            response2._items[0].data.total_magellan_points,
+            getLeaderboardUsers._items[0].data.total_magellan_points,
           total_influx_points:
             response.dataItem.data.influx_points +
-            response2._items[0].data.total_influx_points,
+            getLeaderboardUsers._items[0].data.total_influx_points,
           total_sparc_points:
             response.dataItem.data.sparc_points +
-            response2._items[0].data.total_sparc_points,
+            getLeaderboardUsers._items[0].data.total_sparc_points,
           total_inqu_points:
             response.dataItem.data.inqu_points +
-            response2._items[0].data.total_inqu_points,
+            getLeaderboardUsers._items[0].data.total_inqu_points,
           total_fibrant_points:
             response.dataItem.data.fibrant_points +
-            response2._items[0].data.total_fibrant_points,
+            getLeaderboardUsers._items[0].data.total_fibrant_points,
           total_proteios_points:
             response.dataItem.data.proteios_points +
-            response2._items[0].data.total_proteios_points,
+            getLeaderboardUsers._items[0].data.total_proteios_points,
           total_entries_points:
             response.dataItem.data.total_entry_points +
-            response2._items[0].data.total_entries_points,
+            getLeaderboardUsers._items[0].data.total_entries_points,
         };
         console.log(
           "dataToSendInLeaderboardForUpdate",
@@ -267,9 +267,12 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
             data: dataToSendInLeaderboardForUpdate,
           },
         };
-        console.log("response2._items[0]._id", response2._items[0]._id);
+        console.log(
+          "getLeaderboardUsers._items[0]._id",
+          getLeaderboardUsers._items[0]._id,
+        );
         const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
-          response2._items[0]._id,
+          getLeaderboardUsers._items[0]._id,
           updateLeaderboardOptions,
         );
       }

@@ -1,7 +1,13 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-import { useFonts } from "expo-font";
+import { isLoading, useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 import HospitalIcon from "../Icons/HospitalIcon";
@@ -18,6 +24,8 @@ const CMEntryCard = () => {
   const [entriesData, setEntriesData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -37,15 +45,27 @@ const CMEntryCard = () => {
 
   // Method to get all entries of user
   const getUserEntries = async () => {
+    setIsLoading(true);
     try {
       const options = {
         dataCollectionId: "entries",
+        referencedItemOptions: [
+          {
+            fieldName: "user_id",
+            limit: 100,
+          },
+        ],
       };
-      const response = await myWixClient.items.queryDataItems(options).find();
-      console.log("response", response);
+      const response = await myWixClient.items
+        .queryDataItems(options)
+        .eq("user_id", "ad951362-37c8-4d01-a214-46cafa628440")
+        .find();
+      // console.log("response", response._items);
       setEntriesData(response.items);
     } catch (error) {
       console.log("error in getUserEntries", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,7 +77,8 @@ const CMEntryCard = () => {
     return <CMLoader size={20} />;
   }
 
-  const hanleThreeDotPress = () => {
+  const handleThreeDotPress = (item) => {
+    setSelectedItem(item);
     setModalVisible(!modalVisible);
   };
 
@@ -69,7 +90,7 @@ const CMEntryCard = () => {
     {
       label: "View",
       onPress: () => {
-        navigation.navigate("detailed_entry");
+        navigation.navigate("detailed_entry", { item: selectedItem });
         setModalVisible(!modalVisible);
       },
     },
@@ -106,7 +127,7 @@ const CMEntryCard = () => {
             </>
           )}
         </View>
-        <TouchableOpacity onPress={hanleThreeDotPress}>
+        <TouchableOpacity onPress={() => handleThreeDotPress(item)}>
           <ThreeDotIcon width={8} height={20} />
         </TouchableOpacity>
       </View>
@@ -123,38 +144,37 @@ const CMEntryCard = () => {
             <CMline />
             <View style={{ paddingVertical: 12, gap: 5 }}>
               <Text style={styles.fieldTitle}>Doctor Last Name</Text>
-              <Text style={styles.fieldValue}>
-                {item.data.doctor_lastname}
-              </Text>
+              <Text style={styles.fieldValue}>{item.data.doctor_lastname}</Text>
             </View>
           </>
         ) : (
           <View style={{ paddingVertical: 12, gap: 5 }}>
             <Text style={styles.fieldTitle}>Hospital/Facility</Text>
-            <Text style={styles.fieldValue}>
-              {item.data.hospital_name}
-            </Text>
+            <Text style={styles.fieldValue}>{item.data.hospital_name}</Text>
           </View>
         )}
 
         <CMline />
         <View style={{ paddingVertical: 12, gap: 5 }}>
           <Text style={styles.fieldTitle}>First Case Date</Text>
-          <Text style={styles.fieldValue}>
-            {item.data.first_case_date}
-          </Text>
+          <Text style={styles.fieldValue}>{item.data.first_case_date}</Text>
         </View>
       </View>
     </View>
   );
 
-  return (
+  return isLoading ? (
+    <View style={{ top: 100 }}>
+      <CMLoader size={50} />
+    </View>
+  ) : (
     <View style={styles.container}>
       <FlatList
         data={entriesData}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ paddingBottom: 230 }}
+        showsVerticalScrollIndicator={false}
       />
 
       {/* Modal only opens when modalVisible is true */}
@@ -225,4 +245,3 @@ const styles = StyleSheet.create({
     color: ThemeTextColors.placeholder,
   },
 });
-

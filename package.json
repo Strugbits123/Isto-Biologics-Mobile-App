@@ -40,6 +40,7 @@
     "expo-standard-web-crypto": "^1.8.1",
     "expo-status-bar": "^1.12.1",
     "expo-web-browser": "^13.0.3",
+    "expo-web-view": "^0.1.1",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "nativewind": "^2.0.11",

@@ -19,16 +19,18 @@ import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import Checkbox from "expo-checkbox";
 import { Link, useNavigation } from "@react-navigation/native";
-import { createClient, OAuthStrategy } from "@wix/sdk";
+import { ApiKeyStrategy, createClient, OAuthStrategy } from "@wix/sdk";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { token } from "../utils/constants";
 import CMLoader from "./CMLoader";
 import Cookies from "js-cookie";
 import { members } from "@wix/members";
+import { useLoginHandler } from "../authentication/LoginHandler";
 // import { myWixClient } from "../utils/createClient";
 
 const CMLoginForm = () => {
   const navigation = useNavigation();
+  const { login } = useLoginHandler();
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -47,12 +49,19 @@ const CMLoginForm = () => {
     setErrors((prev) => ({ ...prev, [field]: null }));
   };
 
-  // //Wix headless create client method for auth clientId
+  //Wix headless create client method for auth clientId
   const myWixClient = createClient({
     auth: OAuthStrategy({
       clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
     }),
   });
+  // const myWixClient = createClient({
+  //   auth: ApiKeyStrategy({
+  //     siteId: "e1975cd0-7e77-48df-8b36-4520fb892347",
+  //     apiKey:
+  //       "IST.eyJraWQiOiJQb3pIX2FDMiIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcIjhjNTFlZThiLWJjMGYtNGUyMy04NjdkLWU3ZmIwMmJhZTUyZFwiLFwiaWRlbnRpdHlcIjp7XCJ0eXBlXCI6XCJhcHBsaWNhdGlvblwiLFwiaWRcIjpcImM5YTNlY2ViLWYwN2UtNDU3MC04ZDFmLTMyMDg3NTFlMDAzNlwifSxcInRlbmFudFwiOntcInR5cGVcIjpcImFjY291bnRcIixcImlkXCI6XCI3YTBjZDY4MS03YzZjLTRkZTgtYTEyZS0xZmNjZDllOTVlYTlcIn19IiwiaWF0IjoxNzI4OTA0Mzk3fQ.nU2PLnlJZd0hueJ9uwyCA2GgBgBfDjhdTeFTJW-Y-LLYciA32h9frLYBBxD7paRCVjKq7qt-DUFDhYVqzdzg-gYDnz5AprO_gOG-G5pO6kLbmzrF7zmVdYmDaab1LlOSGsT6ufntvKc4ugYCZjZdyO_2LWcE6MYDN52QDiNrZgN9HjkNKRrgDovR-hG-MYveRrmKRDM_RwvhYHMKHFAIYOnf_97iR58dYxRf8n_hIe_4km5qtVrpBktZTQk9f3KxZcjr9sTVfb8dvDq_o8yI1FXGY9RoOkPMeyzGa3zpApbWbwefvNpuTeak23AmnNUJYWZZMTw9kxjURplgScpC9Q",
+  //   }),
+  // });
 
   // Centralized validation
   const validateInputs = () => {
@@ -97,17 +106,22 @@ const CMLoginForm = () => {
     if (!validateInputs()) return;
     setIsLoading(true);
     try {
-      let response = await myWixClient.auth.login({
-        email: data.email,
-        password: data.password,
-      });
+      const response =  login(data.email, data.password);
+      // let response = await myWixClient.auth.login({
+      //   email: data.email,
+      //   password: data.password,
+      // });
       console.log("response==>", response);
 
       // const { items } = await myWixClient.members.queryMembers().eq("loginEmail", data.email).find();
 
       // console.log("items", items);
 
-      // const memberTokens = await myWixClient.auth.getMemberTokensForExternalLogin("ad951362-37c8-4d01-a214-46cafa628440", "e1975cd0-7e77-48df-8b36-4520fb892347" );
+      // const memberTokens =
+      //   await myWixClient.auth.getMemberTokensForExternalLogin(
+      //     "ad951362-37c8-4d01-a214-46cafa628440",
+      //     "IST.eyJraWQiOiJQb3pIX2FDMiIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcIjhjNTFlZThiLWJjMGYtNGUyMy04NjdkLWU3ZmIwMmJhZTUyZFwiLFwiaWRlbnRpdHlcIjp7XCJ0eXBlXCI6XCJhcHBsaWNhdGlvblwiLFwiaWRcIjpcImM5YTNlY2ViLWYwN2UtNDU3MC04ZDFmLTMyMDg3NTFlMDAzNlwifSxcInRlbmFudFwiOntcInR5cGVcIjpcImFjY291bnRcIixcImlkXCI6XCI3YTBjZDY4MS03YzZjLTRkZTgtYTEyZS0xZmNjZDllOTVlYTlcIn19IiwiaWF0IjoxNzI4OTA0Mzk3fQ.nU2PLnlJZd0hueJ9uwyCA2GgBgBfDjhdTeFTJW-Y-LLYciA32h9frLYBBxD7paRCVjKq7qt-DUFDhYVqzdzg-gYDnz5AprO_gOG-G5pO6kLbmzrF7zmVdYmDaab1LlOSGsT6ufntvKc4ugYCZjZdyO_2LWcE6MYDN52QDiNrZgN9HjkNKRrgDovR-hG-MYveRrmKRDM_RwvhYHMKHFAIYOnf_97iR58dYxRf8n_hIe_4km5qtVrpBktZTQk9f3KxZcjr9sTVfb8dvDq_o8yI1FXGY9RoOkPMeyzGa3zpApbWbwefvNpuTeak23AmnNUJYWZZMTw9kxjURplgScpC9Q",
+      //   );
 
       // console.log("memberTokens", memberTokens);
 
@@ -117,7 +131,7 @@ const CMLoginForm = () => {
       // let tokens = myWixClient.auth.s();
 
       // console.log("check token for set in wix==>", tokens);
-      // myWixClient.auth.setTokens(tokens);
+      // myWixClient.auth.setTokens(memberTokens);
       // console.log("check token for set in wix", tokens);
 
       // Cookies.set(WIX_REFRESH_TOKEN, JSON.stringify(tokens.refreshToken));
@@ -144,7 +158,7 @@ const CMLoginForm = () => {
         ToastAndroid.show(response.errorCode, ToastAndroid.SHORT);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log("error in handle login", error);
     } finally {
       setIsLoading(false);
     }

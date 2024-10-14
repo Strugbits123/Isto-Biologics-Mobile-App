@@ -6,28 +6,29 @@ import CMEntryCard from "../../components/CMEntryCard";
 
 const Entries = () => {
   return (
-    <View style={styles.mainContainer}>
-      {/*  Header component */}
-      <View style={styles.headerContainer}>
-        <CMHomeHeader />
-      </View>
-
-      <ScrollView
-        style={{ top: 80 }}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/*  heading of Entries page  */}
-        <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>Entires</Text>
+    <>
+      <View style={styles.mainContainer}>
+        {/*  Header component */}
+        <View style={styles.headerContainer}>
+          <CMHomeHeader />
         </View>
 
+        <View
+          style={{ top: 80 }}
+          contentContainerStyle={styles.scrollViewContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/*  heading of Entries page  */}
+          <View style={styles.headingContainer}>
+            <Text style={styles.headingText}>Entires</Text>
+          </View>
+        </View>
         {/*  Entries Card Component  */}
         <View style={styles.cardContainer}>
           <CMEntryCard />
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </>
   );
 };
 
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     paddingHorizontal: 29,
-    top: 30,
+    top: 100,
   },
   headingContainer: {
     flexDirection: "row",

@@ -28,7 +28,7 @@ const Leaderboard = () => {
   const [headerData, setHeaderData] = useState({});
   const [productCategory, setProductCategory] = useState("Leaderboard");
   const [LeaderboardData, setLeaderboardData] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -44,6 +44,7 @@ const Leaderboard = () => {
   });
   // let leaderboardData = [];
   const getLeaderboardData = async () => {
+    setIsLoading(true);
     try {
       const options = {
         dataCollectionId: "leaderboard",
@@ -60,16 +61,22 @@ const Leaderboard = () => {
         .find();
       console.log("getLeaderboardData", getLeaderboardData._items);
 
-      setLeaderboardData(getLeaderboardData._items);
-      //  leaderboardData = getLeaderboardData._items;
+      //sort highest to lowest according to the point
+      const sortedData = getLeaderboardData._items.sort(
+        (a, b) => b.data.total_entries_points - a.data.total_entries_points,
+      );
+
+      setLeaderboardData(sortedData);
     } catch (error) {
       console.log("error in queryDataItems", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     getLeaderboardData();
-  }, []);
+  }, [productCategory]);
 
   //product categories for filter or navigation in screen
   const productCategories = [
@@ -81,6 +88,8 @@ const Leaderboard = () => {
     "Fibrant",
     "ProteiOS",
   ];
+
+  //data dynamic show all categories when navigate categories
   useEffect(() => {
     // Function to set header data based on productCategory
     const updateHeaderData = () => {
@@ -94,6 +103,7 @@ const Leaderboard = () => {
               color: ThemeBgColors.white,
             },
             rankingName: ThemeTextColors.white,
+            points: true,
           });
           break;
         case "Influx":
@@ -220,15 +230,20 @@ const Leaderboard = () => {
   // Render a single leaderboard item
 
   console.log("leaderboardData==>", LeaderboardData);
-  const renderItem = ({ item }) => {
-    // const myRank = "05"; // Example: Your rank is 02
-    // const isMyRank = item.rank === myRank;
-    let myRank = item.data.user_id._id = "af0ee3cb-1403-486c-a239-338b6f740759"
-    console.log("item==>", item);
+
+  //flatlist rederItem function for render list
+  const renderItem = ({ item, index }) => {
+    // Example: Define your ID to compare for checking if it's "myRank"
+    const myRankId = "777269e0-1e3c-450d-9e96-6c643119dec1";
+    const isMyRank = item.data.user_id._id === myRankId;
+
+    // Adjust the index to start ranking from 4
+    const rank = index + 4; // Start rank from 4 instead of 1
+
     return (
-      <>
+      <View key={item.data.user_id._id}>
         {/* Apply gradient only if it's my rank */}
-        {myRank ? (
+        {isMyRank ? (
           <LinearGradient
             colors={["rgba(240, 80, 37, 0.2)", "rgba(240, 80, 37, 0.03)"]}
             start={{ x: 0, y: 1 }}
@@ -238,9 +253,8 @@ const Leaderboard = () => {
               styles.myRankContainer, // Special styling for my rank
             ]}
           >
-            <Text style={[styles.rankText, styles.myRankText]}>
-              {item.total_entries_points}
-            </Text>
+            {/* Render adjusted rank using rank variable */}
+            <Text style={[styles.rankText, styles.myRankText]}>{rank}</Text>
             {item.data.user_id.profilePhoto ? (
               <Image
                 source={{ uri: item.data.user_id.profilePhoto }}
@@ -252,9 +266,7 @@ const Leaderboard = () => {
               </View>
             )}
             <Text style={[styles.nameText, styles.myRankText]}>
-              {item.data.user_id.firstName
-                ? item.data.user_id.firstName
-                : item.data.user_id.nickname}
+              {item.data.user_id.firstName || item.data.user_id.nickname}
             </Text>
             <Text style={[styles.scoreText, styles.myRankText]}>
               {item.data.total_entries_points}
@@ -263,9 +275,8 @@ const Leaderboard = () => {
         ) : (
           // Default item layout for other ranks
           <View style={styles.itemContainer}>
-            <Text style={styles.rankText}>
-              {item.data.total_entries_points}
-            </Text>
+            {/* Render adjusted rank using rank variable */}
+            <Text style={styles.rankText}>{rank}</Text>
             {item.data.user_id.profilePhoto ? (
               <Image
                 source={{ uri: item.data.user_id.profilePhoto }}
@@ -276,14 +287,16 @@ const Leaderboard = () => {
                 <MenIcon width={25} height={21} />
               </View>
             )}
-            <Text style={styles.nameText}>{item.data.user_id.firstName}</Text>
+            <Text style={styles.nameText}>
+              {item.data.user_id.firstName || item.data.user_id.nickname}
+            </Text>
             <Text style={styles.scoreText}>
               {item.data.total_entries_points}
             </Text>
           </View>
         )}
         <CMline />
-      </>
+      </View>
     );
   };
 
@@ -312,7 +325,7 @@ const Leaderboard = () => {
         />
       </View>
 
-      {/* container for ranking 1 2 3  */}
+      {/* container for ranking 1 2 3 */}
       <View
         style={{
           flexDirection: "row",
@@ -328,12 +341,18 @@ const Leaderboard = () => {
           <View
             style={{ gap: 5, justifyContent: "center", alignItems: "center" }}
           >
-            {/* when this condition got true so render image and must size is 60 60  */}
+            {/* Profile image or placeholder for Rank 02 */}
             <View style={styles.imageContainer}>
-              {true ? (
-                <MenIcon width={17} height={21} />
+              {LeaderboardData.length > 1 &&
+              LeaderboardData[1].data.user_id.profilePhoto ? (
+                <Image
+                  source={{ uri: LeaderboardData[1].data.user_id.profilePhoto }}
+                  style={styles.positionsProfileImage}
+                />
               ) : (
-                <MenIcon width={17} height={21} />
+                <View style={styles.positionsProfileImage}>
+                  <MenIcon width={30} height={30} />
+                </View>
               )}
             </View>
             <Text
@@ -343,10 +362,13 @@ const Leaderboard = () => {
                 color: headerData.rankingName,
               }}
             >
-              Alan Walter
+              {LeaderboardData.length > 1
+                ? LeaderboardData[1].data.user_id.firstName ||
+                  LeaderboardData[1].data.user_id.nickname
+                : "No User"}
             </Text>
           </View>
-          {/* rank number container  */}
+          {/* Rank number container */}
           <View>
             <LinearGradient
               colors={[rankBgColors.secondRank1, rankBgColors.secondRank2]}
@@ -358,13 +380,14 @@ const Leaderboard = () => {
             </LinearGradient>
           </View>
         </View>
+
         {/* container rank 01 */}
         <View style={{ gap: 15, flex: 1 }}>
           {/* profile and name container */}
           <View
             style={{ gap: 5, justifyContent: "center", alignItems: "center" }}
           >
-            {/* when this condition got true so render image and must size is 60 60  */}
+            {/* Profile image or placeholder for Rank 01 */}
             <View>
               <View
                 style={{
@@ -376,10 +399,24 @@ const Leaderboard = () => {
                 <CrownIcon width={30} height={30} />
               </View>
               <View style={styles.imageContainerCrown}>
-                {true ? (
-                  <MenIcon width={17} height={21} />
+                {LeaderboardData.length > 0 &&
+                LeaderboardData[0].data.user_id.profilePhoto ? (
+                  <Image
+                    source={{
+                      uri: LeaderboardData[0].data.user_id.profilePhoto,
+                    }}
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: 65,
+                      height: 65,
+                      borderRadius: 30,
+                    }}
+                  />
                 ) : (
-                  <MenIcon width={17} height={21} />
+                  <View style={styles.positionsProfileImage}>
+                    <MenIcon width={30} height={30} />
+                  </View>
                 )}
               </View>
             </View>
@@ -390,10 +427,13 @@ const Leaderboard = () => {
                 color: headerData.rankingName,
               }}
             >
-              Alice Warren
+              {LeaderboardData.length > 0
+                ? LeaderboardData[0].data.user_id.firstName ||
+                  LeaderboardData[0].data.user_id.nickname
+                : "No User"}
             </Text>
           </View>
-          {/* rank number container  */}
+          {/* Rank number container */}
           <View>
             <LinearGradient
               colors={[rankBgColors.firstRank1, rankBgColors.firstRank2]}
@@ -405,18 +445,25 @@ const Leaderboard = () => {
             </LinearGradient>
           </View>
         </View>
+
         {/* container rank 03 */}
         <View style={{ gap: 15, top: 75, flex: 1 }}>
           {/* profile and name container */}
           <View
             style={{ gap: 5, justifyContent: "center", alignItems: "center" }}
           >
-            {/* when this condition got true so render image and must size is 60 60  */}
+            {/* Profile image or placeholder for Rank 03 */}
             <View style={styles.imageContainer}>
-              {true ? (
-                <MenIcon width={17} height={21} />
+              {LeaderboardData.length > 2 &&
+              LeaderboardData[2].data.user_id.profilePhoto ? (
+                <Image
+                  source={{ uri: LeaderboardData[2].data.user_id.profilePhoto }}
+                  style={styles.positionsProfileImage}
+                />
               ) : (
-                <MenIcon width={17} height={21} />
+                <View style={styles.positionsProfileImage}>
+                  <MenIcon width={30} height={30} />
+                </View>
               )}
             </View>
             <Text
@@ -426,10 +473,13 @@ const Leaderboard = () => {
                 color: headerData.rankingName,
               }}
             >
-              Nial Anderson
+              {LeaderboardData.length > 2
+                ? LeaderboardData[2].data.user_id.firstName ||
+                  LeaderboardData[2].data.user_id.nickname
+                : "No User"}
             </Text>
           </View>
-          {/* rank number container  */}
+          {/* Rank number container */}
           <View>
             <LinearGradient
               colors={[rankBgColors.thirdRank1, rankBgColors.thirdRank2]}
@@ -473,15 +523,21 @@ const Leaderboard = () => {
             ))}
           </ScrollView>
         </View>
-        <View style={{ flex: 1 }}>
-          <FlatList
-            data={LeaderboardData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-            contentContainerStyle={styles.listContainer}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
+        {isLoading ? (
+          <View style={{ flex: 1, top: 50 }}>
+            <CMLoader size={50} />
+          </View>
+        ) : (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={LeaderboardData.slice(3)}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContainer}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        )}
       </View>
     </LinearGradient>
   );
@@ -614,6 +670,13 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderColor: ThemeTextColors.darkGray1,
     borderWidth: 1,
+  },
+  positionsProfileImage: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 25,
   },
   nameText: {
     fontFamily: "Jakarta-Sans-Semi-bold",

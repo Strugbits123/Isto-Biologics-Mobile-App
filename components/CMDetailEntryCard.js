@@ -8,10 +8,13 @@ import HospitalIcon from "../Icons/HospitalIcon";
 import DoctorIcon from "../Icons/DoctorIcon";
 import ThreeDotIcon from "../Icons/ThreeDotIcon";
 import CMModal from "./CMModal";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
 
 const CMDetailEntryCard = () => {
+  const route = useRoute();
+  const { item } = route.params;
+
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -24,6 +27,8 @@ const CMDetailEntryCard = () => {
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
+
+  console.log("itemData", item.data);
 
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
@@ -85,7 +90,7 @@ const CMDetailEntryCard = () => {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.EntryTitleIcon}>
-          {true ? (
+          {item.data.doctor_firstname ? (
             <>
               <DoctorIcon width={40} height={40} />
               <Text style={styles.EntryTitleText}>Doctor</Text>
@@ -103,27 +108,31 @@ const CMDetailEntryCard = () => {
       </View>
 
       <View style={{ paddingTop: 10 }}>
-        {true && (
+        {item.data.doctor_firstname && (
           <>
             <View style={{ paddingVertical: 12, gap: 5 }}>
               <Text style={styles.fieldTitle}>Doctor First Name</Text>
-              <Text style={styles.fieldValue}>Smith</Text>
+              <Text style={styles.fieldValue}>
+                {item.data.doctor_firstname}
+              </Text>
             </View>
             <CMline />
             <View style={{ paddingVertical: 12, gap: 5 }}>
               <Text style={styles.fieldTitle}>Doctor Last Name</Text>
-              <Text style={styles.fieldValue}>Walter</Text>
+              <Text style={styles.fieldValue}>
+                {item.data.doctor_firstname}
+              </Text>
             </View>
           </>
         )}
         <View style={{ paddingVertical: 12, gap: 5 }}>
           <Text style={styles.fieldTitle}>Hospital/Facility</Text>
-          <Text style={styles.fieldValue}>Mayo Clinic - Rochester</Text>
+          <Text style={styles.fieldValue}>{item.data.hospital_name}</Text>
         </View>
         <CMline />
         <View style={{ paddingVertical: 12, gap: 5 }}>
           <Text style={styles.fieldTitle}>First Case Date</Text>
-          <Text style={styles.fieldValue}>22/5/2024</Text>
+          <Text style={styles.fieldValue}>{item.data.first_case_date}</Text>
         </View>
         <CMline />
       </View>
@@ -133,23 +142,18 @@ const CMDetailEntryCard = () => {
           <Text style={styles.titleHeading}>Product Line</Text>
         </View>
 
-        <View  style={{ paddingTop: 10 }}>
+        <View style={{ paddingTop: 10 }}>
           {/* Dynamically render categories and their products */}
-          {categories.map((category) => (
-            <View
-              key={category.categoryName}
-              style={styles.containerSelectCategory}
-            >
+          {item.data.magellan_category.length > 0 && (
+            <View style={styles.containerSelectCategory}>
               <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>
-                  {category.categoryName}
-                </Text>
+                <Text style={styles.selectorTitle}>Magellan</Text>
               </View>
 
               {/* Render products of each category */}
-              {true && (
+              {item.data.magellan_category && (
                 <View style={styles.dropDownContainer}>
-                  {category.products.map((product, index) => (
+                  {item.data.magellan_category.map((product, index) => (
                     <View style={{ paddingVertical: 2 }} key={index}>
                       <Text
                         style={{
@@ -158,7 +162,7 @@ const CMDetailEntryCard = () => {
                           color: ThemeTextColors.lightGray,
                         }}
                       >
-                        {product.label}
+                        {product}
                       </Text>
                     </View>
                   ))}
@@ -167,7 +171,147 @@ const CMDetailEntryCard = () => {
 
               <CMline />
             </View>
-          ))}
+          )}
+          {item.data.influx_category.length > 0 && (
+            <View style={styles.containerSelectCategory}>
+              <View style={styles.selectorInput}>
+                <Text style={styles.selectorTitle}>Influx</Text>
+              </View>
+
+              {/* Render products of each category */}
+              {item.data.influx_category && (
+                <View style={styles.dropDownContainer}>
+                  {item.data.influx_category.map((product, index) => (
+                    <View style={{ paddingVertical: 2 }} key={index}>
+                      <Text
+                        style={{
+                          fontFamily: "Jakarta-Sans-Medium",
+                          fontSize: 14,
+                          color: ThemeTextColors.lightGray,
+                        }}
+                      >
+                        {product}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <CMline />
+            </View>
+          )}
+          {item.data.sparc_category.length > 0 && (
+            <View style={styles.containerSelectCategory}>
+              <View style={styles.selectorInput}>
+                <Text style={styles.selectorTitle}>SPARC</Text>
+              </View>
+
+              {/* Render products of each category */}
+              {item.data.sparc_category && (
+                <View style={styles.dropDownContainer}>
+                  {item.data.sparc_category.map((product, index) => (
+                    <View style={{ paddingVertical: 2 }} key={index}>
+                      <Text
+                        style={{
+                          fontFamily: "Jakarta-Sans-Medium",
+                          fontSize: 14,
+                          color: ThemeTextColors.lightGray,
+                        }}
+                      >
+                        {product}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <CMline />
+            </View>
+          )}
+          {item.data.inqu_category.length > 0 && (
+            <View style={styles.containerSelectCategory}>
+              <View style={styles.selectorInput}>
+                <Text style={styles.selectorTitle}>InQu</Text>
+              </View>
+
+              {/* Render products of each category */}
+              {item.data.inqu_category && (
+                <View style={styles.dropDownContainer}>
+                  {item.data.inqu_category.map((product, index) => (
+                    <View style={{ paddingVertical: 2 }} key={index}>
+                      <Text
+                        style={{
+                          fontFamily: "Jakarta-Sans-Medium",
+                          fontSize: 14,
+                          color: ThemeTextColors.lightGray,
+                        }}
+                      >
+                        {product}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <CMline />
+            </View>
+          )}
+          {item.data.fibrant_category.length > 0 && (
+            <View style={styles.containerSelectCategory}>
+              <View style={styles.selectorInput}>
+                <Text style={styles.selectorTitle}>Fibrant</Text>
+              </View>
+
+              {/* Render products of each category */}
+              {item.data.fibrant_category && (
+                <View style={styles.dropDownContainer}>
+                  {item.data.fibrant_category.map((product, index) => (
+                    <View style={{ paddingVertical: 2 }} key={index}>
+                      <Text
+                        style={{
+                          fontFamily: "Jakarta-Sans-Medium",
+                          fontSize: 14,
+                          color: ThemeTextColors.lightGray,
+                        }}
+                      >
+                        {product}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <CMline />
+            </View>
+          )}
+          {item.data.proteios_category.length > 0 && (
+            <View style={styles.containerSelectCategory}>
+              <View style={styles.selectorInput}>
+                <Text style={styles.selectorTitle}>ProteiOS</Text>
+              </View>
+
+              {/* Render products of each category */}
+              {item.data.proteios_category && (
+                <View style={styles.dropDownContainer}>
+                  {item.data.proteios_category.map((product, index) => (
+                    <View style={{ paddingVertical: 2 }} key={index}>
+                      <Text
+                        style={{
+                          fontFamily: "Jakarta-Sans-Medium",
+                          fontSize: 14,
+                          color: ThemeTextColors.lightGray,
+                        }}
+                      >
+                        {product}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <CMline />
+            </View>
+          )}
         </View>
       </View>
 
