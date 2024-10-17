@@ -14,7 +14,7 @@ const Entries = () => {
         </View>
 
         <View
-          style={{ top: 80 }}
+          style={{ top: 90 }}
           contentContainerStyle={styles.scrollViewContent}
           showsVerticalScrollIndicator={false}
         >

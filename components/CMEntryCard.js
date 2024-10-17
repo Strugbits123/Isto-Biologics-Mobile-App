@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { items } from "@wix/data";
+import { myWixClient } from "../utils/createClient";
 
 const CMEntryCard = () => {
   const navigation = useNavigation();
@@ -26,6 +27,9 @@ const CMEntryCard = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [modalIndex, setModalIndex] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -36,12 +40,12 @@ const CMEntryCard = () => {
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
 
-  const myWixClient = createClient({
-    modules: { items },
-    auth: OAuthStrategy({
-      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-    }),
-  });
+  // const myWixClient = createClient({
+  //   modules: { items },
+  //   auth: OAuthStrategy({
+  //     clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
+  //   }),
+  // });
 
   // Method to get all entries of user
   const getUserEntries = async () => {
@@ -69,21 +73,110 @@ const CMEntryCard = () => {
     }
   };
 
+  // Pull-to-refresh handler
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getUserEntries(); // Refresh data
+    setRefreshing(false); // End refreshing state
+  };
+
   useEffect(() => {
     getUserEntries();
-  }, []);
+  }, [refresh]);
 
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
   }
 
-  const handleThreeDotPress = (item) => {
+  // Three dot press opens a dropdown for view entry, update, and delete
+  const handleThreeDotPress = (item, index) => {
     setSelectedItem(item);
-    setModalVisible(!modalVisible);
+    if (modalIndex === index) {
+      // If the modal is already open for the same item, close it
+      setModalIndex(null);
+    } else {
+      // Otherwise, open the modal for this item
+      setModalIndex(index);
+    }
   };
 
+  //handle close modal function
   const handleCloseModal = () => {
     setDeleteModal(false);
+    setModalIndex(null);
+  };
+
+  //handle delete entry function
+  const handleDeleteEntry = async (selectedItem) => {
+    try {
+      //first we delete entry from entries collection
+      console.log("selectedItem", selectedItem);
+
+      const deleteEntryOptions = {
+        dataCollectionId: "entries",
+      };
+      const deletedItemResponse = await myWixClient.items.removeDataItem(
+        selectedItem._id,
+        deleteEntryOptions,
+      );
+
+      const leaderboardOptions = {
+        dataCollectionId: "leaderboard",
+      };
+      console.log(
+        " selectedItem.data.user_id._id",
+        selectedItem.data.user_id._id,
+      );
+      //get leaderboard data for subtract points
+      const getLeaderboardUsers = await myWixClient.items
+        .queryDataItems(leaderboardOptions)
+        .eq("user_id", selectedItem.data.user_id._id)
+        .find();
+      console.log("getLeaderboardUsers", getLeaderboardUsers);
+
+      const updateLeaderboardPoints = {
+        user_id: selectedItem.data.user_id._id,
+        total_magellan_points:
+          getLeaderboardUsers._items[0].data.total_magellan_points -
+          selectedItem.data.magellan_points,
+        total_influx_points:
+          getLeaderboardUsers._items[0].data.total_influx_points -
+          selectedItem.data.influx_points,
+        total_sparc_points:
+          getLeaderboardUsers._items[0].data.total_sparc_points -
+          selectedItem.data.sparc_points,
+        total_inqu_points:
+          getLeaderboardUsers._items[0].data.total_inqu_points -
+          selectedItem.data.inqu_points,
+        total_fibrant_points:
+          getLeaderboardUsers._items[0].data.total_fibrant_points -
+          selectedItem.data.fibrant_points,
+        total_proteios_points:
+          getLeaderboardUsers._items[0].data.total_proteios_points -
+          selectedItem.data.proteios_points,
+        total_entries_points:
+          getLeaderboardUsers._items[0].data.total_entries_points -
+          selectedItem.data.total_entry_points,
+      };
+      console.log("updateLeaderboardPoints", updateLeaderboardPoints);
+      const updateLeaderboardOptions = {
+        dataCollectionId: "leaderboard",
+        dataItem: {
+          data: updateLeaderboardPoints,
+        },
+      };
+      console.log(
+        "getLeaderboardUsers._items[0]._id",
+        getLeaderboardUsers._items[0]._id,
+      );
+      const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
+        getLeaderboardUsers._items[0]._id,
+        updateLeaderboardOptions,
+      );
+      setRefresh(!refresh);
+    } catch (error) {
+      console.log("error in handleDeleteEntry", error);
+    }
   };
 
   const options = [
@@ -92,13 +185,15 @@ const CMEntryCard = () => {
       onPress: () => {
         navigation.navigate("detailed_entry", { item: selectedItem });
         setModalVisible(!modalVisible);
+        setModalIndex(null);
       },
     },
     {
-      label: "Update",
+      label: "Edit",
       onPress: () => {
-        navigation.navigate("add_data");
+        navigation.navigate("add_data", { item: selectedItem });
         setModalVisible(!modalVisible);
+        setModalIndex(null);
       },
     },
     {
@@ -106,12 +201,14 @@ const CMEntryCard = () => {
       onPress: () => {
         setDeleteModal(true);
         setModalVisible(!modalVisible);
+        setModalIndex(null);
       },
       textStyle: { color: "red" },
     },
   ];
 
-  const renderItem = ({ item }) => (
+  // Render each entry card
+  const renderItem = ({ item, index }) => (
     <View style={styles.cardContainer}>
       <View style={styles.headerContainer}>
         <View style={styles.EntryTitleIcon}>
@@ -127,7 +224,7 @@ const CMEntryCard = () => {
             </>
           )}
         </View>
-        <TouchableOpacity onPress={() => handleThreeDotPress(item)}>
+        <TouchableOpacity onPress={() => handleThreeDotPress(item, index)}>
           <ThreeDotIcon width={8} height={20} />
         </TouchableOpacity>
       </View>
@@ -160,6 +257,19 @@ const CMEntryCard = () => {
           <Text style={styles.fieldValue}>{item.data.first_case_date}</Text>
         </View>
       </View>
+
+      {/* Modal only opens for the current entry */}
+      {modalIndex === index && (
+        <CMModal
+          options={options}
+          isVisible={modalIndex === index}
+          modalStyle={{
+            position: "absolute",
+            right: 40,
+            top: 40,
+          }}
+        />
+      )}
     </View>
   );
 
@@ -171,29 +281,36 @@ const CMEntryCard = () => {
     <View style={styles.container}>
       <FlatList
         data={entriesData}
-        renderItem={renderItem}
+        renderItem={entriesData.length > 0 ? renderItem : null}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 230 }}
+        contentContainerStyle={{
+          paddingBottom: 230,
+        }}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          // Show a message when the list is empty
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 16,
+              color: ThemeTextColors.placeholder,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            No entries available. Pull down to refresh.
+          </Text>
+        }
+        refreshing={refreshing} // Bind refreshing state to FlatList
+        onRefresh={onRefresh} // Handle pull-to-refresh action
       />
 
-      {/* Modal only opens when modalVisible is true */}
-      {modalVisible && (
-        <CMModal
-          options={options}
-          isVisible={modalVisible}
-          modalStyle={{
-            position: "absolute",
-            right: 40,
-            top: 40,
-          }}
-        />
-      )}
+      {/* delete confirmation modal */}
       {deleteModal && (
         <CMConfirmationModal
           onCancel={handleCloseModal}
           onConfirm={() => {
-            console.log("Item Deleted");
+            handleDeleteEntry(selectedItem);
             handleCloseModal();
           }}
         />

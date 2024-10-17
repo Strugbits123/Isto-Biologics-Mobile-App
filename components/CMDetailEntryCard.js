@@ -10,6 +10,8 @@ import ThreeDotIcon from "../Icons/ThreeDotIcon";
 import CMModal from "./CMModal";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
+import { items } from "@wix/data";
+import { createClient, OAuthStrategy } from "@wix/sdk";
 
 const CMDetailEntryCard = () => {
   const route = useRoute();
@@ -18,6 +20,15 @@ const CMDetailEntryCard = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const myWixClient = createClient({
+    modules: { items },
+    auth: OAuthStrategy({
+      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
+    }),
+    // Include the auth strategy and host as relevant
+  });
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -28,56 +39,98 @@ const CMDetailEntryCard = () => {
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
 
-  console.log("itemData", item.data);
-
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
   }
 
-  const hanleThreeDotPress = () => {
-    setModalVisible(!modalVisible); // Open modal on profile press
+  const hanleThreeDotPress = (item) => {
+    setSelectedItem(item);
+    setModalVisible(!modalVisible);
   };
+
   const handleCloseModal = () => {
     setDeleteModal(false);
   };
 
-  // Categories and their respective products
-  const categories = [
-    {
-      categoryName: "Magellan",
-      products: [
-        { label: "PRP Kit", value: "prpkit" },
-        { label: "Mar0 Kit", value: "marokit" },
-        { label: "Machine", value: "machine" },
-      ],
-    },
-    {
-      categoryName: "Influx",
-      products: [
-        { label: "Cortical Fibers", value: "corticalFibers" },
-        { label: "PLUS Flow", value: "plusFlow" },
-        { label: "PLUS Crunch", value: "plusCrunch" },
-      ],
-    },
-  ];
+  //handle delete entry function
+  const handleDeleteEntry = async (selectedItem) => {
+    try {
+      //first we delete entry from entries collection
+      console.log("selectedItem", selectedItem);
+
+      const deleteEntryOptions = {
+        dataCollectionId: "entries",
+      };
+      const deletedItemResponse = await myWixClient.items.removeDataItem(
+        selectedItem._id,
+        deleteEntryOptions,
+      );
+
+      const leaderboardOptions = {
+        dataCollectionId: "leaderboard",
+      };
+  
+      //get leaderboard data for subtract points
+      const getLeaderboardUsers = await myWixClient.items
+        .queryDataItems(leaderboardOptions)
+        .eq("user_id", selectedItem.data.user_id._id)
+        .find();
+      console.log("getLeaderboardUsers", getLeaderboardUsers);
+
+      const updateLeaderboardPoints = {
+        user_id: selectedItem.data.user_id._id,
+        total_magellan_points:
+          getLeaderboardUsers._items[0].data.total_magellan_points -
+          selectedItem.data.magellan_points,
+        total_influx_points:
+          getLeaderboardUsers._items[0].data.total_influx_points -
+          selectedItem.data.influx_points,
+        total_sparc_points:
+          getLeaderboardUsers._items[0].data.total_sparc_points -
+          selectedItem.data.sparc_points,
+        total_inqu_points:
+          getLeaderboardUsers._items[0].data.total_inqu_points -
+          selectedItem.data.inqu_points,
+        total_fibrant_points:
+          getLeaderboardUsers._items[0].data.total_fibrant_points -
+          selectedItem.data.fibrant_points,
+        total_proteios_points:
+          getLeaderboardUsers._items[0].data.total_proteios_points -
+          selectedItem.data.proteios_points,
+        total_entries_points:
+          getLeaderboardUsers._items[0].data.total_entries_points -
+          selectedItem.data.total_entry_points,
+      };
+      console.log("updateLeaderboardPoints", updateLeaderboardPoints);
+      const updateLeaderboardOptions = {
+        dataCollectionId: "leaderboard",
+        dataItem: {
+          data: updateLeaderboardPoints,
+        },
+      };
+    
+      const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
+        getLeaderboardUsers._items[0]._id,
+        updateLeaderboardOptions,
+      );
+      navigation.replace("Bottom_Navigation", {
+        screen: "entries",
+      });
+    } catch (error) {
+      console.log("error in handleDeleteEntry", error);
+    }
+  };
 
   const options = [
     {
-      label: "View",
+      label: "Edit",
       onPress: () => {
-        navigation.navigate("detailed_entry");
+        navigation.navigate("add_data", { item: selectedItem });
         setModalVisible(!modalVisible);
       },
     },
     {
-      label: "Update",
-      onPress: () => {
-        navigation.navigate("add_data");
-        setModalVisible(!modalVisible);
-      },
-    },
-    {
-      label: "delete",
+      label: "Delete",
       onPress: () => {
         setDeleteModal(true);
         setModalVisible(!modalVisible);
@@ -85,6 +138,29 @@ const CMDetailEntryCard = () => {
       textStyle: { color: "red" },
     },
   ];
+
+  // Reusable component for rendering a product category
+  const renderCategory = (categoryName, products) => {
+    return (
+      products.length > 0 && (
+        <View style={styles.containerSelectCategory}>
+          <View style={styles.selectorInput}>
+            <Text style={styles.selectorTitle}>{categoryName}</Text>
+          </View>
+
+          <View style={styles.dropDownContainer}>
+            {products.map((product, index) => (
+              <View style={{ paddingVertical: 2 }} key={index}>
+                <Text style={styles.productText}>{product}</Text>
+              </View>
+            ))}
+          </View>
+
+          <CMline />
+        </View>
+      )
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -102,7 +178,7 @@ const CMDetailEntryCard = () => {
             </>
           )}
         </View>
-        <TouchableOpacity onPress={hanleThreeDotPress}>
+        <TouchableOpacity onPress={() => hanleThreeDotPress(item)}>
           <ThreeDotIcon width={8} height={20} />
         </TouchableOpacity>
       </View>
@@ -110,27 +186,27 @@ const CMDetailEntryCard = () => {
       <View style={{ paddingTop: 10 }}>
         {item.data.doctor_firstname && (
           <>
-            <View style={{ paddingVertical: 12, gap: 5 }}>
+            <View style={styles.fieldContainer}>
               <Text style={styles.fieldTitle}>Doctor First Name</Text>
               <Text style={styles.fieldValue}>
                 {item.data.doctor_firstname}
               </Text>
             </View>
             <CMline />
-            <View style={{ paddingVertical: 12, gap: 5 }}>
+            <View style={styles.fieldContainer}>
               <Text style={styles.fieldTitle}>Doctor Last Name</Text>
-              <Text style={styles.fieldValue}>
-                {item.data.doctor_firstname}
-              </Text>
+              <Text style={styles.fieldValue}>{item.data.doctor_lastname}</Text>
             </View>
           </>
         )}
-        <View style={{ paddingVertical: 12, gap: 5 }}>
+
+        <View style={styles.fieldContainer}>
           <Text style={styles.fieldTitle}>Hospital/Facility</Text>
           <Text style={styles.fieldValue}>{item.data.hospital_name}</Text>
         </View>
         <CMline />
-        <View style={{ paddingVertical: 12, gap: 5 }}>
+
+        <View style={styles.fieldContainer}>
           <Text style={styles.fieldTitle}>First Case Date</Text>
           <Text style={styles.fieldValue}>{item.data.first_case_date}</Text>
         </View>
@@ -143,179 +219,16 @@ const CMDetailEntryCard = () => {
         </View>
 
         <View style={{ paddingTop: 10 }}>
-          {/* Dynamically render categories and their products */}
-          {item.data.magellan_category.length > 0 && (
-            <View style={styles.containerSelectCategory}>
-              <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>Magellan</Text>
-              </View>
-
-              {/* Render products of each category */}
-              {item.data.magellan_category && (
-                <View style={styles.dropDownContainer}>
-                  {item.data.magellan_category.map((product, index) => (
-                    <View style={{ paddingVertical: 2 }} key={index}>
-                      <Text
-                        style={{
-                          fontFamily: "Jakarta-Sans-Medium",
-                          fontSize: 14,
-                          color: ThemeTextColors.lightGray,
-                        }}
-                      >
-                        {product}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <CMline />
-            </View>
-          )}
-          {item.data.influx_category.length > 0 && (
-            <View style={styles.containerSelectCategory}>
-              <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>Influx</Text>
-              </View>
-
-              {/* Render products of each category */}
-              {item.data.influx_category && (
-                <View style={styles.dropDownContainer}>
-                  {item.data.influx_category.map((product, index) => (
-                    <View style={{ paddingVertical: 2 }} key={index}>
-                      <Text
-                        style={{
-                          fontFamily: "Jakarta-Sans-Medium",
-                          fontSize: 14,
-                          color: ThemeTextColors.lightGray,
-                        }}
-                      >
-                        {product}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <CMline />
-            </View>
-          )}
-          {item.data.sparc_category.length > 0 && (
-            <View style={styles.containerSelectCategory}>
-              <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>SPARC</Text>
-              </View>
-
-              {/* Render products of each category */}
-              {item.data.sparc_category && (
-                <View style={styles.dropDownContainer}>
-                  {item.data.sparc_category.map((product, index) => (
-                    <View style={{ paddingVertical: 2 }} key={index}>
-                      <Text
-                        style={{
-                          fontFamily: "Jakarta-Sans-Medium",
-                          fontSize: 14,
-                          color: ThemeTextColors.lightGray,
-                        }}
-                      >
-                        {product}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <CMline />
-            </View>
-          )}
-          {item.data.inqu_category.length > 0 && (
-            <View style={styles.containerSelectCategory}>
-              <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>InQu</Text>
-              </View>
-
-              {/* Render products of each category */}
-              {item.data.inqu_category && (
-                <View style={styles.dropDownContainer}>
-                  {item.data.inqu_category.map((product, index) => (
-                    <View style={{ paddingVertical: 2 }} key={index}>
-                      <Text
-                        style={{
-                          fontFamily: "Jakarta-Sans-Medium",
-                          fontSize: 14,
-                          color: ThemeTextColors.lightGray,
-                        }}
-                      >
-                        {product}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <CMline />
-            </View>
-          )}
-          {item.data.fibrant_category.length > 0 && (
-            <View style={styles.containerSelectCategory}>
-              <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>Fibrant</Text>
-              </View>
-
-              {/* Render products of each category */}
-              {item.data.fibrant_category && (
-                <View style={styles.dropDownContainer}>
-                  {item.data.fibrant_category.map((product, index) => (
-                    <View style={{ paddingVertical: 2 }} key={index}>
-                      <Text
-                        style={{
-                          fontFamily: "Jakarta-Sans-Medium",
-                          fontSize: 14,
-                          color: ThemeTextColors.lightGray,
-                        }}
-                      >
-                        {product}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <CMline />
-            </View>
-          )}
-          {item.data.proteios_category.length > 0 && (
-            <View style={styles.containerSelectCategory}>
-              <View style={styles.selectorInput}>
-                <Text style={styles.selectorTitle}>ProteiOS</Text>
-              </View>
-
-              {/* Render products of each category */}
-              {item.data.proteios_category && (
-                <View style={styles.dropDownContainer}>
-                  {item.data.proteios_category.map((product, index) => (
-                    <View style={{ paddingVertical: 2 }} key={index}>
-                      <Text
-                        style={{
-                          fontFamily: "Jakarta-Sans-Medium",
-                          fontSize: 14,
-                          color: ThemeTextColors.lightGray,
-                        }}
-                      >
-                        {product}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <CMline />
-            </View>
-          )}
+          {/* Reuse the renderCategory function for each category */}
+          {renderCategory("Magellan", item.data.magellan_category)}
+          {renderCategory("Influx", item.data.influx_category)}
+          {renderCategory("SPARC", item.data.sparc_category)}
+          {renderCategory("InQu", item.data.inqu_category)}
+          {renderCategory("Fibrant", item.data.fibrant_category)}
+          {renderCategory("ProteiOS", item.data.proteios_category)}
         </View>
       </View>
 
-      {/* Modal only opens when modalVisible is true */}
       {modalVisible && (
         <CMModal
           options={options}
@@ -327,11 +240,12 @@ const CMDetailEntryCard = () => {
           }}
         />
       )}
+      {/* delete confirmation modal */}
       {deleteModal && (
         <CMConfirmationModal
           onCancel={handleCloseModal}
           onConfirm={() => {
-            console.log("Item Deleted");
+            handleDeleteEntry(selectedItem);
             handleCloseModal();
           }}
         />
@@ -366,6 +280,10 @@ const styles = StyleSheet.create({
     fontSize: 21,
     color: ThemeTextColors.darkGray1,
   },
+  fieldContainer: {
+    paddingVertical: 12,
+    gap: 5,
+  },
   fieldTitle: {
     fontFamily: "Jakarta-Sans-Semi-bold",
     fontSize: 16,
@@ -398,5 +316,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "100%",
     paddingVertical: 10,
+  },
+  productText: {
+    fontFamily: "Jakarta-Sans-Medium",
+    fontSize: 14,
+    color: ThemeTextColors.lightGray,
   },
 });

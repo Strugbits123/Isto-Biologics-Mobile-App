@@ -15,8 +15,12 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
 import CMLoader from "../../components/CMLoader";
+import { LoginHandler } from "../../authentication/LoginHandler";
+import { WixSessionProvider } from "../../authentication/session";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const LoginScreen = () => {
+  const queryClient = new QueryClient();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });

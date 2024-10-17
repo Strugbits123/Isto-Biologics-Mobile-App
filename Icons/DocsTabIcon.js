@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-const DocsTabIcon = ({ width, height }) => (
+export const DocsTabIcon = ({ width, height }) => (
   <Svg
     viewBox="0 0 20 24"
     fill="none"
@@ -22,4 +22,37 @@ const DocsTabIcon = ({ width, height }) => (
     />
   </Svg>
 );
-export default DocsTabIcon;
+
+export const UnActiveDocsTabIcon = ({ width, height }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    fill="none"
+  >
+    <Path
+      fill="#F05025"
+      fillRule="evenodd"
+      d="M19.143 19.62V8.951l-7.62-7.619H3.906A3.048 3.048 0 0 0 .857 4.381v15.238a3.048 3.048 0 0 0 3.048 3.048h12.19a3.048 3.048 0 0 0 3.048-3.048ZM3.905 12h7.619-7.62Zm0 3.048H14.57 3.905Zm0 3.047h4.571-4.571Z"
+      clipRule="evenodd"
+    />
+    <Path
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M3.905 12h7.619m-7.62 3.048h10.667M3.905 18.095h4.571m10.667 1.524V8.952l-7.62-7.619H3.906A3.048 3.048 0 0 0 .857 4.381v15.238a3.048 3.048 0 0 0 3.048 3.048h12.19a3.048 3.048 0 0 0 3.048-3.048Z"
+    />
+    <Path
+      fill="#F05025"
+      fillRule="evenodd"
+      d="M11.523 1.333v4.572a3.047 3.047 0 0 0 3.048 3.047h4.571"
+      clipRule="evenodd"
+    />
+    <Path
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M11.523 1.333v4.572a3.047 3.047 0 0 0 3.048 3.047h4.571"
+    />
+  </Svg>
+);

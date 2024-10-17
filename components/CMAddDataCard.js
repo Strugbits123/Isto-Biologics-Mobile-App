@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
@@ -9,12 +9,12 @@ import DoctorIcon from "../Icons/DoctorIcon";
 import CMCheckbox from "./CMCheckbox";
 import CMAddDataForm from "./CMAddDataForm";
 
-const CMAddDataCard = () => {
+const CMAddDataCard = ({ isUpdateItem }) => {
   const [checkedState, setCheckedState] = useState({
     doctorChecked: false,
     hospitalChecked: true,
   });
-
+  // console.log("isUpdateItem", isUpdateItem);
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -28,12 +28,19 @@ const CMAddDataCard = () => {
     return <CMLoader size={20} />;
   }
 
-  // const handleCheckboxChange = (type) => {
-  //   setCheckedState((prevState) => ({
-  //     ...prevState,
-  //     [`${type}Checked`]: !prevState[`${type}Checked`],
-  //   }));
-  // };
+  // Initialize checkbox state based on the passed isUpdateItem
+  useEffect(() => {
+    if (isUpdateItem && isUpdateItem.data) {
+      const { doctor_points, hospital_points } = isUpdateItem.data;
+
+      setCheckedState({
+        doctorChecked: doctor_points === 3 || doctor_points === 5,
+        hospitalChecked: hospital_points > 0,
+      });
+    }
+  }, [isUpdateItem]);
+
+  // handle checkbox when which one is checked
   const handleCheckboxChange = (type) => {
     setCheckedState((prevState) => {
       const updatedState = {
@@ -89,6 +96,7 @@ const CMAddDataCard = () => {
         <CMAddDataForm
           checkedForms={checkedState}
           submisionType={checkedState.doctorChecked ? "doctor" : "hospital"}
+          isUpdateItem={isUpdateItem}
         />
       </View>
     </View>

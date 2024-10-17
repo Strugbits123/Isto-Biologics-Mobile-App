@@ -106,57 +106,11 @@ const CMLoginForm = () => {
     if (!validateInputs()) return;
     setIsLoading(true);
     try {
-      const response =  login(data.email, data.password);
-      // let response = await myWixClient.auth.login({
-      //   email: data.email,
-      //   password: data.password,
-      // });
+      const response = await login(data.email, data.password);
       console.log("response==>", response);
-
-      // const { items } = await myWixClient.members.queryMembers().eq("loginEmail", data.email).find();
-
-      // console.log("items", items);
-
-      // const memberTokens =
-      //   await myWixClient.auth.getMemberTokensForExternalLogin(
-      //     "ad951362-37c8-4d01-a214-46cafa628440",
-      //     "IST.eyJraWQiOiJQb3pIX2FDMiIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcIjhjNTFlZThiLWJjMGYtNGUyMy04NjdkLWU3ZmIwMmJhZTUyZFwiLFwiaWRlbnRpdHlcIjp7XCJ0eXBlXCI6XCJhcHBsaWNhdGlvblwiLFwiaWRcIjpcImM5YTNlY2ViLWYwN2UtNDU3MC04ZDFmLTMyMDg3NTFlMDAzNlwifSxcInRlbmFudFwiOntcInR5cGVcIjpcImFjY291bnRcIixcImlkXCI6XCI3YTBjZDY4MS03YzZjLTRkZTgtYTEyZS0xZmNjZDllOTVlYTlcIn19IiwiaWF0IjoxNzI4OTA0Mzk3fQ.nU2PLnlJZd0hueJ9uwyCA2GgBgBfDjhdTeFTJW-Y-LLYciA32h9frLYBBxD7paRCVjKq7qt-DUFDhYVqzdzg-gYDnz5AprO_gOG-G5pO6kLbmzrF7zmVdYmDaab1LlOSGsT6ufntvKc4ugYCZjZdyO_2LWcE6MYDN52QDiNrZgN9HjkNKRrgDovR-hG-MYveRrmKRDM_RwvhYHMKHFAIYOnf_97iR58dYxRf8n_hIe_4km5qtVrpBktZTQk9f3KxZcjr9sTVfb8dvDq_o8yI1FXGY9RoOkPMeyzGa3zpApbWbwefvNpuTeak23AmnNUJYWZZMTw9kxjURplgScpC9Q",
-      //   );
-
-      // console.log("memberTokens", memberTokens);
-
-      // const myTokens = await myWixClient.auth.generateVisitorTokens();
-      // console.log("myTokens==>", myTokens);
-      // let tokens = await myWixClient.auth.getMemberTokensForDirectLogin(response.data.sessionToken);
-      // let tokens = myWixClient.auth.s();
-
-      // console.log("check token for set in wix==>", tokens);
-      // myWixClient.auth.setTokens(memberTokens);
-      // console.log("check token for set in wix", tokens);
-
-      // Cookies.set(WIX_REFRESH_TOKEN, JSON.stringify(tokens.refreshToken));
-
-      if (response.loginState === "SUCCESS") {
-        await AsyncStorage.setItem(token, response.data.sessionToken);
-
-        // Save email if "Remember Me" is checked
-        if (isChecked) {
-          await AsyncStorage.setItem("userEmail", data.email);
-        } else {
-          await AsyncStorage.removeItem("userEmail"); // Remove email if unchecked
-        }
-        //toast for showing message
-        ToastAndroid.show("Login Successfully!", ToastAndroid.SHORT);
-        // Clear input fields
-        setData({ email: "", password: "" });
-        navigation.replace("Bottom_Navigation", {
-          screen: "home",
-        });
-      }
-      console.log("Error", response.errorCode);
-      if (response.loginState === "FAILURE") {
-        ToastAndroid.show(response.errorCode, ToastAndroid.SHORT);
-      }
+      navigation.replace("Bottom_Navigation", {
+        screen: "home",
+      });
     } catch (error) {
       console.log("error in handle login", error);
     } finally {

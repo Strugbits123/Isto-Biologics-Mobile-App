@@ -6,46 +6,19 @@ import { styles } from "../../../styles/members/styles";
 import { MemberView } from "./MemberView";
 import { SignInView } from "./SignInView";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import LoginScreen from "../../login/LoginScreen";
+import HomeScreen from "../../home/HomeScreen";
 
 const MemberArea = () => {
   const { session } = useWixSession();
+  console.log("session", session);
   if (session.refreshToken.role !== "member") {
-    return <SignInView />;
+    return <LoginScreen />;
   } else {
-    return (
-      <MemberHandler>
-        <MemberView />
-      </MemberHandler>
-    );
+    return <HomeScreen />;
   }
 };
 
 export const MemberAreaScreen = ({ navigation }) => {
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 0, backgroundColor: "#c3c198" }} />
-      <SimpleHeader
-        title={"My Account"}
-        backIcon={true}
-        navigation={navigation}
-        onBackPress={() => navigation.goBack()}
-      />
-      <View
-        keyboardShouldPersistTaps="always"
-        alwaysBounceVertical={false}
-        showsVerticalScrollIndicator={false}
-        style={{ height: "100%", flex: 1, backgroundColor: "#fdfbef" }}
-      >
-        <ScrollView
-          keyboardShouldPersistTaps="always"
-          alwaysBounceVertical={false}
-          showsVerticalScrollIndicator={false}
-          styles={styles.container}
-          contentContainerStyle={styles.content}
-        >
-          <MemberArea />
-        </ScrollView>
-      </View>
-    </GestureHandlerRootView>
-  );
+  return <MemberArea />;
 };

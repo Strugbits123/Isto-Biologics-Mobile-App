@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
-const HomeTabIcon = ({ width, height }) => (
+export const HomeTabIcon = ({ width, height }) => (
   <Svg
     viewBox="0 0 25 23"
     fill="none"
@@ -42,4 +42,24 @@ const HomeTabIcon = ({ width, height }) => (
     </Defs>
   </Svg>
 );
-export default HomeTabIcon;
+
+
+export const UnActiveHomeTabIcon = ({ width, height }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    fill="none"
+  >
+    <Path
+      fill="#6D698E"
+      d="M11.893 1.969a.859.859 0 0 1 1.214 0l9.947 9.947a.858.858 0 1 0 1.213-1.215L14.321.755a2.575 2.575 0 0 0-3.642 0L.732 10.701a.859.859 0 1 0 1.214 1.214l9.947-9.946Z"
+    />
+    <Path
+      stroke="#6D698E"
+      strokeWidth={1.5}
+      d="M3.806 20.323v-6.777c4.835-4.713 12.552-4.713 17.387 0v6.777c0 .77-.625 1.396-1.396 1.396h-3.863a.109.109 0 0 1-.077-.032l-.53.53.53-.53a.109.109 0 0 1-.032-.077v-5.15a1.608 1.608 0 0 0-1.608-1.61h-3.434a1.608 1.608 0 0 0-1.609 1.61v5.15a.109.109 0 0 1-.031.077l.53.53-.53-.53a.109.109 0 0 1-.077.032H5.203c-.37 0-.726-.147-.988-.41l-.53.531.53-.53a1.396 1.396 0 0 1-.409-.987Z"
+    />
+  </Svg>
+)
+

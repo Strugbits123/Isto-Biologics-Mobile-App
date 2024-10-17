@@ -24,11 +24,72 @@ import CMline from "../../components/CMline";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { items } from "@wix/data";
 
+const productCategoryConfig = {
+  Magellan: {
+    colors: [productsBgColors.magellan1, productsBgColors.magellan2],
+    iconColor: ThemeBgColors.white,
+    headerTitle: "Magellan",
+    points_field: "total_magellan_points",
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeBgColors.white },
+  },
+  Influx: {
+    colors: [productsBgColors.influx, productsBgColors.influx],
+    iconColor: ThemeTextColors.darkGray1,
+    headerTitle: "Influx",
+    points_field: "total_influx_points",
+    rankingName: ThemeTextColors.darkGray1,
+    headerTitleStyle: { color: ThemeTextColors.darkGray1 },
+  },
+  SPARC: {
+    colors: [productsBgColors.sparc1, productsBgColors.sparc2],
+    iconColor: ThemeTextColors.white,
+    headerTitle: "SPARC",
+    points_field: "total_sparc_points",
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeTextColors.white },
+  },
+  InQu: {
+    colors: [productsBgColors.inqu, productsBgColors.inqu],
+    iconColor: ThemeTextColors.white,
+    headerTitle: "InQu",
+    points_field: "total_inqu_points",
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeTextColors.white },
+  },
+  Fibrant: {
+    colors: [productsBgColors.fibrant, productsBgColors.fibrant],
+    iconColor: ThemeTextColors.white,
+    headerTitle: "Fibrant",
+    points_field: "total_fibrant_points",
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeTextColors.white },
+  },
+  ProteiOS: {
+    colors: [productsBgColors.proteios, productsBgColors.proteios],
+    iconColor: ThemeTextColors.white,
+    headerTitle: "ProteiOS",
+    points_field: "total_proteios_points",
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeTextColors.white },
+  },
+  Leaderboard: {
+    colors: [productsBgColors.leaderboard1, productsBgColors.leaderboard2],
+    iconColor: ThemeBgColors.white,
+    headerTitle: "Leaderboard",
+    points_field: "total_entries_points",
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeBgColors.white },
+  },
+};
+
 const Leaderboard = () => {
   const [headerData, setHeaderData] = useState({});
   const [productCategory, setProductCategory] = useState("Leaderboard");
   const [LeaderboardData, setLeaderboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -62,8 +123,9 @@ const Leaderboard = () => {
       console.log("getLeaderboardData", getLeaderboardData._items);
 
       //sort highest to lowest according to the point
-      const sortedData = getLeaderboardData._items.sort(
-        (a, b) => b.data.total_entries_points - a.data.total_entries_points,
+      const sortedData = getLeaderboardData.items.sort(
+        (a, b) =>
+          b.data[headerData.points_field] - a.data[headerData.points_field],
       );
 
       setLeaderboardData(sortedData);
@@ -74,9 +136,16 @@ const Leaderboard = () => {
     }
   };
 
+  // Pull-to-refresh handler
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getLeaderboardData(); // Refresh data
+    setRefreshing(false); // End refreshing state
+  };
+
   useEffect(() => {
     getLeaderboardData();
-  }, [productCategory]);
+  }, [headerData]);
 
   //product categories for filter or navigation in screen
   const productCategories = [
@@ -89,98 +158,108 @@ const Leaderboard = () => {
     "ProteiOS",
   ];
 
-  //data dynamic show all categories when navigate categories
+  // //data dynamic show all categories when navigate categories
+  // useEffect(() => {
+  //   // Function to set header data based on productCategory
+  //   const updateHeaderData = () => {
+  //     switch (productCategory) {
+  //       case "Magellan":
+  //         setHeaderData({
+  //           colors: [productsBgColors.magellan1, productsBgColors.magellan2],
+  //           iconColor: ThemeBgColors.white,
+  //           headerTitle: "Magellan",
+  //           headerTitleStyle: {
+  //             color: ThemeBgColors.white,
+  //           },
+  //           rankingName: ThemeTextColors.white,
+  //           points_field: "total_magellan_points",
+  //         });
+  //         break;
+  //       case "Influx":
+  //         setHeaderData({
+  //           colors: [productsBgColors.influx, productsBgColors.influx],
+  //           iconColor: ThemeTextColors.darkGray1,
+  //           headerTitle: "Influx",
+  //           headerTitleStyle: {
+  //             color: ThemeTextColors.darkGray1,
+  //           },
+  //           rankingName: ThemeTextColors.darkGray1,
+  //           points_field: "total_influx_points",
+  //         });
+  //         break;
+  //       case "SPARC":
+  //         setHeaderData({
+  //           colors: [productsBgColors.sparc1, productsBgColors.sparc2],
+  //           iconColor: ThemeTextColors.white,
+  //           headerTitle: "SPARC",
+  //           headerTitleStyle: {
+  //             color: ThemeTextColors.white,
+  //           },
+  //           rankingName: ThemeTextColors.white,
+  //           points_field: "total_sparc_points",
+  //         });
+  //         break;
+  //       case "InQu":
+  //         setHeaderData({
+  //           colors: [productsBgColors.inqu, productsBgColors.inqu],
+  //           iconColor: ThemeTextColors.white,
+  //           headerTitle: "InQu",
+  //           headerTitleStyle: {
+  //             color: ThemeTextColors.white,
+  //           },
+  //           rankingName: ThemeTextColors.white,
+  //           points_field: "total_inqu_points",
+  //         });
+  //         break;
+  //       case "Fibrant":
+  //         setHeaderData({
+  //           colors: [productsBgColors.fibrant, productsBgColors.fibrant],
+  //           iconColor: ThemeTextColors.white,
+  //           headerTitle: "Fibrant",
+  //           headerTitleStyle: {
+  //             color: ThemeTextColors.white,
+  //           },
+  //           rankingName: ThemeTextColors.white,
+  //           points_field: "total_fibrant_points",
+  //         });
+  //         break;
+  //       case "ProteiOS":
+  //         setHeaderData({
+  //           colors: [productsBgColors.proteios, productsBgColors.proteios],
+  //           iconColor: ThemeTextColors.white,
+  //           headerTitle: "ProteiOS",
+  //           headerTitleStyle: {
+  //             color: ThemeTextColors.white,
+  //           },
+  //           rankingName: ThemeTextColors.white,
+  //           points_field: "total_proteios_points",
+  //         });
+  //         break;
+  //       case "Leaderboard":
+  //         setHeaderData({
+  //           colors: [
+  //             productsBgColors.leaderboard1,
+  //             productsBgColors.leaderboard2,
+  //           ],
+  //           iconColor: ThemeBgColors.white,
+  //           headerTitle: "Leaderboard",
+  //           headerTitleStyle: {
+  //             color: ThemeBgColors.white,
+  //           },
+  //           rankingName: ThemeTextColors.white,
+  //           points_field: "total_entries_points",
+  //         });
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   };
+  //   updateHeaderData();
+  // }, [productCategory]); // useEffect will run when productCategory changes
+
   useEffect(() => {
-    // Function to set header data based on productCategory
-    const updateHeaderData = () => {
-      switch (productCategory) {
-        case "Magellan":
-          setHeaderData({
-            colors: [productsBgColors.magellan1, productsBgColors.magellan2],
-            iconColor: ThemeBgColors.white,
-            headerTitle: "Magellan",
-            headerTitleStyle: {
-              color: ThemeBgColors.white,
-            },
-            rankingName: ThemeTextColors.white,
-            points: true,
-          });
-          break;
-        case "Influx":
-          setHeaderData({
-            colors: [productsBgColors.influx, productsBgColors.influx],
-            iconColor: ThemeTextColors.darkGray1,
-            headerTitle: "Influx",
-            headerTitleStyle: {
-              color: ThemeTextColors.darkGray1,
-            },
-            rankingName: ThemeTextColors.darkGray1,
-          });
-          break;
-        case "SPARC":
-          setHeaderData({
-            colors: [productsBgColors.sparc1, productsBgColors.sparc2],
-            iconColor: ThemeTextColors.white,
-            headerTitle: "SPARC",
-            headerTitleStyle: {
-              color: ThemeTextColors.white,
-            },
-            rankingName: ThemeTextColors.white,
-          });
-          break;
-        case "InQu":
-          setHeaderData({
-            colors: [productsBgColors.inqu, productsBgColors.inqu],
-            iconColor: ThemeTextColors.white,
-            headerTitle: "InQu",
-            headerTitleStyle: {
-              color: ThemeTextColors.white,
-            },
-            rankingName: ThemeTextColors.white,
-          });
-          break;
-        case "Fibrant":
-          setHeaderData({
-            colors: [productsBgColors.fibrant, productsBgColors.fibrant],
-            iconColor: ThemeTextColors.white,
-            headerTitle: "Fibrant",
-            headerTitleStyle: {
-              color: ThemeTextColors.white,
-            },
-            rankingName: ThemeTextColors.white,
-          });
-          break;
-        case "ProteiOS":
-          setHeaderData({
-            colors: [productsBgColors.proteios, productsBgColors.proteios],
-            iconColor: ThemeTextColors.white,
-            headerTitle: "ProteiOS",
-            headerTitleStyle: {
-              color: ThemeTextColors.white,
-            },
-            rankingName: ThemeTextColors.white,
-          });
-          break;
-        case "Leaderboard":
-          setHeaderData({
-            colors: [
-              productsBgColors.leaderboard1,
-              productsBgColors.leaderboard2,
-            ],
-            iconColor: ThemeBgColors.white,
-            headerTitle: "Leaderboard",
-            headerTitleStyle: {
-              color: ThemeBgColors.white,
-            },
-            rankingName: ThemeTextColors.white,
-          });
-          break;
-        default:
-          break;
-      }
-    };
-    updateHeaderData();
-  }, [productCategory]); // useEffect will run when productCategory changes
+    setHeaderData(productCategoryConfig[productCategory]);
+  }, [productCategory]);
 
   //leaderboard random data
   // const leaderboardData = [
@@ -238,7 +317,7 @@ const Leaderboard = () => {
     const isMyRank = item.data.user_id._id === myRankId;
 
     // Adjust the index to start ranking from 4
-    const rank = index + 4; // Start rank from 4 instead of 1
+    const rank = index + 1; // Start rank from 4 instead of 1
 
     return (
       <View key={item.data.user_id._id}>
@@ -269,7 +348,7 @@ const Leaderboard = () => {
               {item.data.user_id.firstName || item.data.user_id.nickname}
             </Text>
             <Text style={[styles.scoreText, styles.myRankText]}>
-              {item.data.total_entries_points}
+              {item.data[headerData.points_field]}
             </Text>
           </LinearGradient>
         ) : (
@@ -291,7 +370,7 @@ const Leaderboard = () => {
               {item.data.user_id.firstName || item.data.user_id.nickname}
             </Text>
             <Text style={styles.scoreText}>
-              {item.data.total_entries_points}
+              {item.data[headerData.points_field]}
             </Text>
           </View>
         )}
@@ -358,14 +437,14 @@ const Leaderboard = () => {
             <Text
               style={{
                 fontFamily: "Jakarta-Sans-bold",
-                fontSize: 13,
+                fontSize: 15,
                 color: headerData.rankingName,
               }}
             >
               {LeaderboardData.length > 1
                 ? LeaderboardData[1].data.user_id.firstName ||
                   LeaderboardData[1].data.user_id.nickname
-                : "No User"}
+                : "User"}
             </Text>
           </View>
           {/* Rank number container */}
@@ -423,14 +502,14 @@ const Leaderboard = () => {
             <Text
               style={{
                 fontFamily: "Jakarta-Sans-bold",
-                fontSize: 13,
+                fontSize: 15,
                 color: headerData.rankingName,
               }}
             >
               {LeaderboardData.length > 0
                 ? LeaderboardData[0].data.user_id.firstName ||
                   LeaderboardData[0].data.user_id.nickname
-                : "No User"}
+                : "User"}
             </Text>
           </View>
           {/* Rank number container */}
@@ -441,7 +520,15 @@ const Leaderboard = () => {
               end={{ x: 0, y: 1 }}
               style={styles.numberBox1}
             >
-              <Text style={styles.numberText}>01</Text>
+              <Text
+                style={{
+                  fontFamily: "Jakarta-Sans-Extra-bold",
+                  fontSize: 46,
+                  color: ThemeTextColors.white,
+                }}
+              >
+                01
+              </Text>
             </LinearGradient>
           </View>
         </View>
@@ -469,14 +556,14 @@ const Leaderboard = () => {
             <Text
               style={{
                 fontFamily: "Jakarta-Sans-bold",
-                fontSize: 13,
+                fontSize: 15,
                 color: headerData.rankingName,
               }}
             >
               {LeaderboardData.length > 2
                 ? LeaderboardData[2].data.user_id.firstName ||
                   LeaderboardData[2].data.user_id.nickname
-                : "No User"}
+                : "User"}
             </Text>
           </View>
           {/* Rank number container */}
@@ -530,11 +617,30 @@ const Leaderboard = () => {
         ) : (
           <View style={{ flex: 1 }}>
             <FlatList
-              data={LeaderboardData.slice(3)}
+              data={LeaderboardData}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem}
-              contentContainerStyle={styles.listContainer}
+              renderItem={LeaderboardData.length > 0 ? renderItem : null}
+              contentContainerStyle={{
+                paddingBottom: 415,
+                flexGrow: 1, // Ensure the FlatList takes the full height
+              }}
+              ListEmptyComponent={
+                // Show a message when the list is empty
+                <Text
+                  style={{
+                    flex: 1,
+                    fontSize: 16,
+                    color: ThemeTextColors.placeholder,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Users available. Pull down to refresh.
+                </Text>
+              }
               showsVerticalScrollIndicator={false}
+              refreshing={refreshing} // Bind refreshing state to FlatList
+              onRefresh={onRefresh} // Handle pull-to-refresh action
             />
           </View>
         )}
@@ -572,17 +678,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderColor: ThemeTextColors.white,
-    borderWidth: 1,
+    borderWidth: 2,
   },
   imageContainerCrown: {
     width: 75,
     height: 75,
     backgroundColor: ThemeBgColors.white,
-    borderRadius: 50,
+    borderRadius: 60,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "#F5A534",
-    borderWidth: 3,
+    borderWidth: 2,
   },
   name: {
     fontFamily: "Jakarta-Sans-bold",
@@ -676,7 +782,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 60,
     height: 60,
-    borderRadius: 25,
+    borderRadius: 30,
   },
   nameText: {
     fontFamily: "Jakarta-Sans-Semi-bold",

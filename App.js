@@ -1,5 +1,4 @@
 import "./polyfills";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { OAuthStrategy, WixProvider } from "@wix/sdk-react";
@@ -103,7 +102,15 @@ function App() {
       {/* <LoginScreen /> */}
       {/* <SplashScreen /> */}
       {/* <HomeScreen/> */}
-      <App_Navigation/>
+      {/* <QueryClientProvider client={queryClient}> */}
+      <QueryClientProvider client={queryClient}>
+        <WixSessionProvider clientId="0715f53d-fb36-46bd-8fce-7f151bf279ee">
+          <LoginHandler>
+            <App_Navigation />
+          </LoginHandler>
+        </WixSessionProvider>
+      </QueryClientProvider>
+      {/* </QueryClientProvider> */}
     </>
   );
 }

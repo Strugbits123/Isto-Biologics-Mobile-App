@@ -1,5 +1,5 @@
 import { StyleSheet, Text, ToastAndroid, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CMInput from "./CMInput";
 import CMDateInput from "./CMDateInput";
 import CMProductLine from "./CMProductLine";
@@ -7,8 +7,11 @@ import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { items } from "@wix/data";
+import { useNavigation } from "@react-navigation/native";
+// import { useFocusEffect } from "@react-navigation/native";
 
-const CMAddDataForm = ({ submisionType, checkedForms }) => {
+const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
+  const navigation = useNavigation();
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -23,6 +26,65 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
     ProteiOS: [],
   });
 
+//  if(!isUpdateItem){
+//   React.useEffect(() => {
+//     const unsubscribe = navigation.addListener("focus", () => {
+//       setData({})
+//     });
+
+//     return unsubscribe;
+//   }, [navigation]);
+//  }
+
+  //checks when is updateItem comes it means update form so set all fields.
+  useEffect(() => {
+    if (isUpdateItem) {
+      const {
+        doctor_firstname,
+        doctor_lastname,
+        hospital_name,
+        first_case_date,
+        magellan_category,
+        influx_category,
+        sparc_category,
+        inqu_category,
+        fibrant_category,
+        proteios_category,
+      } = isUpdateItem.data;
+      console.log(
+        "isUpdateItem.data destrued",
+        doctor_firstname,
+        doctor_lastname,
+        hospital_name,
+        first_case_date,
+        magellan_category,
+        influx_category,
+        sparc_category,
+        inqu_category,
+        fibrant_category,
+        proteios_category,
+      );
+
+      // Set initial form data
+      setData({
+        doctorFirstName: doctor_firstname,
+        doctorLastName: doctor_lastname,
+        hospitalName: hospital_name,
+        firstCaseDate: first_case_date || "",
+      });
+
+      // Set selected products
+      setSelectedProducts({
+        Magellan: magellan_category || [],
+        Influx: influx_category || [],
+        SPARC: sparc_category || [],
+        InQu: inqu_category || [],
+        Fibrant: fibrant_category || [],
+        ProteiOS: proteios_category || [],
+      });
+    }
+  }, [isUpdateItem]);
+
   const myWixClient = createClient({
     modules: { items },
     auth: OAuthStrategy({
@@ -31,7 +93,6 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
     // Include the auth strategy and host as relevant
   });
 
-  // Input fields handleOnChange
   const handle_onChange_Text = (field, value) => {
     setData((pre) => ({ ...pre, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: null }));
@@ -118,6 +179,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       //de structure points for hospital or doctor
       // console.log("checkedForms", checkedForms);
       const { doctorChecked, hospitalChecked } = checkedForms;
+
       //Points distributions
       const doctorPoints = doctorChecked ? 3 : 0;
       const hospitalPoints = hospitalChecked ? 5 : 0;
@@ -161,11 +223,23 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
           proteiOSPoints;
       }
 
+      // Clear doctor names if the doctor is unchecked
+      if (!doctorChecked) {
+        setData({
+          doctorFirstName: "",
+          doctorLastName: "",
+        });
+      }
+
+      // Clear doctor names in dataToSend if the doctor is unchecked
+      const doctorFirstNameToSend = doctorChecked ? doctorFirstName : "";
+      const doctorLastNameToSend = doctorChecked ? doctorLastName : "";
+
       // Combine all data into one object
       const dataToSend = {
-        user_id: "ee0eeaf5-663b-4c35-aeee-c1f504b91dc8",
-        doctor_firstname: doctorFirstName,
-        doctor_lastname: doctorLastName,
+        user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+        doctor_firstname: doctorFirstNameToSend,
+        doctor_lastname: doctorLastNameToSend,
         hospital_name: hospitalName,
         first_case_date: firstCaseDateObject,
         magellan_category: Magellan,
@@ -192,14 +266,72 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
         },
       };
 
-      const response =
-        await myWixClient.items.insertDataItem(addEntriesOptions);
-      console.log("response", response);
+      //this part is checking if when user update the entry else condition will run for update
+      let response;
+      if (!isUpdateItem) {
+        response = await myWixClient.items.insertDataItem(addEntriesOptions);
+        console.log("response of add entry", response);
+      } else {
+        response = await myWixClient.items.updateDataItem(
+          isUpdateItem._id,
+          addEntriesOptions,
+        );
 
+        //query call for getting leaderboard points
+        const leaderboardOptions = {
+          dataCollectionId: "leaderboard",
+        };
+        //query for checking if user is available in leaderboard or not
+        const getLeaderboardUsers = await myWixClient.items
+          .queryDataItems(leaderboardOptions)
+          .eq("user_id", response.dataItem.data.user_id)
+          .find();
+        // console.log("getLeaderboardUsers", getLeaderboardUsers);
+        // console.log("response of update entry", response);
+
+        //data to send for minus when user update the entry old points minus from total leaderboard points
+        const dataToSendInLeaderboardForUpdatePoints = {
+          user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+          total_magellan_points:
+            getLeaderboardUsers._items[0].data.total_magellan_points -
+            isUpdateItem.data.magellan_points,
+          total_influx_points:
+            getLeaderboardUsers._items[0].data.total_influx_points -
+            isUpdateItem.data.influx_points,
+          total_sparc_points:
+            getLeaderboardUsers._items[0].data.total_sparc_points -
+            isUpdateItem.data.sparc_points,
+          total_inqu_points:
+            getLeaderboardUsers._items[0].data.total_inqu_points -
+            isUpdateItem.data.inqu_points,
+          total_fibrant_points:
+            getLeaderboardUsers._items[0].data.total_fibrant_points -
+            isUpdateItem.data.fibrant_points,
+          total_proteios_points:
+            getLeaderboardUsers._items[0].data.total_proteios_points -
+            isUpdateItem.data.proteios_points,
+          total_entries_points:
+            getLeaderboardUsers._items[0].data.total_entries_points -
+            isUpdateItem.data.total_entry_points,
+        };
+        const updateLeaderboardOptions = {
+          dataCollectionId: "leaderboard",
+          dataItem: {
+            data: dataToSendInLeaderboardForUpdatePoints,
+          },
+        };
+        const resLeaderboardUpdatePoints =
+          await myWixClient.items.updateDataItem(
+            getLeaderboardUsers._items[0]._id,
+            updateLeaderboardOptions,
+          );
+        // console.log("resLeaderboardUpdatePoints", resLeaderboardUpdatePoints);
+      }
+
+      //Now again call for addition of points when user enter new entry points
       const leaderboardOptions = {
         dataCollectionId: "leaderboard",
       };
-
       //query for checking if user is available in leaderboard or not
       const getLeaderboardUsers = await myWixClient.items
         .queryDataItems(leaderboardOptions)
@@ -211,7 +343,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       if (getLeaderboardUsers._items.length === 0) {
         console.log("item not found");
         const dataToSendInLeaderboard = {
-          user_id: "ee0eeaf5-663b-4c35-aeee-c1f504b91dc8",
+          user_id: "ad951362-37c8-4d01-a214-46cafa628440",
           total_magellan_points: response.dataItem.data.magellan_points,
           total_influx_points: response.dataItem.data.influx_points,
           total_sparc_points: response.dataItem.data.sparc_points,
@@ -234,7 +366,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       } else {
         console.log("item found");
         const dataToSendInLeaderboardForUpdate = {
-          user_id: "ee0eeaf5-663b-4c35-aeee-c1f504b91dc8",
+          user_id: "ad951362-37c8-4d01-a214-46cafa628440",
           total_magellan_points:
             response.dataItem.data.magellan_points +
             getLeaderboardUsers._items[0].data.total_magellan_points,
@@ -257,38 +389,39 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
             response.dataItem.data.total_entry_points +
             getLeaderboardUsers._items[0].data.total_entries_points,
         };
-        console.log(
-          "dataToSendInLeaderboardForUpdate",
-          dataToSendInLeaderboardForUpdate,
-        );
+
         const updateLeaderboardOptions = {
           dataCollectionId: "leaderboard",
           dataItem: {
             data: dataToSendInLeaderboardForUpdate,
           },
         };
-        console.log(
-          "getLeaderboardUsers._items[0]._id",
-          getLeaderboardUsers._items[0]._id,
-        );
+
         const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
           getLeaderboardUsers._items[0]._id,
           updateLeaderboardOptions,
         );
       }
 
-      ToastAndroid.show("Data Added Successfully!", ToastAndroid.SHORT);
-      // // Reset all fields and uncheck products
-      // setData({});
-      // setSelectedProducts({
-      //   Magellan: [],
-      //   Influx: [],
-      //   SPARC: [],
-      //   InQu: [],
-      //   Fibrant: [],
-      //   ProteiOS: [],
-      // });
-      // setErrors({});
+      if (!isUpdateItem) {
+        ToastAndroid.show("Data Added Successfully!", ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Data Updated Successfully!", ToastAndroid.SHORT);
+        navigation.replace("Bottom_Navigation", {
+          screen: "entries",
+        });
+      }
+      // Reset all fields and uncheck products
+      setData({});
+      setSelectedProducts({
+        Magellan: [],
+        Influx: [],
+        SPARC: [],
+        InQu: [],
+        Fibrant: [],
+        ProteiOS: [],
+      });
+      setErrors({});
     } catch (error) {
       console.log("error in handle submit", error);
     } finally {
@@ -305,6 +438,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
             <CMInput
               title={"Doctor First Name"}
               placeholderText={"Enter"}
+              value={data.doctorFirstName || ""}
               onChange={(text) => handle_onChange_Text("doctorFirstName", text)}
               error={!!errors.doctorFirstName}
               errorMessage={errors.doctorFirstName}
@@ -312,6 +446,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
             <CMInput
               title={"Doctor Last Name"}
               placeholderText={"Enter"}
+              value={data.doctorLastName || ""}
               onChange={(text) => handle_onChange_Text("doctorLastName", text)}
               error={!!errors.doctorLastName}
               errorMessage={errors.doctorLastName}
@@ -323,6 +458,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
         <CMInput
           title={"Hospital/Facility"}
           placeholderText={"Enter"}
+          value={data.hospitalName || ""}
           onChange={(text) => handle_onChange_Text("hospitalName", text)}
           error={!!errors.hospitalName}
           errorMessage={errors.hospitalName}
@@ -349,7 +485,7 @@ const CMAddDataForm = ({ submisionType, checkedForms }) => {
       <View style={{ width: "100%", height: 45 }}>
         <CMThemedButton
           gradientStyle={{ paddingVertical: 10 }}
-          title="Submit"
+          title={isUpdateItem ? "Update" : "Submit"}
           onPress={handleSubmit}
           icon={<ArrowRight width={20} height={20} />}
           loading={isLoading}

@@ -10,11 +10,11 @@ const DetailedEntry = () => {
     <View style={styles.mainContainer}>
       {/*  Header component */}
       <View style={styles.headerContainer}>
-        <CMHomeHeader />
+        <CMHomeHeader navigationOnPage="entries" />
       </View>
 
       <ScrollView
-        style={{ top: 80 }}
+        style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >

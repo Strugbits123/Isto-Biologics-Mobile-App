@@ -12,7 +12,7 @@ import BackIcon from "../../Icons/BackIcon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { token } from "../../utils/constants";
 
-const CMHomeHeader = ({ useInScreen }) => {
+const CMHomeHeader = ({ useInScreen, navigationOnPage }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = useFonts({
@@ -57,7 +57,7 @@ const CMHomeHeader = ({ useInScreen }) => {
         </View>
       ) : (
         <View>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => {navigationOnPage ? navigation.navigate(navigationOnPage) : navigation.goBack()}}>
             <BackIcon width={10} height={17} />
           </TouchableOpacity>
         </View>

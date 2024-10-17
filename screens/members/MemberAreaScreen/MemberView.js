@@ -22,6 +22,7 @@ import { usePrice } from "../../store/price";
 import { DismissKeyboardScrollView } from "../../../components/DismissKeyboardHOC/DismissKeyboardScrollView";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+
 const FormInput = ({ labelValue, placeholderText, inputValue, ...rest }) => {
   return (
     <View style={styles.accountInputContainer}>

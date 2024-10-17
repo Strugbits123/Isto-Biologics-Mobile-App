@@ -1,13 +1,13 @@
-import WebView from "expo-web-view";
+// import WebView from "expo-web-view";
+import { WebView } from "react-native-webview";
+import * as Linking from "expo-linking";
 import { useWixSession } from "../authentication/session";
+import { createClient, OAuthStrategy } from "@wix/sdk";
 
-export function LoginHandlerInvisibleWebview({
-  loginState,
-  setloginState,
-}) {
+export function LoginHandlerInvisibleWebview(props) {
   const { setSession } = useWixSession();
 
-  console.log("check login state", loginState)
+  console.log("props in LoginHandlerInvisibleWebview", props);
 
   //Wix headless create client method for auth clientId
   const myWixClient = createClient({
@@ -16,29 +16,30 @@ export function LoginHandlerInvisibleWebview({
     }),
   });
 
-  if (!loginState) {
+  if (!props.loginState) {
     return null;
   } else {
     return (
       <WebView
-        source={{ uri: loginState.url }}
+        source={{ uri: props.loginState.url }}
         originWhitelist={["exp://*", "wixmobileheadless://*"]}
         containerStyle={{ display: "none" }}
         onShouldStartLoadWithRequest={(request) => {
           if (
-            request.url.startsWith(
-              Linking.createURL("exp://172.16.0.181:8081/oauth/wix/callback"),
-            )
+            request.url.startsWith(Linking.createURL("/oauth/wix/callback"))
           ) {
             const { code, state } = myWixClient.auth.parseFromUrl(
               request.url,
-              loginState.data,
+              props.loginState.data,
             );
+            console.log("code", code);
+            console.log("state", state);
             myWixClient.auth
-              .getMemberTokens(code, state, loginState.data)
+              .getMemberTokens(code, state, props.loginState.data)
               .then((tokens) => {
+                // console.log("tokens in LoginHandlerInvisibleWebview",tokens);
                 setSession(tokens);
-                setloginState(null);
+                props.setloginState(null);
               });
             return false;
           }

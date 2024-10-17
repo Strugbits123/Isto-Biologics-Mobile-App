@@ -2,18 +2,15 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-import CMHeader from "../../components/CMHeader/CMHeader";
 import CMHomeCard from "../../components/CMHomeCard";
-import { useFonts } from "expo-font";
-import { LoadingIndicator } from "../../components/LoadingIndicator/LoadingIndicator";
-import CMModal from "../../components/CMModal";
 import CMLoader from "../../components/CMLoader";
 import { ApiKeyStrategy, createClient, OAuthStrategy } from "@wix/sdk";
 import { members } from "@wix/members";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { token } from "../../utils/constants";
+import { QueryClient, useQueryClient, useQuery } from "@tanstack/react-query";
+import { ErrorView } from "../../components/ErrorView/ErrorView";
 
 const HomeScreen = () => {
+  const queryClient = useQueryClient();
   // //Wix headless create client method for auth clientId
   const myWixClient = createClient({
     modules: {
@@ -24,27 +21,29 @@ const HomeScreen = () => {
     }),
   });
 
-  const getCurrentUser = async () => {
-    try {
-      const member = myWixClient.auth.loggedIn();
-      // const member = await myWixClient.members.getCurrentMember();
-      // : {};
-
-      console.log("current user ==>", member);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  });
+  const getCurrentMemberRes = useQuery(["currentMember"], () =>
+    myWixClient.members.getCurrentMember(),
+  );
+  // console.log("getCurrentMemberRes", getCurrentMemberRes);
+  const [currentMember, setCurrentMember] = useState(null);
 
   useEffect(() => {
-    getCurrentUser();
+    const fetchCurrentMember = async () => {
+      const { member } = await myWixClient.members.getCurrentMember();
+
+      setCurrentMember(member);
+    };
+    fetchCurrentMember();
   }, []);
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  console.log("currentMember", currentMember);
+
+  if (getCurrentMemberRes.isError) {
+    return <ErrorView message={getCurrentMemberRes.error.message} />;
+  }
+
+  if (getCurrentMemberRes.isLoading || !currentMember) {
+    return <CMLoader size={30} />;
   }
 
   return (
