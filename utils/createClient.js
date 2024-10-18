@@ -1,14 +1,20 @@
 import { createClient, OAuthStrategy } from "@wix/sdk";
-import { items } from "@wix/data";
 import { members } from "@wix/members";
+import { redirects } from "@wix/redirects";
+import { items } from "@wix/data";
+import { files } from "@wix/media";
 
-//Wix headless create client method for auth clientId
+
+// const clientId = process.env.WIX_CLIENT_ID || "";
+
 export const myWixClient = createClient({
-  modules: {
-    items,
-    members,
-  },
   auth: OAuthStrategy({
     clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
   }),
+  modules: {
+    members,
+    redirects,
+    items,
+    files
+  },
 });

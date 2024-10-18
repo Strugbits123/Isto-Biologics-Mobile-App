@@ -26,7 +26,7 @@ import CMLoader from "./CMLoader";
 import Cookies from "js-cookie";
 import { members } from "@wix/members";
 import { useLoginHandler } from "../authentication/LoginHandler";
-// import { myWixClient } from "../utils/createClient";
+import { myWixClient } from "../utils/createClient";
 
 const CMLoginForm = () => {
   const navigation = useNavigation();
@@ -49,19 +49,6 @@ const CMLoginForm = () => {
     setErrors((prev) => ({ ...prev, [field]: null }));
   };
 
-  //Wix headless create client method for auth clientId
-  const myWixClient = createClient({
-    auth: OAuthStrategy({
-      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-    }),
-  });
-  // const myWixClient = createClient({
-  //   auth: ApiKeyStrategy({
-  //     siteId: "e1975cd0-7e77-48df-8b36-4520fb892347",
-  //     apiKey:
-  //       "IST.eyJraWQiOiJQb3pIX2FDMiIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcIjhjNTFlZThiLWJjMGYtNGUyMy04NjdkLWU3ZmIwMmJhZTUyZFwiLFwiaWRlbnRpdHlcIjp7XCJ0eXBlXCI6XCJhcHBsaWNhdGlvblwiLFwiaWRcIjpcImM5YTNlY2ViLWYwN2UtNDU3MC04ZDFmLTMyMDg3NTFlMDAzNlwifSxcInRlbmFudFwiOntcInR5cGVcIjpcImFjY291bnRcIixcImlkXCI6XCI3YTBjZDY4MS03YzZjLTRkZTgtYTEyZS0xZmNjZDllOTVlYTlcIn19IiwiaWF0IjoxNzI4OTA0Mzk3fQ.nU2PLnlJZd0hueJ9uwyCA2GgBgBfDjhdTeFTJW-Y-LLYciA32h9frLYBBxD7paRCVjKq7qt-DUFDhYVqzdzg-gYDnz5AprO_gOG-G5pO6kLbmzrF7zmVdYmDaab1LlOSGsT6ufntvKc4ugYCZjZdyO_2LWcE6MYDN52QDiNrZgN9HjkNKRrgDovR-hG-MYveRrmKRDM_RwvhYHMKHFAIYOnf_97iR58dYxRf8n_hIe_4km5qtVrpBktZTQk9f3KxZcjr9sTVfb8dvDq_o8yI1FXGY9RoOkPMeyzGa3zpApbWbwefvNpuTeak23AmnNUJYWZZMTw9kxjURplgScpC9Q",
-  //   }),
-  // });
 
   // Centralized validation
   const validateInputs = () => {
@@ -106,8 +93,7 @@ const CMLoginForm = () => {
     if (!validateInputs()) return;
     setIsLoading(true);
     try {
-      const response = await login(data.email, data.password);
-      console.log("response==>", response);
+      await login(data.email, data.password);
       navigation.replace("Bottom_Navigation", {
         screen: "home",
       });

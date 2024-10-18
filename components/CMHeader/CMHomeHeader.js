@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  Image,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import menAvatar from "../../assets/Images/menAvatar.png";
 import { Avatar } from "react-native-paper";
@@ -11,22 +18,41 @@ import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../Icons/BackIcon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { token } from "../../utils/constants";
+import { useWixSession } from "../../authentication/session";
 
-const CMHomeHeader = ({ useInScreen, navigationOnPage }) => {
+const CMHomeHeader = ({
+  useInScreen,
+  navigationOnPage,
+  profileImage = "",
+  name = "",
+}) => {
   const navigation = useNavigation();
+  const { newVisitorSession } = useWixSession();
   const [modalVisible, setModalVisible] = useState(false);
+  const [greeting, setGreeting] = useState("Good Morning");
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
     "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
   });
+  useEffect(() => {
+    const currentHour = new Date().getHours();
 
-  if (!fontsLoaded) {
-    return <LoadingIndicator />;
-  }
+    if (currentHour < 12) {
+      setGreeting("Good Morning,");
+    } else if (currentHour < 18) {
+      setGreeting("Good Afternoon,");
+    } else {
+      setGreeting("Good Evening,");
+    }
+  }, []);
 
   const handleProfilePress = () => {
     setModalVisible(!modalVisible); // Open modal on profile press
   };
+
+  if (!fontsLoaded) {
+    return <LoadingIndicator />;
+  }
 
   const options = [
     {
@@ -40,7 +66,9 @@ const CMHomeHeader = ({ useInScreen, navigationOnPage }) => {
       label: "Logout",
       onPress: () => {
         navigation.replace("login");
-        AsyncStorage.setItem(token, "");
+        async () => {
+          await newVisitorSession();
+        };
         setModalVisible(!modalVisible);
       },
       textStyle: { color: "red" },
@@ -48,16 +76,22 @@ const CMHomeHeader = ({ useInScreen, navigationOnPage }) => {
   ];
 
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       {/* this condition shows header dynamic which screen shows which things  */}
       {useInScreen === "home" ? (
         <View>
-          <Text style={styles.greetingText}>Good Morning,</Text>
-          <Text style={styles.nameText}>Jessica!</Text>
+          <Text style={styles.greetingText}>{greeting}</Text>
+          <Text style={styles.nameText}>{name ? name : "Name"}</Text>
         </View>
       ) : (
         <View>
-          <TouchableOpacity onPress={() => {navigationOnPage ? navigation.navigate(navigationOnPage) : navigation.goBack()}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigationOnPage
+                ? navigation.navigate(navigationOnPage)
+                : navigation.goBack();
+            }}
+          >
             <BackIcon width={10} height={17} />
           </TouchableOpacity>
         </View>
@@ -69,8 +103,13 @@ const CMHomeHeader = ({ useInScreen, navigationOnPage }) => {
           onPress={handleProfilePress}
           style={styles.imageContainer}
         >
-          {true ? (
-            <MenIcon width={17} height={21} />
+          {profileImage ? (
+            <Image
+              style={{ borderRadius: 60, borderWidth: 1 }}
+              source={{ uri: profileImage }}
+              width={50}
+              height={50}
+            />
           ) : (
             <MenIcon width={17} height={21} />
           )}

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import MenIcon from "../Icons/MenIcon";
@@ -15,7 +15,7 @@ import CMLoader from "./CMLoader";
 import { useNavigation } from "@react-navigation/native";
 import CMline from "./CMline";
 
-const CMHomeCard = () => {
+const CMHomeCard = ({ totalPoints = "00", profileImage = "" }) => {
   const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -36,8 +36,13 @@ const CMHomeCard = () => {
       <View style={styles.profileContainer}>
         <View style={styles.avatarContainer}>
           {/* when this condition got true so render image and must size is 110 110  */}
-          {true ? (
-            <MenIcon width={50} height={50} />
+          {profileImage ? (
+            <Image
+              style={{ borderRadius: 60, borderWidth: 1 }}
+              source={{ uri: profileImage }}
+              width={110}
+              height={110}
+            />
           ) : (
             <MenIcon width={50} height={50} />
           )}
@@ -49,7 +54,7 @@ const CMHomeCard = () => {
         <BagdeHomeCardIcon width={26} height={30} />
         <Text style={styles.TotalPointsText}>Total Points </Text>
         <LinearGradient colors={["#F87655", "#EF5128"]} style={styles.gradient}>
-          <Text style={styles.pointsText}>144{""}</Text>
+          <Text style={styles.pointsText}>{totalPoints}</Text>
         </LinearGradient>
       </View>
       {/* Container of Points Information for doctor and hospital in card*/}

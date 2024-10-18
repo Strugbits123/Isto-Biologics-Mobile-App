@@ -8,34 +8,30 @@ import {
   Modal,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CameraIcon from "../Icons/CameraIcon";
-import BagdeHomeCardIcon from "../Icons/BagdeHomeCardIcon";
 import { useFonts } from "expo-font";
-import { LinearGradient } from "expo-linear-gradient";
 import CMThemedButton from "./CMThemedButton";
-import { stubArray } from "lodash";
-import CMButton from "./CMButton";
-import CMGradientButton from "./CMGradientButton";
-import { max } from "date-fns/max";
-import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
 import ArrowRight from "../Icons/ArrowRight";
 import CMLoader from "./CMLoader";
 import * as ImagePicker from "expo-image-picker";
 import GalleryIcon from "../Icons/GaleryIcon";
-// import { Dialog } from "react-native-paper";
-
-const CMProfileCard = () => {
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { myWixClient } from "../utils/createClient";
+const CMProfileCard = ({ currentMember, setCurrentMember }) => {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Check error");
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
+  const { profile, loginEmail, contact } = currentMember || {};
+  const queryClient = useQueryClient();
   const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
     "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
     "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
@@ -43,9 +39,61 @@ const CMProfileCard = () => {
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
+  useEffect(() => {
+    setImage(profile?.photo?.url);
+    setName(contact?.firstName);
+  }, [currentMember]);
+
+  // const getWixImageUrl = async () => {
+  //   try {
+  //     const options = {
+  //       // filePath:"D:\Janisar",
+  //       fileName:"Janisar.jpeg"
+  //     }
+  //     console.log("currentMember in profile screen", currentMember);
+  //     const responseImageUrl = await myWixClient.files.generateFileUploadUrl(
+  //       "image/jpeg",
+  //       options,
+  //     );
+  //     console.log("responseImageUrl", responseImageUrl);
+  //   } catch (error) {
+  //     console.log("error in getWixImageUrl", error);
+  //   }
+  // };
+
+  console.log("image", image);
+
+  const updateUser = async (id) => {
+    setLoading(true);
+    try {
+      const updatedMemberDataToSend = {
+        contact: {
+          firstName: name,
+        },
+        profile: {
+          photo: {
+            url: image,
+          },
+        },
+      };
+      console.log("updatedMemberDataToSend", updatedMemberDataToSend);
+      const updatedMemberResponse = await myWixClient.members.updateMember(
+        id,
+        updatedMemberDataToSend,
+      );
+      console.log("updatedMemberResponse", updatedMemberResponse);
+      if (updatedMemberResponse) {
+        ToastAndroid.show("Profile updated Successfully!", ToastAndroid.SHORT);
+        setRefresh(!refresh);
+      }
+      // setCurrentMember(updatedMemberResponse);
+    } catch (error) {
+      console.log("Error in updateMember ", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const pickImageFromGallery = async () => {
     // check permision of galery
@@ -101,6 +149,9 @@ const CMProfileCard = () => {
   };
 
   const hideDialog = () => setVisible(false);
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
   return (
     <View style={styles.container}>
       {/* Container of profile in card  */}
@@ -151,14 +202,10 @@ const CMProfileCard = () => {
           <Text style={styles.inputTitle}>Email</Text>
           <TextInput
             style={styles.input}
-            value={email}
-            onChangeText={(text) => {
-              setEmail(text);
-            }}
+            value={loginEmail}
             placeholderTextColor={ThemeTextColors.placeholder}
             autoCorrect={false}
             autoCapitalize="none"
-            placeholder={"Your email"}
             editable={false}
           />
         </View>
@@ -168,7 +215,11 @@ const CMProfileCard = () => {
         <CMThemedButton
           gradientStyle={{ paddingVertical: 10 }}
           title="Update"
-          onPress={() => console.log("update btn pressed")}
+          onPress={() => {
+            updateUser(currentMember?._id);
+            // getWixImageUrl();
+          }}
+          loading={loading}
           icon={<ArrowRight width={20} height={20} />}
         />
       </View>

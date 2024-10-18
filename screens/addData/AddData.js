@@ -4,11 +4,31 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { myWixClient } from "../../utils/createClient";
 
 const AddData = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const route = useRoute();
   const { item } = route.params || {}; // Safely destructure item from params
+  const [currentMember, setCurrentMember] = useState({});
+  const [fontsLoaded] = useFonts({
+    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  });
+
+  useEffect(() => {
+    const fetchCurrentMember = async () => {
+      const { member } = await myWixClient.members.getCurrentMember({
+        fieldSet: "FULL",
+      });
+
+      setCurrentMember(member);
+    };
+    fetchCurrentMember();
+  }, []);
+
+  console.log("currentMember", currentMember);
+  const { profile } = currentMember || {};
 
   // Use useEffect to determine if it's an update when the screen is first loaded
   useEffect(() => {
@@ -18,12 +38,20 @@ const AddData = () => {
       setIsUpdate(false); // Otherwise, it's adding new data
     }
   }, [item]);
+
   console.log("isUpdate", isUpdate);
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
+
   return (
     <View style={styles.mainContainer}>
       {/*  Header component */}
       <View style={styles.headerContainer}>
-        <CMHomeHeader />
+        <CMHomeHeader
+          profileImage={profile?.photo?.url}
+          name={profile?.nickname}
+        />
       </View>
 
       <ScrollView

@@ -5,21 +5,23 @@ import { View } from "react-native";
 import "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 import "react-native-url-polyfill/auto";
-
-const myWixClient = createClient({
-  auth: OAuthStrategy({
-    clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-  }),
-});
-
+import { members } from "@wix/members";
+import { redirects } from "@wix/redirects";
+import { myWixClient } from "../utils/createClient";
+/**
+ * @type {React.Context<{
+ *  session: import("@wix/sdk").Tokens,
+ * setSession: (session: import("@wix/sdk").Tokens) => Promise<void>,
+ * newVisitorSession: () => Promise<void> }>}
+ */
 const WixSessionContext = React.createContext(undefined);
 
 export function WixSessionProvider(props) {
   const [session, setSessionState] = React.useState(null);
   const [sessionLoading, setSessionLoading] = React.useState(false);
+
   const setSession = React.useCallback(
     async (tokens) => {
-      // console.log("set Session run", tokens);
       myWixClient.auth.setTokens(tokens);
       await SecureStore.setItemAsync(
         "wixSession",

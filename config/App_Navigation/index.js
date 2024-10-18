@@ -10,27 +10,21 @@ import ProfileScreen from "../../screens/profile/ProfileScreen";
 import { LoadingIndicator } from "../../components/LoadingIndicator/LoadingIndicator";
 import CMLoader from "../../components/CMLoader";
 import { token } from "../../utils/constants";
+import { useWixSession } from "../../authentication/session";
 
 const Stack = createNativeStackNavigator();
 
 const App_Navigation = () => {
+  const { session } = useWixSession();
   const [isLoggedIn, setIsLoggedIn] = useState(null); // null to handle splash state
   const [isLoading, setIsLoading] = useState(true); // null to handle splash state
 
   useEffect(() => {
     const checkAuthToken = async () => {
       try {
-        console.log("Fetching auth token...");
-        const auth_token = await AsyncStorage.getItem(token);
-        console.log("Auth token:", auth_token);
-
-        if (auth_token) {
-          console.log("Auth token found, verifying...");
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-          console.log("No auth token found, setting auth to false");
-        }
+        session.refreshToken.role !== "member"
+          ? setIsLoggedIn(false)
+          : setIsLoggedIn(true);
       } catch (error) {
         setIsLoggedIn(false);
         console.error("Error fetching auth token:", error);

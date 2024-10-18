@@ -5,47 +5,13 @@ import { createClient, OAuthStrategy } from "@wix/sdk";
 import { members } from "@wix/members";
 import validator from "validator";
 import WebView from "react-native-webview";
+import { myWixClient } from "../utils/createClient";
 
-const myWixClient = createClient({
-  modules: {
-    members,
-  },
-  auth: OAuthStrategy({
-    clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-  }),
-});
 const LoginHandlerContext = React.createContext(null);
 
 export function useLoginHandler() {
   return React.useContext(LoginHandlerContext);
 }
-
-// export function LoginHandler(props) {
-//   const { setSessionLoading } = useWixSession();
-//   const [loginState, setLoginState] = React.useState({});
-//   const login = React.useCallback(
-//     async (email, password) => {
-//       const result = await myWixClient.auth.login({
-//         email,
-//         password,
-//       });
-//       // console.log("results", result);
-//       const data = myWixClient.auth.generateOAuthData(
-//         Linking.createURL("/oauth/wix/callback"),
-//       );
-//       // console.log("data", data);
-//       const { authUrl } = await myWixClient.auth.getAuthUrl(data, {
-//         prompt: "none",
-//         sessionToken: result.data.sessionToken,
-//       });
-//       // console.log("authUrl", authUrl);
-//       setLoginState({
-//         url: authUrl,
-//         data,
-//       });
-//     },
-//     [myWixClient.auth, setSessionLoading],
-//   );
 
 export function LoginHandler(props) {
   const { session, setSessionLoading } = useWixSession();
@@ -56,16 +22,19 @@ export function LoginHandler(props) {
       const data = myWixClient.auth.generateOAuthData(
         Linking.createURL("/oauth/wix/callback"),
       );
+      // console.log("data", data)
       const { authUrl } = await myWixClient.auth.getAuthUrl(data, {
         prompt: "none",
         sessionToken,
       });
+      // console.log("authUrl", authUrl)
       const result = await fetch(authUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
+      // console.log("result", result)
       if (result.status === 400) {
         setSessionLoading(false);
         return Promise.reject(
@@ -108,7 +77,6 @@ export function LoginHandler(props) {
     const subscription = Linking.addEventListener("url", async (event) => {
       const url = new URL(event.url);
       const wixMemberLoggedIn = url.searchParams.get("wixMemberLoggedIn");
-      console.log("wixMemberLoggedIn", wixMemberLoggedIn);
       const requiresSilentLogin =
         wixMemberLoggedIn === "true" && session.refreshToken.role !== "member";
       if (requiresSilentLogin) {
@@ -149,14 +117,11 @@ function LoginHandlerInvisibleWebview(props) {
               request.url,
               props.loginState.data,
             );
-            // console.log("code", code);
-            // console.log("state", state);
             myWixClient.auth
               .getMemberTokens(code, state, props.loginState.data)
               .then((tokens) => {
-                // console.log("tokens in LoginHandlerInvisibleWebview",tokens);
                 setSession(tokens);
-                props.setloginState(null);
+                props.setLoginState(null);
               });
             return false;
           }

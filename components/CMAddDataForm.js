@@ -7,8 +7,7 @@ import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { items } from "@wix/data";
-import { useNavigation } from "@react-navigation/native";
-// import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
   const navigation = useNavigation();
@@ -26,16 +25,25 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
     ProteiOS: [],
   });
 
-//  if(!isUpdateItem){
-//   React.useEffect(() => {
-//     const unsubscribe = navigation.addListener("focus", () => {
-//       setData({})
-//     });
-
-//     return unsubscribe;
-//   }, [navigation]);
-//  }
-
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset form only if not updating an item
+      if (!isUpdateItem) {
+        setData({});
+        setSelectedProducts({
+          Magellan: [],
+          Influx: [],
+          SPARC: [],
+          InQu: [],
+          Fibrant: [],
+          ProteiOS: [],
+        });
+      }
+      return () => {
+        // Cleanup when screen loses focus
+      };
+    }, [isUpdateItem]),
+  );
   //checks when is updateItem comes it means update form so set all fields.
   useEffect(() => {
     if (isUpdateItem) {

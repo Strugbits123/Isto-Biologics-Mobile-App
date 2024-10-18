@@ -1,15 +1,39 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
+import { fetchCurrentMember } from "../../authentication/getCurrentMember";
+import { myWixClient } from "../../utils/createClient";
 
 const ProfileScreen = () => {
+  const [currentMember, setCurrentMember] = useState({});
+  useEffect(() => {
+    const fetchCurrentMember = async () => {
+      const { member } = await myWixClient.members.getCurrentMember({
+        fieldSet: "FULL",
+      });
+
+      setCurrentMember(member);
+    };
+    fetchCurrentMember();
+  }, []);
+
+  console.log("currentMember", currentMember);
+  const { profile } = currentMember || {};
+
+  if (!currentMember) {
+    return <CMLoader size={30} />;
+  }
+
   return (
     <View style={styles.mainContainer}>
       {/*  Header component */}
       <View style={styles.headerContainer}>
-        <CMHomeHeader />
+        <CMHomeHeader
+          profileImage={profile?.photo?.url}
+          name={profile?.nickname}
+        />
       </View>
 
       <ScrollView
@@ -24,7 +48,7 @@ const ProfileScreen = () => {
 
         {/*  Profile Card Component  */}
         <View style={styles.cardContainer}>
-          <CMProfileCard />
+          <CMProfileCard currentMember={currentMember} setCurrentMember={setCurrentMember} />
         </View>
       </ScrollView>
     </View>

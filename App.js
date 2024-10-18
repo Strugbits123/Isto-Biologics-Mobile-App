@@ -1,24 +1,13 @@
 import "./polyfills";
-import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { OAuthStrategy, WixProvider } from "@wix/sdk-react";
-import * as Linking from "expo-linking";
 import * as React from "react";
 import "react-native-gesture-handler";
-import { PaperProvider } from "react-native-paper";
 import "react-native-url-polyfill/auto";
 import { WixSessionProvider } from "./authentication/session";
 import { LoginHandler } from "./authentication/LoginHandler";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { tabs } from "./data/tabs/data";
-import { TabBar } from "./components/Tabs/Tabs";
 import { useFonts } from "expo-font";
 import { LoadingIndicator } from "./components/LoadingIndicator/LoadingIndicator";
-import { Text, View, StyleSheet } from "react-native";
-import { ThemeBgColors, ThemeTextColors } from "./theme/theme";
-import SplashScreen from "./screens/splash/SplashScreen";
-import LoginScreen from "./screens/login/LoginScreen";
-import HomeScreen from "./screens/home/HomeScreen";
 import App_Navigation from "./config/App_Navigation";
 
 const Tab = createBottomTabNavigator();
@@ -35,74 +24,10 @@ function App() {
     return <LoadingIndicator />;
   }
 
-  const clientId = process.env.WIX_CLIENT_ID || "";
+  // const clientId = process.env.WIX_CLIENT_ID || "";
 
   return (
-    // <PaperProvider>
-    //   <QueryClientProvider client={queryClient}>
-    //     <WixProvider
-    //       auth={OAuthStrategy({
-    //         clientId,
-    //       })}
-    //     >
-    //       <WixSessionProvider clientId={clientId}>
-    //         <LoginHandler>
-    //           <NavigationContainer
-    //             linking={{
-    //               prefixes: [Linking.createURL("/")],
-    //               config: {
-    //                 screens: {
-    //                   Store: {
-    //                     path: "store",
-    //                     screens: {
-    //                       CheckoutThankYou: "checkout/thank-you",
-    //                       Cart: "cart",
-    //                       Products: "products",
-    //                       Product: "products/product",
-    //                       Collections: "collections",
-    //                     },
-    //                   },
-    //                 },
-    //               },
-    //             }}
-    //           >
-    //             <Tab.Navigator
-    //               screenOptions={() => ({
-    //                 headerShown: false,
-    //                 tabBarLabelStyle: {
-    //                   fontSize: 11,
-    //                 },
-    //                 tabBarStyle: {
-    //                   backgroundColor: "#C4C197",
-    //                 },
-    //                 tabBarHideOnKeyboard: true,
-    //               })}
-    //               initialRouteName={tabs[0].name}
-    //               tabBar={(props) => <TabBar {...props} />}
-    //             >
-    //               {tabs.map((tab) => (
-    //                 <Tab.Screen
-    //                   options={{
-    //                     tabBarIcon: tab.icon,
-    //                   }}
-    //                   name={tab.name}
-    //                   component={tab.component}
-    //                   navigationKey={tab.name}
-    //                   key={tab.name}
-    //                 />
-    //               ))}
-    //             </Tab.Navigator>
-    //           </NavigationContainer>
-    //         </LoginHandler>
-    //       </WixSessionProvider>
-    //     </WixProvider>
-    //   </QueryClientProvider>
-    // </PaperProvider>
     <>
-      {/* <LoginScreen /> */}
-      {/* <SplashScreen /> */}
-      {/* <HomeScreen/> */}
-      {/* <QueryClientProvider client={queryClient}> */}
       <QueryClientProvider client={queryClient}>
         <WixSessionProvider clientId="0715f53d-fb36-46bd-8fce-7f151bf279ee">
           <LoginHandler>
@@ -110,7 +35,6 @@ function App() {
           </LoginHandler>
         </WixSessionProvider>
       </QueryClientProvider>
-      {/* </QueryClientProvider> */}
     </>
   );
 }
