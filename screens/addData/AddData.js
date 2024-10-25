@@ -16,23 +16,10 @@ const AddData = () => {
   const { item } = route.params || {}; // Safely destructure item from params
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
-  // const [currentMember, setCurrentMember] = useState({});
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
 
-  // useEffect(() => {
-  //   const fetchCurrentMember = async () => {
-  //     const { member } = await myWixClient.members.getCurrentMember({
-  //       fieldSet: "FULL",
-  //     });
-
-  //     setCurrentMember(member);
-  //   };
-  //   fetchCurrentMember();
-  // }, []);
-
-  // console.log("currentMember", currentMember);
   const { profile } = currentMemberData || {};
 
   // Use useEffect to determine if it's an update when the screen is first loaded

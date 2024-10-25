@@ -13,23 +13,10 @@ const Entries = () => {
   const { id } = route.params || {};
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
-  const [currentMember, setCurrentMember] = useState({});
-  useEffect(() => {
-    const fetchCurrentMember = async () => {
-      const { member } = await myWixClient.members.getCurrentMember({
-        fieldSet: "FULL",
-      });
-      console.log("run");
-      setCurrentMember(member);
-    };
-    fetchCurrentMember();
-  }, []);
 
-  console.log("currentMember", currentMember);
+  const { profile } = currentMemberData || {};
 
-  const { profile } = currentMember || {};
-
-  if (!currentMember) {
+  if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
 

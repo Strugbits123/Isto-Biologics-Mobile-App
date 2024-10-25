@@ -115,7 +115,9 @@ const HomeScreen = ({ isLoggedIn }) => {
     <View style={styles.mainContainer}>
       <View style={styles.headerContainer}>
         <CMHomeHeader
-          profileImage={currentMemberData?.profile?.photo?.url || profile?.photo?.url}
+          profileImage={
+            currentMemberData?.profile?.photo?.url || profile?.photo?.url
+          }
           name={currentMemberData?.profile?.nickname || profile?.nickname}
           fullName={currentMemberData?.contact?.firstName || contact?.firstName}
           useInScreen={"home"}

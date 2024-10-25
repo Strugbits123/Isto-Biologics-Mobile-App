@@ -11,19 +11,7 @@ import CMLoader from "../../components/CMLoader";
 const DetailedEntry = () => {
   const { currentMemberData, updateCurrentMemberData } =
   useContext(CurrentMemberContext);
-  // const [currentMember, setCurrentMember] = useState({});
-  // useEffect(() => {
-  //   const fetchCurrentMember = async () => {
-  //     const { member } = await myWixClient.members.getCurrentMember({
-  //       fieldSet: "FULL",
-  //     });
 
-  //     setCurrentMember(member);
-  //   };
-  //   fetchCurrentMember();
-  // }, []);
-
-  // console.log("currentMember", currentMember);
   const { profile } = currentMemberData || {};
 
   if (!currentMemberData) {

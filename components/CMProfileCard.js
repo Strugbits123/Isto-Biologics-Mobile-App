@@ -23,7 +23,6 @@ import * as FileSystem from "expo-file-system";
 import { Buffer } from "buffer";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
-// import { ToastContext, useToast } from "./ToastHandler";
 
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
