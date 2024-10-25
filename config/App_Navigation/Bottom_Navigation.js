@@ -2,18 +2,15 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../../screens/home/HomeScreen";
-import LoginScreen from "../../screens/login/LoginScreen";
 import DocsScreen from "../../screens/docs/DocsScreen";
 import { UnActiveHomeTabIcon, HomeTabIcon } from "../../Icons/HomeTabIcon";
 import LeaderboardTabIcon from "../../Icons/LeaderboardTabIcon";
 import { UnActiveDocsTabIcon, DocsTabIcon } from "../../Icons/DocsTabIcon";
 import Leaderboard from "../../screens/leaderboard/Leaderboard";
-import { ThemeBgColors } from "../../theme/theme";
 import ProfileScreen from "../../screens/profile/ProfileScreen";
 import Entries from "../../screens/Entries/Entries";
 import DetailedEntry from "../../screens/DetailedEntry/DetailedEntry";
 import AddData from "../../screens/addData/AddData";
-import { MemberAreaScreen } from "../../screens/members/MemberAreaScreen/MemberAreaScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -97,13 +94,6 @@ const Bottom_Navigation = () => {
         }}
         name="detailed_entry"
         component={DetailedEntry}
-      />
-       <Tab.Screen
-        options={{
-          tabBarButton: () => null, // Hide this tab from the tab bar
-        }}
-        name="member_area_screen"
-        component={MemberAreaScreen}
       />
     </Tab.Navigator>
   );

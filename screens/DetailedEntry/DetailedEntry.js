@@ -1,16 +1,43 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMEntryCard from "../../components/CMEntryCard";
 import CMDetailEntryCard from "../../components/CMDetailEntryCard";
+import { myWixClient } from "../../utils/createClient";
+import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import CMLoader from "../../components/CMLoader";
 
 const DetailedEntry = () => {
+  const { currentMemberData, updateCurrentMemberData } =
+  useContext(CurrentMemberContext);
+  // const [currentMember, setCurrentMember] = useState({});
+  // useEffect(() => {
+  //   const fetchCurrentMember = async () => {
+  //     const { member } = await myWixClient.members.getCurrentMember({
+  //       fieldSet: "FULL",
+  //     });
+
+  //     setCurrentMember(member);
+  //   };
+  //   fetchCurrentMember();
+  // }, []);
+
+  // console.log("currentMember", currentMember);
+  const { profile } = currentMemberData || {};
+
+  if (!currentMemberData) {
+    return <CMLoader size={30} />;
+  }
   return (
     <View style={styles.mainContainer}>
       {/*  Header component */}
       <View style={styles.headerContainer}>
-        <CMHomeHeader navigationOnPage="entries" />
+        <CMHomeHeader
+          profileImage={profile?.photo?.url}
+          name={profile?.nickname}
+          navigationOnPage="entries"
+        />
       </View>
 
       <ScrollView

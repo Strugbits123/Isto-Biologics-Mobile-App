@@ -1,5 +1,5 @@
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import CMInput from "./CMInput";
 import CMDateInput from "./CMDateInput";
 import CMProductLine from "./CMProductLine";
@@ -8,12 +8,26 @@ import ArrowRight from "../Icons/ArrowRight";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { items } from "@wix/data";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { myWixClient } from "../utils/createClient";
+import { PointsContext } from "./PointsHandler";
+import Toast from "./Toast/Toast";
 
-const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
+const CMAddDataForm = ({
+  submisionType,
+  checkedForms,
+  isUpdateItem,
+  currentMember,
+}) => {
   const navigation = useNavigation();
+  const { totalPoints, updatePoints } = useContext(PointsContext);
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [toastVisible, setToastVisible] = useState(false);
+  const [iconType, setIconType] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // console.log("currentMember", currentMember._id);
 
   // State to hold checkbox values categorized
   const [selectedProducts, setSelectedProducts] = useState({
@@ -59,19 +73,19 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
         fibrant_category,
         proteios_category,
       } = isUpdateItem.data;
-      console.log(
-        "isUpdateItem.data destrued",
-        doctor_firstname,
-        doctor_lastname,
-        hospital_name,
-        first_case_date,
-        magellan_category,
-        influx_category,
-        sparc_category,
-        inqu_category,
-        fibrant_category,
-        proteios_category,
-      );
+      // console.log(
+      //   "isUpdateItem.data destrued",
+      //   doctor_firstname,
+      //   doctor_lastname,
+      //   hospital_name,
+      //   first_case_date,
+      //   magellan_category,
+      //   influx_category,
+      //   sparc_category,
+      //   inqu_category,
+      //   fibrant_category,
+      //   proteios_category,
+      // );
 
       // Set initial form data
       setData({
@@ -92,14 +106,6 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
       });
     }
   }, [isUpdateItem]);
-
-  const myWixClient = createClient({
-    modules: { items },
-    auth: OAuthStrategy({
-      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-    }),
-    // Include the auth strategy and host as relevant
-  });
 
   const handle_onChange_Text = (field, value) => {
     setData((pre) => ({ ...pre, [field]: value }));
@@ -243,9 +249,9 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
       const doctorFirstNameToSend = doctorChecked ? doctorFirstName : "";
       const doctorLastNameToSend = doctorChecked ? doctorLastName : "";
 
-      // Combine all data into one object
+      // Combine all data into one object for add a entry
       const dataToSend = {
-        user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+        user_id: currentMember._id,
         doctor_firstname: doctorFirstNameToSend,
         doctor_lastname: doctorLastNameToSend,
         hospital_name: hospitalName,
@@ -278,7 +284,7 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
       let response;
       if (!isUpdateItem) {
         response = await myWixClient.items.insertDataItem(addEntriesOptions);
-        console.log("response of add entry", response);
+        // console.log("response of add entry", response);
       } else {
         response = await myWixClient.items.updateDataItem(
           isUpdateItem._id,
@@ -289,7 +295,7 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
         const leaderboardOptions = {
           dataCollectionId: "leaderboard",
         };
-        //query for checking if user is available in leaderboard or not
+        //query for getting update leaderboard data by user id for updated points
         const getLeaderboardUsers = await myWixClient.items
           .queryDataItems(leaderboardOptions)
           .eq("user_id", response.dataItem.data.user_id)
@@ -299,7 +305,7 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
 
         //data to send for minus when user update the entry old points minus from total leaderboard points
         const dataToSendInLeaderboardForUpdatePoints = {
-          user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+          user_id: currentMember._id,
           total_magellan_points:
             getLeaderboardUsers._items[0].data.total_magellan_points -
             isUpdateItem.data.magellan_points,
@@ -333,6 +339,9 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
             getLeaderboardUsers._items[0]._id,
             updateLeaderboardOptions,
           );
+        updatePoints(
+          resLeaderboardUpdatePoints.dataItem.data.total_entries_points,
+        );
         // console.log("resLeaderboardUpdatePoints", resLeaderboardUpdatePoints);
       }
 
@@ -345,13 +354,13 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
         .queryDataItems(leaderboardOptions)
         .eq("user_id", response.dataItem.data.user_id)
         .find();
-      console.log("getLeaderboardUsers", getLeaderboardUsers);
+      // console.log("getLeaderboardUsers", getLeaderboardUsers);
 
       //condition for if this users is first time adding a product so leaderboard accept new entry otherwise update the old entry
       if (getLeaderboardUsers._items.length === 0) {
-        console.log("item not found");
+        // console.log("item not found");
         const dataToSendInLeaderboard = {
-          user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+          user_id: currentMember._id,
           total_magellan_points: response.dataItem.data.magellan_points,
           total_influx_points: response.dataItem.data.influx_points,
           total_sparc_points: response.dataItem.data.sparc_points,
@@ -370,11 +379,12 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
         const resLeaderboardNewEntry = await myWixClient.items.insertDataItem(
           addLeaderboardOptions,
         );
-        console.log("resLeaderboardNewEntry", resLeaderboardNewEntry);
+        // console.log("resLeaderboardNewEntry", resLeaderboardNewEntry);
+        updatePoints(resLeaderboardNewEntry.dataItem.data.total_entries_points);
       } else {
-        console.log("item found");
+        // console.log("item found");
         const dataToSendInLeaderboardForUpdate = {
-          user_id: "ad951362-37c8-4d01-a214-46cafa628440",
+          user_id: currentMember._id,
           total_magellan_points:
             response.dataItem.data.magellan_points +
             getLeaderboardUsers._items[0].data.total_magellan_points,
@@ -409,15 +419,28 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
           getLeaderboardUsers._items[0]._id,
           updateLeaderboardOptions,
         );
+        // console.log("resLeaderboardUpdate", resLeaderboardUpdate.dataItem.data.total_entries_points)
+        updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
       }
 
       if (!isUpdateItem) {
-        ToastAndroid.show("Data Added Successfully!", ToastAndroid.SHORT);
+        setToastVisible(true);
+        setIconType("success");
+        setErrorMessage("Data Added Successfully!");
+        setTimeout(() => {
+          setToastVisible(false);
+          navigation.navigate("home");
+        }, 3000);
       } else {
-        ToastAndroid.show("Data Updated Successfully!", ToastAndroid.SHORT);
-        navigation.replace("Bottom_Navigation", {
-          screen: "entries",
-        });
+        setToastVisible(true);
+        setIconType("success");
+        setErrorMessage("Data Updated Successfully!");
+        setTimeout(() => {
+          setToastVisible(false);
+          navigation.replace("Bottom_Navigation", {
+            screen: "entries",
+          });
+        }, 3000);
       }
       // Reset all fields and uncheck products
       setData({});
@@ -499,6 +522,7 @@ const CMAddDataForm = ({ submisionType, checkedForms, isUpdateItem }) => {
           loading={isLoading}
         />
       </View>
+      <Toast visible={toastVisible} type={iconType} message={errorMessage} />
     </View>
   );
 };

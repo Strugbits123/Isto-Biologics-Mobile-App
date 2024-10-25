@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { isLoading, useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
@@ -19,8 +19,13 @@ import CMConfirmationModal from "./CMConfirmationModal";
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { items } from "@wix/data";
 import { myWixClient } from "../utils/createClient";
+import { PointsContext } from "./PointsHandler";
+import { CurrentMemberContext } from "./CurrentMemberHandler";
+import Toast from "./Toast/Toast";
 
-const CMEntryCard = () => {
+const CMEntryCard = ({ currentMember, id }) => {
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const navigation = useNavigation();
   const [entriesData, setEntriesData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -30,6 +35,11 @@ const CMEntryCard = () => {
   const [modalIndex, setModalIndex] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const { totalPoints, updatePoints } = useContext(PointsContext);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [iconType, setIconType] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  // console.log("currentMember", currentMember._id);
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -39,13 +49,6 @@ const CMEntryCard = () => {
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
-
-  // const myWixClient = createClient({
-  //   modules: { items },
-  //   auth: OAuthStrategy({
-  //     clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-  //   }),
-  // });
 
   // Method to get all entries of user
   const getUserEntries = async () => {
@@ -62,7 +65,7 @@ const CMEntryCard = () => {
       };
       const response = await myWixClient.items
         .queryDataItems(options)
-        .eq("user_id", "ad951362-37c8-4d01-a214-46cafa628440")
+        .eq("user_id", currentMemberData?._id)
         .find();
       // console.log("response", response._items);
       setEntriesData(response.items);
@@ -82,7 +85,7 @@ const CMEntryCard = () => {
 
   useEffect(() => {
     getUserEntries();
-  }, [refresh]);
+  }, [refresh, currentMemberData]);
 
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
@@ -110,7 +113,7 @@ const CMEntryCard = () => {
   const handleDeleteEntry = async (selectedItem) => {
     try {
       //first we delete entry from entries collection
-      console.log("selectedItem", selectedItem);
+      // console.log("selectedItem", selectedItem);
 
       const deleteEntryOptions = {
         dataCollectionId: "entries",
@@ -123,16 +126,16 @@ const CMEntryCard = () => {
       const leaderboardOptions = {
         dataCollectionId: "leaderboard",
       };
-      console.log(
-        " selectedItem.data.user_id._id",
-        selectedItem.data.user_id._id,
-      );
+      // console.log(
+      //   " selectedItem.data.user_id._id",
+      //   selectedItem.data.user_id._id,
+      // );
       //get leaderboard data for subtract points
       const getLeaderboardUsers = await myWixClient.items
         .queryDataItems(leaderboardOptions)
         .eq("user_id", selectedItem.data.user_id._id)
         .find();
-      console.log("getLeaderboardUsers", getLeaderboardUsers);
+      // console.log("getLeaderboardUsers", getLeaderboardUsers);
 
       const updateLeaderboardPoints = {
         user_id: selectedItem.data.user_id._id,
@@ -158,22 +161,29 @@ const CMEntryCard = () => {
           getLeaderboardUsers._items[0].data.total_entries_points -
           selectedItem.data.total_entry_points,
       };
-      console.log("updateLeaderboardPoints", updateLeaderboardPoints);
+      // console.log("updateLeaderboardPoints", updateLeaderboardPoints);
       const updateLeaderboardOptions = {
         dataCollectionId: "leaderboard",
         dataItem: {
           data: updateLeaderboardPoints,
         },
       };
-      console.log(
-        "getLeaderboardUsers._items[0]._id",
-        getLeaderboardUsers._items[0]._id,
-      );
+      // console.log(
+      //   "getLeaderboardUsers._items[0]._id",
+      //   getLeaderboardUsers._items[0]._id,
+      // );
       const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
         getLeaderboardUsers._items[0]._id,
         updateLeaderboardOptions,
       );
-      setRefresh(!refresh);
+      updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
+      setToastVisible(true);
+      setIconType("success");
+      setErrorMessage("Entry Deleted Successfully!");
+      setTimeout(() => {
+        setToastVisible(false);
+        setRefresh(!refresh);
+      }, 2000);
     } catch (error) {
       console.log("error in handleDeleteEntry", error);
     }
@@ -315,6 +325,7 @@ const CMEntryCard = () => {
           }}
         />
       )}
+      <Toast visible={toastVisible} type={iconType} message={errorMessage} />
     </View>
   );
 };

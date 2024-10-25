@@ -32,8 +32,8 @@ export function LoginHandlerInvisibleWebview(props) {
               request.url,
               props.loginState.data,
             );
-            console.log("code", code);
-            console.log("state", state);
+            // console.log("code", code);
+            // console.log("state", state);
             myWixClient.auth
               .getMemberTokens(code, state, props.loginState.data)
               .then((tokens) => {

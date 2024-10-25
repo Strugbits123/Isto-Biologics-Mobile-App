@@ -9,7 +9,7 @@ import DoctorIcon from "../Icons/DoctorIcon";
 import CMCheckbox from "./CMCheckbox";
 import CMAddDataForm from "./CMAddDataForm";
 
-const CMAddDataCard = ({ isUpdateItem }) => {
+const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
   const [checkedState, setCheckedState] = useState({
     doctorChecked: false,
     hospitalChecked: true,
@@ -57,7 +57,7 @@ const CMAddDataCard = ({ isUpdateItem }) => {
     });
   };
 
-  console.log("check", checkedState);
+  // console.log("check", checkedState);
 
   return (
     <View style={styles.container}>
@@ -94,6 +94,7 @@ const CMAddDataCard = ({ isUpdateItem }) => {
       {/* Always render the Doctor form */}
       <View>
         <CMAddDataForm
+          currentMember={currentMember}
           checkedForms={checkedState}
           submisionType={checkedState.doctorChecked ? "doctor" : "hospital"}
           isUpdateItem={isUpdateItem}

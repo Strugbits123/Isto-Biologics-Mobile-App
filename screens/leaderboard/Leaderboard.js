@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   productsBgColors,
   rankBgColors,
@@ -21,9 +21,10 @@ import CMLoader from "../../components/CMLoader";
 import { useFonts } from "expo-font";
 import CrownIcon from "../../Icons/CrownIcon";
 import CMline from "../../components/CMline";
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { items } from "@wix/data";
-
+import { myWixClient } from "../../utils/createClient";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+//leaderboard object data for dynamic pages
 const productCategoryConfig = {
   Magellan: {
     colors: [productsBgColors.magellan1, productsBgColors.magellan2],
@@ -84,11 +85,16 @@ const productCategoryConfig = {
 };
 
 const Leaderboard = () => {
+  const route = useRoute();
+  const { id } = route.params || {};
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const [headerData, setHeaderData] = useState({});
   const [productCategory, setProductCategory] = useState("Leaderboard");
   const [LeaderboardData, setLeaderboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const { profile } = currentMemberData || {};
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -96,13 +102,6 @@ const Leaderboard = () => {
     "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
   });
 
-  const myWixClient = createClient({
-    modules: { items },
-    auth: OAuthStrategy({
-      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-    }),
-    // Include the auth strategy and host as relevant
-  });
   // let leaderboardData = [];
   const getLeaderboardData = async () => {
     setIsLoading(true);
@@ -120,7 +119,7 @@ const Leaderboard = () => {
       const getLeaderboardData = await myWixClient.items
         .queryDataItems(options)
         .find();
-      console.log("getLeaderboardData", getLeaderboardData._items);
+      // console.log("getLeaderboardData", getLeaderboardData._items);
 
       //sort highest to lowest according to the point
       const sortedData = getLeaderboardData.items.sort(
@@ -158,162 +157,20 @@ const Leaderboard = () => {
     "ProteiOS",
   ];
 
-  // //data dynamic show all categories when navigate categories
-  // useEffect(() => {
-  //   // Function to set header data based on productCategory
-  //   const updateHeaderData = () => {
-  //     switch (productCategory) {
-  //       case "Magellan":
-  //         setHeaderData({
-  //           colors: [productsBgColors.magellan1, productsBgColors.magellan2],
-  //           iconColor: ThemeBgColors.white,
-  //           headerTitle: "Magellan",
-  //           headerTitleStyle: {
-  //             color: ThemeBgColors.white,
-  //           },
-  //           rankingName: ThemeTextColors.white,
-  //           points_field: "total_magellan_points",
-  //         });
-  //         break;
-  //       case "Influx":
-  //         setHeaderData({
-  //           colors: [productsBgColors.influx, productsBgColors.influx],
-  //           iconColor: ThemeTextColors.darkGray1,
-  //           headerTitle: "Influx",
-  //           headerTitleStyle: {
-  //             color: ThemeTextColors.darkGray1,
-  //           },
-  //           rankingName: ThemeTextColors.darkGray1,
-  //           points_field: "total_influx_points",
-  //         });
-  //         break;
-  //       case "SPARC":
-  //         setHeaderData({
-  //           colors: [productsBgColors.sparc1, productsBgColors.sparc2],
-  //           iconColor: ThemeTextColors.white,
-  //           headerTitle: "SPARC",
-  //           headerTitleStyle: {
-  //             color: ThemeTextColors.white,
-  //           },
-  //           rankingName: ThemeTextColors.white,
-  //           points_field: "total_sparc_points",
-  //         });
-  //         break;
-  //       case "InQu":
-  //         setHeaderData({
-  //           colors: [productsBgColors.inqu, productsBgColors.inqu],
-  //           iconColor: ThemeTextColors.white,
-  //           headerTitle: "InQu",
-  //           headerTitleStyle: {
-  //             color: ThemeTextColors.white,
-  //           },
-  //           rankingName: ThemeTextColors.white,
-  //           points_field: "total_inqu_points",
-  //         });
-  //         break;
-  //       case "Fibrant":
-  //         setHeaderData({
-  //           colors: [productsBgColors.fibrant, productsBgColors.fibrant],
-  //           iconColor: ThemeTextColors.white,
-  //           headerTitle: "Fibrant",
-  //           headerTitleStyle: {
-  //             color: ThemeTextColors.white,
-  //           },
-  //           rankingName: ThemeTextColors.white,
-  //           points_field: "total_fibrant_points",
-  //         });
-  //         break;
-  //       case "ProteiOS":
-  //         setHeaderData({
-  //           colors: [productsBgColors.proteios, productsBgColors.proteios],
-  //           iconColor: ThemeTextColors.white,
-  //           headerTitle: "ProteiOS",
-  //           headerTitleStyle: {
-  //             color: ThemeTextColors.white,
-  //           },
-  //           rankingName: ThemeTextColors.white,
-  //           points_field: "total_proteios_points",
-  //         });
-  //         break;
-  //       case "Leaderboard":
-  //         setHeaderData({
-  //           colors: [
-  //             productsBgColors.leaderboard1,
-  //             productsBgColors.leaderboard2,
-  //           ],
-  //           iconColor: ThemeBgColors.white,
-  //           headerTitle: "Leaderboard",
-  //           headerTitleStyle: {
-  //             color: ThemeBgColors.white,
-  //           },
-  //           rankingName: ThemeTextColors.white,
-  //           points_field: "total_entries_points",
-  //         });
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   };
-  //   updateHeaderData();
-  // }, [productCategory]); // useEffect will run when productCategory changes
-
+  //data dynamic show all categories when navigate categories
   useEffect(() => {
     setHeaderData(productCategoryConfig[productCategory]);
   }, [productCategory]);
 
-  //leaderboard random data
-  // const leaderboardData = [
-  //   {
-  //     id: "1",
-  //     name: "Alice Warren",
-  //     score: 323,
-  //     rank: "01",
-  //     image: "https://randomuser.me/api/portraits/women/44.jpg",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Alan Walter",
-  //     score: 300,
-  //     rank: "02",
-  //     image: "https://randomuser.me/api/portraits/men/34.jpg",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Nial Anderson",
-  //     score: 295,
-  //     rank: "03",
-  //     image: "https://randomuser.me/api/portraits/men/14.jpg",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Arlene McCoy",
-  //     score: 223,
-  //     rank: "04",
-  //     image: "https://randomuser.me/api/portraits/women/24.jpg",
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "Jessica Kemp",
-  //     score: 220,
-  //     rank: "05",
-  //     image: "https://randomuser.me/api/portraits/women/34.jpg",
-  //   },
-  //   {
-  //     id: "6",
-  //     name: "Jessica",
-  //     score: 500,
-  //     rank: "06",
-  //     image: "https://randomuser.me/api/portraits/men/34.jpg",
-  //   },
-  // ];
   // Render a single leaderboard item
 
-  console.log("leaderboardData==>", LeaderboardData);
+  // console.log("leaderboardData==>", LeaderboardData);
 
   //flatlist rederItem function for render list
   const renderItem = ({ item, index }) => {
     // Example: Define your ID to compare for checking if it's "myRank"
-    const myRankId = "777269e0-1e3c-450d-9e96-6c643119dec1";
+    const myRankId = currentMemberData?._id || id;
+    // console.log("myRankId",myRankId)
     const isMyRank = item.data.user_id._id === myRankId;
 
     // Adjust the index to start ranking from 4
@@ -334,7 +191,7 @@ const Leaderboard = () => {
           >
             {/* Render adjusted rank using rank variable */}
             <Text style={[styles.rankText, styles.myRankText]}>{rank}</Text>
-            {item.data.user_id.profilePhoto ? (
+            {item.data.user_id?.profilePhoto ? (
               <Image
                 source={{ uri: item.data.user_id.profilePhoto }}
                 style={styles.profileImage}

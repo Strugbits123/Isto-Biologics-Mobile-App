@@ -18,6 +18,7 @@ import CMLoader from "../../components/CMLoader";
 import { LoginHandler } from "../../authentication/LoginHandler";
 import { WixSessionProvider } from "../../authentication/session";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as SecureStore from "expo-secure-store";
 
 const LoginScreen = () => {
   const queryClient = new QueryClient();
@@ -26,7 +27,11 @@ const LoginScreen = () => {
   });
 
   if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <CMLoader size={30} />
+      </View>
+    );
   }
 
   return (

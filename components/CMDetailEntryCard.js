@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
@@ -12,15 +12,20 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
 import { items } from "@wix/data";
 import { createClient, OAuthStrategy } from "@wix/sdk";
+import { PointsContext } from "./PointsHandler";
+import Toast from "./Toast/Toast";
 
 const CMDetailEntryCard = () => {
   const route = useRoute();
   const { item } = route.params;
-
+  const { totalPoints, updatePoints } = useContext(PointsContext);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [iconType, setIconType] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const myWixClient = createClient({
     modules: { items },
@@ -56,7 +61,7 @@ const CMDetailEntryCard = () => {
   const handleDeleteEntry = async (selectedItem) => {
     try {
       //first we delete entry from entries collection
-      console.log("selectedItem", selectedItem);
+      // console.log("selectedItem", selectedItem);
 
       const deleteEntryOptions = {
         dataCollectionId: "entries",
@@ -69,13 +74,13 @@ const CMDetailEntryCard = () => {
       const leaderboardOptions = {
         dataCollectionId: "leaderboard",
       };
-  
+
       //get leaderboard data for subtract points
       const getLeaderboardUsers = await myWixClient.items
         .queryDataItems(leaderboardOptions)
         .eq("user_id", selectedItem.data.user_id._id)
         .find();
-      console.log("getLeaderboardUsers", getLeaderboardUsers);
+      // console.log("getLeaderboardUsers", getLeaderboardUsers);
 
       const updateLeaderboardPoints = {
         user_id: selectedItem.data.user_id._id,
@@ -101,21 +106,28 @@ const CMDetailEntryCard = () => {
           getLeaderboardUsers._items[0].data.total_entries_points -
           selectedItem.data.total_entry_points,
       };
-      console.log("updateLeaderboardPoints", updateLeaderboardPoints);
+      // console.log("updateLeaderboardPoints", updateLeaderboardPoints);
       const updateLeaderboardOptions = {
         dataCollectionId: "leaderboard",
         dataItem: {
           data: updateLeaderboardPoints,
         },
       };
-    
+
       const resLeaderboardUpdate = await myWixClient.items.updateDataItem(
         getLeaderboardUsers._items[0]._id,
         updateLeaderboardOptions,
       );
-      navigation.replace("Bottom_Navigation", {
-        screen: "entries",
-      });
+      updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
+      setToastVisible(true);
+      setIconType("success");
+      setErrorMessage("Entry Deleted Successfully!");
+      setTimeout(() => {
+        setToastVisible(false);
+        navigation.replace("Bottom_Navigation", {
+          screen: "entries",
+        });
+      }, 2000);
     } catch (error) {
       console.log("error in handleDeleteEntry", error);
     }
@@ -250,6 +262,7 @@ const CMDetailEntryCard = () => {
           }}
         />
       )}
+      <Toast visible={toastVisible} type={iconType} message={errorMessage} />
     </View>
   );
 };

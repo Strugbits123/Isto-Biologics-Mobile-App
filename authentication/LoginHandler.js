@@ -16,6 +16,7 @@ export function useLoginHandler() {
 export function LoginHandler(props) {
   const { session, setSessionLoading } = useWixSession();
   const [loginState, setLoginState] = React.useState(null);
+  const [rememberMe, setRememberMe] = React.useState(false)
 
   const silentLogin = React.useCallback(
     async (sessionToken) => {
@@ -51,7 +52,9 @@ export function LoginHandler(props) {
   );
 
   const login = React.useCallback(
-    async (email, password) => {
+    async (email, password, rememberMe) => {
+      // console.log("rememberMe", rememberMe);
+      setRememberMe(rememberMe);
       setSessionLoading(true);
       if (!validator.isEmail(email)) {
         setSessionLoading(false);
@@ -92,6 +95,7 @@ export function LoginHandler(props) {
       <LoginHandlerInvisibleWebview
         loginState={loginState}
         setLoginState={setLoginState}
+        rememberMe={rememberMe}
       />
       {props.children}
     </LoginHandlerContext.Provider>
@@ -120,7 +124,8 @@ function LoginHandlerInvisibleWebview(props) {
             myWixClient.auth
               .getMemberTokens(code, state, props.loginState.data)
               .then((tokens) => {
-                setSession(tokens);
+                console.log("props.rememberMe", props.rememberMe);
+                setSession(tokens, props.rememberMe);
                 props.setLoginState(null);
               });
             return false;

@@ -1,28 +1,31 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
 import { fetchCurrentMember } from "../../authentication/getCurrentMember";
 import { myWixClient } from "../../utils/createClient";
+import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import CMLoader from "../../components/CMLoader";
 
 const ProfileScreen = () => {
-  const [currentMember, setCurrentMember] = useState({});
-  useEffect(() => {
-    const fetchCurrentMember = async () => {
-      const { member } = await myWixClient.members.getCurrentMember({
-        fieldSet: "FULL",
-      });
+  const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
+  // useEffect(() => {
+  //   const fetchCurrentMember = async () => {
+  //     const { member } = await myWixClient.members.getCurrentMember({
+  //       fieldSet: "FULL",
+  //     });
 
-      setCurrentMember(member);
-    };
-    fetchCurrentMember();
-  }, []);
+  //     setCurrentMember(member);
+  //   };
+  //   fetchCurrentMember();
+  // }, []);
 
-  console.log("currentMember", currentMember);
-  const { profile } = currentMember || {};
+  // console.log("currentMember", currentMember);
+  // console.log("currentMemberData",currentMemberData);
+  const { profile } = currentMemberData || {};
 
-  if (!currentMember) {
+  if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
 
@@ -37,7 +40,7 @@ const ProfileScreen = () => {
       </View>
 
       <ScrollView
-        style={{ top: 80 }}
+        style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
@@ -48,7 +51,7 @@ const ProfileScreen = () => {
 
         {/*  Profile Card Component  */}
         <View style={styles.cardContainer}>
-          <CMProfileCard currentMember={currentMember} setCurrentMember={setCurrentMember} />
+          <CMProfileCard />
         </View>
       </ScrollView>
     </View>

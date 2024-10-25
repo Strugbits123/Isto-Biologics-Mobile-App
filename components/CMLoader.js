@@ -1,9 +1,11 @@
-import {ActivityIndicator} from 'react-native';
-import React from 'react';
+import { ActivityIndicator, View } from "react-native";
+import React from "react";
 
-const CMLoader = ({size, color}) => {
+const CMLoader = ({ size, color }) => {
   return (
-   <ActivityIndicator size={size} color={color || "#EE4C22"}/>
+    <View>
+      <ActivityIndicator size={size} color={color || "#EE4C22"} />
+    </View>
   );
 };
 

@@ -1,42 +1,45 @@
-import { ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeCard from "../../components/CMHomeCard";
 import CMLoader from "../../components/CMLoader";
-import { ApiKeyStrategy, createClient, OAuthStrategy } from "@wix/sdk";
-import { members } from "@wix/members";
-import { QueryClient, useQueryClient, useQuery } from "@tanstack/react-query";
-import { ErrorView } from "../../components/ErrorView/ErrorView";
-import { redirects } from "@wix/redirects";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { myWixClient } from "../../utils/createClient";
 import { useFonts } from "expo-font";
+import { useFocusEffect } from "@react-navigation/native";
+import { PointsContext } from "../../components/PointsHandler";
+import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import Toast from "../../components/Toast/Toast";
 
-const HomeScreen = () => {
+const HomeScreen = ({ isLoggedIn }) => {
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const [reloadData, setReloadData] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [iconType, setIconType] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
-
-  const [leaderboardData, setLeaderboardData] = useState("");
-  const getCurrentMemberRes = useQuery(["currentMember"], () =>
-    myWixClient.members.getCurrentMember({ fieldSet: "FULL" }),
-  );
-  // console.log("getCurrentMemberRes", getCurrentMemberRes);
+  const [leaderboardData, setLeaderboardData] = useState(null);
   const [currentMember, setCurrentMember] = useState(null);
 
-  useEffect(() => {
-    const fetchCurrentMember = async () => {
-      const { member } = await myWixClient.members.getCurrentMember({
-        fieldSet: "FULL",
-      });
+  const getCurrentMemberRes = useQuery(
+    ["currentMember"],
+    () => myWixClient.members.getCurrentMember({ fieldSet: "FULL" }),
+    {
+      refetchOnWindowFocus: true,
+      onSuccess: (data) => {
+        setCurrentMember(data.member);
+      },
+    },
+  );
 
-      setCurrentMember(member);
-    };
-    fetchCurrentMember();
-  }, []);
-
-  const getLeaderboardDataByUserId = async () => {
+  const getLeaderboardDataByUserId = async (memberId) => {
+    setIsLoading(true);
     try {
       const options = {
         dataCollectionId: "leaderboard",
@@ -47,53 +50,74 @@ const HomeScreen = () => {
           },
         ],
       };
-      //get  leaderboard data by user id
       const getLeaderboardDataByUserIdRes = await myWixClient.items
         .queryDataItems(options)
-        .eq("user_id", currentMember._id)
+        .eq("user_id", memberId)
         .find();
-      // console.log(
-      //   "total points",
-      //   getLeaderboardDataByUserIdRes._items[0].data
-      // );
+
       setLeaderboardData(getLeaderboardDataByUserIdRes._items[0].data);
-    } catch (error) {
       console.log(
-        "error in getLeaderboardDataByUserId ==>",
-        getLeaderboardDataByUserId,
+        "getLeaderboardDataByUserIdRes",
+        getLeaderboardDataByUserIdRes,
       );
+    } catch (error) {
+      console.log("error in getLeaderboardDataByUserId ==>", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getLeaderboardDataByUserId();
+    console.log("currentMember home", currentMember);
+    updateCurrentMemberData(currentMember);
   }, [currentMember]);
 
-  console.log("currentMember", currentMember);
-  console.log("Leaderboard data state", leaderboardData);
+  useEffect(() => {
+    if (currentMember?._id) {
+      console.log("first time getLeaderboardDataByUserId run ");
+      getLeaderboardDataByUserId(currentMember._id);
+    }
+  }, [currentMember]);
+
+  // Invalidate and refetch the query when login state changes
+  useEffect(() => {
+    console.log("isLogged in Home", isLoggedIn);
+    if (isLoggedIn) {
+      queryClient.invalidateQueries(["currentMember"]); // This will refetch the current member data after login
+    }
+  }, [isLoggedIn]);
 
   if (getCurrentMemberRes.isError) {
-    return ToastAndroid.show(
-      getCurrentMemberRes.error.message,
-      ToastAndroid.SHORT,
-    );
+    setToastVisible(true);
+    setIconType("error");
+    setErrorMessage(getCurrentMemberRes.error.message);
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 5000);
+    return;
   }
 
   if (getCurrentMemberRes.isLoading || !currentMember) {
-    return <CMLoader size={30} />;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <CMLoader size={50} />
+      </View>
+    );
   }
 
-  const { profile } = currentMember || {};
+  const { profile, contact } = currentMember || {};
+
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
   }
+
   return (
     <View style={styles.mainContainer}>
-      {/*  Header component */}
       <View style={styles.headerContainer}>
         <CMHomeHeader
-          profileImage={profile?.photo?.url}
-          name={profile?.nickname}
+          profileImage={currentMemberData?.profile?.photo?.url || profile?.photo?.url}
+          name={currentMemberData?.profile?.nickname || profile?.nickname}
+          fullName={currentMemberData?.contact?.firstName || contact?.firstName}
           useInScreen={"home"}
         />
       </View>
@@ -102,19 +126,26 @@ const HomeScreen = () => {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of main home page  */}
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Statistics</Text>
         </View>
         <View style={styles.cardContainer}>
-          {/*  Main Card Component  */}
-          {/* <Text style={styles.headingText} >Statistics</Text> */}
           <CMHomeCard
-            totalPoints={leaderboardData.total_entries_points}
-            profileImage={profile?.photo?.url}
+            isLoading={isLoading}
+            totalPointsLeaderboard={leaderboardData?.total_entries_points}
+            profileImage={
+              currentMemberData?.profile?.photo?.url || profile?.photo?.url
+            }
+            fullName={
+              currentMemberData?.contact?.firstName || contact?.firstName
+            }
+            name={currentMemberData?.profile?.nickname || profile?.nickname}
+            id={currentMember?._id}
+            setReloadData={setReloadData}
           />
         </View>
       </ScrollView>
+      <Toast visible={toastVisible} type={iconType} message={errorMessage} />
     </View>
   );
 };
@@ -143,6 +174,6 @@ const styles = StyleSheet.create({
     top: 30,
   },
   scrollViewContent: {
-    paddingBottom: 190, // Add some bottom padding to prevent content being hidden
+    paddingBottom: 190,
   },
 });

@@ -5,13 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ToastAndroid,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { DismissKeyboardSafeAreaView } from "./DismissKeyboardHOC/DismissKeyboardSafeAreaView";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
-import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
 import { HelperText } from "react-native-paper";
 import OpenEyeIcon from "../Icons/OpenEyeIcon";
 import ClosedEyeIcon from "../Icons/ClosedEyeIcon";
@@ -19,14 +16,9 @@ import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import Checkbox from "expo-checkbox";
 import { Link, useNavigation } from "@react-navigation/native";
-import { ApiKeyStrategy, createClient, OAuthStrategy } from "@wix/sdk";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { token } from "../utils/constants";
 import CMLoader from "./CMLoader";
-import Cookies from "js-cookie";
-import { members } from "@wix/members";
 import { useLoginHandler } from "../authentication/LoginHandler";
-import { myWixClient } from "../utils/createClient";
+import Toast from "./Toast/Toast";
 
 const CMLoginForm = () => {
   const navigation = useNavigation();
@@ -36,6 +28,9 @@ const CMLoginForm = () => {
   const [errors, setErrors] = useState({});
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [iconType, setIconType] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -48,7 +43,6 @@ const CMLoginForm = () => {
     setData((pre) => ({ ...pre, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: null }));
   };
-
 
   // Centralized validation
   const validateInputs = () => {
@@ -70,34 +64,29 @@ const CMLoginForm = () => {
     return valid;
   };
 
-  // Function to load stored email from AsyncStorage
-  const loadStoredEmail = async () => {
-    try {
-      const storedEmail = await AsyncStorage.getItem("userEmail");
-      console.log("storedEmail", storedEmail);
-      if (storedEmail) {
-        setData((prev) => ({ ...prev, email: storedEmail }));
-        setIsChecked(true); // Check the "Remember Me" checkbox if email is found
-      }
-    } catch (error) {
-      console.log("Failed to load email from storage", error);
-    }
-  };
-
-  useEffect(() => {
-    loadStoredEmail(); // Load stored email when component mounts
-  }, []);
-
+  // console.log("isChecked", isChecked);
   //handle login when user submit the login form
   const handleLogin = async () => {
     if (!validateInputs()) return;
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
-      navigation.replace("Bottom_Navigation", {
-        screen: "home",
-      });
+      await login(data.email, data.password, isChecked);
+      setToastVisible(true);
+      setIconType("success");
+      setErrorMessage("Logged In Successfully!");
+      setTimeout(() => {
+        setToastVisible(false);
+        navigation.replace("Bottom_Navigation", {
+          screen: "home",
+        });
+      }, 2000);
     } catch (error) {
+      setToastVisible(true);
+      setIconType("error");
+      setErrorMessage(error);
+      setTimeout(() => {
+        setToastVisible(false);
+      }, 5000);
       console.log("error in handle login", error);
     } finally {
       setIsLoading(false);
@@ -191,6 +180,11 @@ const CMLoginForm = () => {
             icon={<ArrowRight width={20} height={20} />}
             loading={isLoading}
             onPress={handleLogin}
+          />
+          <Toast
+            visible={toastVisible}
+            type={iconType}
+            message={errorMessage}
           />
         </View>
       )}

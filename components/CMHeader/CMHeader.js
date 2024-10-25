@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { useFonts } from "expo-font";
-import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 import BackIcon from "../../Icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
+import CMLoader from "../CMLoader";
 const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
@@ -12,13 +12,13 @@ const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   });
 
   if (!fontsLoaded) {
-    return <LoadingIndicator />;
+    return <CMLoader />;
   }
 
   return (
     <View style={styles.container}>
       <View>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.navigate("home")}>
           <BackIcon color={iconColor} width={10} height={17} />
         </TouchableOpacity>
       </View>

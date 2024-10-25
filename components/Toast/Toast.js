@@ -1,70 +1,108 @@
-import React, { useEffect, useState } from "react";
-import { Animated, Easing, StyleSheet, Text } from "react-native";
-import { IconButton } from "react-native-paper";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import SuccessIcon from "../../Icons/SuccessIcon";
+import ErrorIcon from "../../Icons/ErrorIcon";
+import WarningIcon from "../../Icons/WarningIcon";
 
-export const Toast = ({ message }) => {
-  const [visible, setVisible] = useState(true);
-  const fadeAnim = new Animated.Value(1);
-
-  const handleClose = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 500,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start(() => setVisible(false));
+const Toast = ({ visible, type, message }) => {
+  const renderIcon = (type) => {
+    switch (type) {
+      case "success":
+        return <SuccessIcon width={30} height={30} />;
+      case "error":
+        return <ErrorIcon width={30} height={30} />;
+      case "warning":
+        return <WarningIcon width={30} height={30} />;
+      default:
+        return null;
+    }
   };
 
-  useEffect(() => {
-    if (!visible) {
-      fadeAnim.setValue(1);
-    }
-  }, [visible, fadeAnim]);
+  const textColor =
+    type === "success"
+      ? "green"
+      : type === "error"
+      ? "red"
+      : "orange"
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        { opacity: fadeAnim },
-        { display: visible ? "flex" : "none" },
-      ]}
-    >
-      <Text style={styles.toastText}>{message}</Text>
-      <IconButton
-        icon="close"
-        size={20}
-        style={styles.closeButton}
-        onPress={handleClose}
-      />
-    </Animated.View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={visible}
+          onRequestClose={() => {
+            setToast({
+              visible: false,
+            });
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                {/* Render the correct SVG icon */}
+                {renderIcon(type)}
+                <Text
+                  style={{
+                    color:textColor,
+                    marginBottom: 15,
+                    textAlign: "center",
+                    justifyContent: "center",
+                    paddingTop: 5,
+                  }}
+                >
+                  {message}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#E7E59B",
-    padding: 10,
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 60,
-  },
-  toastText: {
-    color: "#333",
-    fontSize: 16,
-    textAlign: "center",
-    paddingHorizontal: 20,
-  },
-  closeButton: {
-    padding: 8,
-    borderRadius: 5,
-    marginLeft: 10,
+  centeredView: {
     position: "absolute",
-    right: 10,
+    bottom: 50, // Adjust this value to control how far up from the bottom the toast appears
+    left: 0,
+    right: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent", // Ensure the background is transparent
   },
-  closeButtonText: {
-    color: "#FFF",
-    fontSize: 14,
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
 });
+
+export default Toast;

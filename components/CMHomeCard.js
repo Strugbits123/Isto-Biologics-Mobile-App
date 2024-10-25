@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import MenIcon from "../Icons/MenIcon";
 import BagdeHomeCardIcon from "../Icons/BagdeHomeCardIcon";
@@ -10,13 +10,25 @@ import { stubArray } from "lodash";
 import CMButton from "./CMButton";
 import CMGradientButton from "./CMGradientButton";
 import { max } from "date-fns/max";
-import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
 import CMLoader from "./CMLoader";
 import { useNavigation } from "@react-navigation/native";
 import CMline from "./CMline";
+import { PointsContext } from "./PointsHandler";
+import { CurrentMemberContext } from "./CurrentMemberHandler";
 
-const CMHomeCard = ({ totalPoints = "00", profileImage = "" }) => {
+const CMHomeCard = ({
+  totalPointsLeaderboard = "00",
+  profileImage = "",
+  fullName = "",
+  name = "",
+  isLoading = false,
+  id,
+}) => {
+  const { totalPoints, updatePoints } = useContext(PointsContext);
+  const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
   const navigation = useNavigation();
+  
+  const { profile } = currentMemberData || {};
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -47,14 +59,18 @@ const CMHomeCard = ({ totalPoints = "00", profileImage = "" }) => {
             <MenIcon width={50} height={50} />
           )}
         </View>
-        <Text style={styles.nameText}>Jessica Kemp</Text>
+        <Text style={styles.nameText}>{fullName ? fullName : name}</Text>
       </View>
       {/* Container of badge container in card */}
       <View style={styles.pointsContainer}>
         <BagdeHomeCardIcon width={26} height={30} />
         <Text style={styles.TotalPointsText}>Total Points </Text>
         <LinearGradient colors={["#F87655", "#EF5128"]} style={styles.gradient}>
-          <Text style={styles.pointsText}>{totalPoints}</Text>
+          {isLoading ? (
+            <CMLoader color={"#ffffff"} size={20} />
+          ) : (
+            <Text style={styles.pointsText}>{totalPoints !== 0 ? totalPoints  : totalPointsLeaderboard}</Text>
+          )}
         </LinearGradient>
       </View>
       {/* Container of Points Information for doctor and hospital in card*/}
@@ -86,7 +102,7 @@ const CMHomeCard = ({ totalPoints = "00", profileImage = "" }) => {
             style={styles.simpleButton}
             textStyle={styles.buttonText}
             onPress={() => {
-              navigation.navigate("entries");
+              navigation.navigate("entries", { id });
             }}
           />
         </View>
@@ -95,7 +111,7 @@ const CMHomeCard = ({ totalPoints = "00", profileImage = "" }) => {
             title="Leaderboard"
             style={styles.LeaderBoardButton}
             textStyle={styles.buttonText}
-            onPress={() => navigation.navigate("leaderboard")}
+            onPress={() => navigation.navigate("leaderboard", { id })}
           />
         </View>
       </View>

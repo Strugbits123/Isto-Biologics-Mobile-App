@@ -3,11 +3,11 @@ import * as SecureStore from "expo-secure-store";
 import * as React from "react";
 import { View } from "react-native";
 import "react-native-gesture-handler";
-import { ActivityIndicator } from "react-native-paper";
 import "react-native-url-polyfill/auto";
-import { members } from "@wix/members";
-import { redirects } from "@wix/redirects";
 import { myWixClient } from "../utils/createClient";
+import CMLoader from "../components/CMLoader";
+import { useQueryClient } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 /**
  * @type {React.Context<{
  *  session: import("@wix/sdk").Tokens,
@@ -19,14 +19,19 @@ const WixSessionContext = React.createContext(undefined);
 export function WixSessionProvider(props) {
   const [session, setSessionState] = React.useState(null);
   const [sessionLoading, setSessionLoading] = React.useState(false);
+  const [rememberMeChecked, setRememberMeChecked] = React.useState(false);
+  const queryClient = useQueryClient();
 
   const setSession = React.useCallback(
-    async (tokens) => {
+    async (tokens, rememberMe) => {
       myWixClient.auth.setTokens(tokens);
-      await SecureStore.setItemAsync(
-        "wixSession",
-        JSON.stringify({ tokens, clientId: props.clientId }),
-      );
+      // Store session securely if remember me is checked
+      if (rememberMe) {
+        await SecureStore.setItemAsync(
+          "wixSession",
+          JSON.stringify({ tokens, clientId: props.clientId }),
+        );
+      }
       setSessionState(tokens);
       setSessionLoading(false);
     },
@@ -43,12 +48,16 @@ export function WixSessionProvider(props) {
   React.useEffect(() => {
     setSessionLoading(true);
     SecureStore.getItemAsync("wixSession").then((wixSession) => {
+      console.log("wixSession on firstTime", wixSession);
       if (!wixSession) {
         newVisitorSession();
+        // console.log("wixSession not found");
       } else {
         const { tokens, clientId } = JSON.parse(wixSession);
+        console.log("tokens in useEffect",tokens)
         if (clientId !== props.clientId) {
           newVisitorSession();
+          // console.log("wixSession not found");
         } else {
           setSession(tokens);
         }
@@ -59,7 +68,7 @@ export function WixSessionProvider(props) {
   if (!session) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator />
+        <CMLoader size={50} />
       </View>
     );
   }

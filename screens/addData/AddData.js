@@ -1,34 +1,39 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { myWixClient } from "../../utils/createClient";
+import { PointsContext } from "../../components/PointsHandler";
+import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import CMLoader from "../../components/CMLoader";
 
 const AddData = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const route = useRoute();
   const { item } = route.params || {}; // Safely destructure item from params
-  const [currentMember, setCurrentMember] = useState({});
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
+  // const [currentMember, setCurrentMember] = useState({});
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
 
-  useEffect(() => {
-    const fetchCurrentMember = async () => {
-      const { member } = await myWixClient.members.getCurrentMember({
-        fieldSet: "FULL",
-      });
+  // useEffect(() => {
+  //   const fetchCurrentMember = async () => {
+  //     const { member } = await myWixClient.members.getCurrentMember({
+  //       fieldSet: "FULL",
+  //     });
 
-      setCurrentMember(member);
-    };
-    fetchCurrentMember();
-  }, []);
+  //     setCurrentMember(member);
+  //   };
+  //   fetchCurrentMember();
+  // }, []);
 
-  console.log("currentMember", currentMember);
-  const { profile } = currentMember || {};
+  // console.log("currentMember", currentMember);
+  const { profile } = currentMemberData || {};
 
   // Use useEffect to determine if it's an update when the screen is first loaded
   useEffect(() => {
@@ -39,7 +44,7 @@ const AddData = () => {
     }
   }, [item]);
 
-  console.log("isUpdate", isUpdate);
+  // console.log("isUpdate", isUpdate);
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
   }
@@ -55,7 +60,7 @@ const AddData = () => {
       </View>
 
       <ScrollView
-        style={{ top: 80 }}
+        style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
@@ -68,7 +73,10 @@ const AddData = () => {
 
         {/*  add data Card Component  */}
         <View style={styles.cardContainer}>
-          <CMAddDataCard isUpdateItem={item} />
+          <CMAddDataCard
+            currentMember={currentMemberData}
+            isUpdateItem={item}
+          />
         </View>
       </ScrollView>
     </View>

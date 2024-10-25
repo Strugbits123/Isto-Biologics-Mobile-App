@@ -4,11 +4,10 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ToastAndroid,
   Modal,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CameraIcon from "../Icons/CameraIcon";
 import { useFonts } from "expo-font";
@@ -19,17 +18,28 @@ import * as ImagePicker from "expo-image-picker";
 import GalleryIcon from "../Icons/GaleryIcon";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { myWixClient } from "../utils/createClient";
-const CMProfileCard = ({ currentMember, setCurrentMember }) => {
+import axios from "axios";
+import * as FileSystem from "expo-file-system";
+import { Buffer } from "buffer";
+import { CurrentMemberContext } from "./CurrentMemberHandler";
+import Toast from "./Toast/Toast";
+// import { ToastContext, useToast } from "./ToastHandler";
+
+const CMProfileCard = () => {
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Check error");
   const [image, setImage] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false);
-
-  const { profile, loginEmail, contact } = currentMember || {};
+  const [toastVisible, setToastVisible] = useState(false);
+  const [iconType, setIconType] = useState("");
+  const [message, setMessage] = useState("");
+  const { profile, loginEmail, contact } = currentMemberData || {};
   const queryClient = useQueryClient();
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -39,54 +49,152 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
 
+  const showToast = (visible, typeOfIcon, message) => {
+    setToastVisible(visible);
+    setIconType(typeOfIcon);
+    setMessage(message);
+  };
+
   useEffect(() => {
-    setImage(profile?.photo?.url);
+    setImageUri(profile?.photo?.url);
     setName(contact?.firstName);
-  }, [currentMember]);
+  }, [currentMemberData]);
 
-  // const getWixImageUrl = async () => {
-  //   try {
-  //     const options = {
-  //       // filePath:"D:\Janisar",
-  //       fileName:"Janisar.jpeg"
-  //     }
-  //     console.log("currentMember in profile screen", currentMember);
-  //     const responseImageUrl = await myWixClient.files.generateFileUploadUrl(
-  //       "image/jpeg",
-  //       options,
-  //     );
-  //     console.log("responseImageUrl", responseImageUrl);
-  //   } catch (error) {
-  //     console.log("error in getWixImageUrl", error);
-  //   }
-  // };
+  // https://www.mysite.com/_functions/myFunction/John/Doe
+  const generateUploadUrl = async (mimeType) => {
+    try {
+      const urlResponse = await axios.get(
+        `https://strugbitstech.wixstudio.io/isto-biologics/_functions/imageUploadUrl/${mimeType}`,
+      );
+      return urlResponse.data.url;
+    } catch (error) {
+      return error;
+    }
+  };
 
-  console.log("image", image);
+  async function uploadMyFile(fileUri) {
+    try {
+      let mimeType = fileUri.assets[0].mimeType;
+      let fileName = fileUri.assets[0].fileName;
+      let filePath = fileUri.assets[0].uri; // The URI of the file
+      // console.log("mimeType", mimeType);
+      // console.log("file Uri", fileUri);
+      // console.log("fileName", fileName);
+      const uploadUrl = await generateUploadUrl(mimeType);
+      // console.log("uploadUrl", uploadUrl);
+      // Read the file content as binary using FileSystem
+      const fileContents = await FileSystem.readAsStringAsync(filePath, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Convert the Base64 data to a Buffer
+      const fileBuffer = Buffer.from(fileContents, "base64");
+      // Image upload request code with wix actual documentation
+      const params = { filename: `${Date.now()}_${fileName}` };
+      const headers = {
+        "Content-Type": mimeType,
+      };
+
+      // Upload the file using PUT request
+      const uploadResponse = await axios.put(uploadUrl, fileBuffer, {
+        headers,
+        params,
+      });
+
+      // Handle response
+      // console.log("uploadResponse", uploadResponse);
+      if (uploadResponse.status !== 200) {
+        throw new Error("File upload failed");
+      }
+      const uploadData = uploadResponse.data; // Assuming the response is JSON
+      console.log("uploadData", uploadData);
+      setImageUri(uploadData.file.url);
+      // const file = await getFileDescriptor(uploadData.file.id); // Calling the getFileDescriptor function with the file ID
+      // return file;
+      return uploadData;
+    } catch (error) {
+      return error;
+      // console.log("error in uploadMyFile", error);
+    }
+  }
 
   const updateUser = async (id) => {
     setLoading(true);
     try {
-      const updatedMemberDataToSend = {
-        contact: {
-          firstName: name,
-        },
-        profile: {
-          photo: {
-            url: image,
+      let imageResponse;
+      let updatedMemberDataToSend;
+      console.log("image", image);
+      if (!image) {
+        updatedMemberDataToSend = {
+          contact: {
+            firstName: name,
           },
-        },
-      };
+        };
+      } else {
+        imageResponse = await uploadMyFile(image);
+        console.log("imageResponse", imageResponse);
+        updatedMemberDataToSend = {
+          contact: {
+            firstName: name,
+          },
+          profile: {
+            photo: {
+              _id: imageResponse?.file?.id,
+              url: imageResponse?.file?.url,
+            },
+          },
+        };
+      }
       console.log("updatedMemberDataToSend", updatedMemberDataToSend);
       const updatedMemberResponse = await myWixClient.members.updateMember(
-        id,
+        currentMemberData?._id,
         updatedMemberDataToSend,
       );
       console.log("updatedMemberResponse", updatedMemberResponse);
       if (updatedMemberResponse) {
-        ToastAndroid.show("Profile updated Successfully!", ToastAndroid.SHORT);
-        setRefresh(!refresh);
+        showToast(true, "success", "Profile updated Successfully!");
+        setTimeout(() => {
+          setToastVisible(false);
+        }, 5000);
+
+        updateCurrentMemberData({
+          ...currentMemberData,
+          contact: {
+            ...currentMemberData.contact,
+            firstName: updatedMemberResponse?.contact?.firstName,
+          },
+          ...(image && {
+            profile: {
+              ...currentMemberData.profile,
+              photo: {
+                _id: imageResponse?.file?.id,
+                url: imageResponse?.file?.url,
+              },
+            },
+          }),
+        });
+        // Update local state
+        setImage(null);
+        // if (!image) {
+        //   setImage(null);
+        //   updateCurrentMemberData({
+        //     ...currentMemberData,
+        //     firstName: updatedMemberResponse?.contact?.firstName,
+        //   });
+        // } else {
+        //   setImage(null);
+        //   updateCurrentMemberData({
+        //     ...currentMemberData,
+        //     profile: {
+        //       photo: {
+        //         _id: imageResponse?.file?.id,
+        //         url: imageResponse?.file?.url,
+        //       },
+        //     },
+        //     firstName: updatedMemberResponse?.contact?.firstName,
+        //   });
+        // }
       }
-      // setCurrentMember(updatedMemberResponse);
     } catch (error) {
       console.log("Error in updateMember ", error);
       setLoading(false);
@@ -95,16 +203,17 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
     }
   };
 
+  //Pick image from galery
   const pickImageFromGallery = async () => {
     // check permision of galery
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      ToastAndroid.show(
-        "Permission to access gallery is required!",
-        ToastAndroid.SHORT,
-      );
+      showToast(true, "error", "Permission to access gallery is required!");
+      setTimeout(() => {
+        setToastVisible(false);
+      }, 5000);
       return;
     }
 
@@ -116,8 +225,26 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
       quality: 1,
     });
 
+    // console.log("result of image launchImageLibraryAsync", result);
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const fileSizeInMB = result.assets[0].fileSize / (1024 * 1024); // Convert file size from bytes to MB
+      // console.log("File Size (MB):", fileSizeInMB);
+      if (fileSizeInMB > 2) {
+        // Show message if file size exceeds 3M
+        setVisible(false);
+        showToast(
+          true,
+          "error",
+          "Selected image exceeds 2MB, please choose a smaller image.",
+        );
+        setTimeout(() => {
+          setToastVisible(false);
+        }, 5000);
+        return;
+      }
+
+      setImage(result);
+      setImageUri(result.assets[0].uri);
     }
     setVisible(false);
   };
@@ -128,10 +255,10 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      ToastAndroid.show(
-        "Permission to access camera is required!",
-        ToastAndroid.SHORT,
-      );
+      showToast(true, "error", "Permission to access gallery is required!");
+      setTimeout(() => {
+        setToastVisible(false);
+      }, 5000);
       return;
     }
 
@@ -143,10 +270,30 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const fileSizeInMB = result.assets[0].fileSize / (1024 * 1024); // Convert file size from bytes to MB
+      // console.log("File Size (MB):", fileSizeInMB);
+
+      if (fileSizeInMB > 2) {
+        setVisible(false);
+        // Show message if file size exceeds 3MB
+        showToast(
+          true,
+          "error",
+          "Captured image exceeds 2MB, please reduce the image size.",
+        );
+        setTimeout(() => {
+          setToastVisible(false);
+        }, 5000);
+        return;
+      }
+      setImage(result);
+      setImageUri(result.assets[0].uri);
     }
     setVisible(false);
   };
+
+  // console.log("image in CMProfileCard ===>", image);
+  // console.log("Wix upload imageUrl ", wixUploadUrl);
 
   const hideDialog = () => setVisible(false);
   if (!fontsLoaded) {
@@ -158,10 +305,10 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
       <View style={styles.profileContainer}>
         <View style={styles.avatarContainer}>
           {/* when this condition got true so render image and must size is 110 110  */}
-          {image ? (
+          {imageUri ? (
             <Image
               style={styles.avatarContainer}
-              source={{ uri: image }}
+              source={{ uri: imageUri }}
               width={110}
               height={110}
             />
@@ -215,9 +362,10 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
         <CMThemedButton
           gradientStyle={{ paddingVertical: 10 }}
           title="Update"
-          onPress={() => {
-            updateUser(currentMember?._id);
-            // getWixImageUrl();
+          onPress={async () => {
+            updateUser(currentMemberData?._id);
+            // const imageResponse = await uploadMyFile(wixUploadUrl, image);
+            // console.log("imageResponse", imageResponse);
           }}
           loading={loading}
           icon={<ArrowRight width={20} height={20} />}
@@ -227,14 +375,30 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
         <View style={styles.modalContainer}>
           <View>
             <View style={styles.modalContent}>
-              <GalleryIcon width={20} height={20} />
-              <TouchableOpacity onPress={pickImageFromGallery}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  gap: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={pickImageFromGallery}
+              >
+                <GalleryIcon width={20} height={20} />
                 <Text style={styles.modalButton}>Gallery</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.modalContent}>
-              <CameraIcon width={20} height={20} />
-              <TouchableOpacity onPress={takeImageWithCamera}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  gap: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={takeImageWithCamera}
+              >
+                <CameraIcon width={20} height={20} />
                 <Text style={styles.modalButton}>Camera</Text>
               </TouchableOpacity>
             </View>
@@ -246,6 +410,7 @@ const CMProfileCard = ({ currentMember, setCurrentMember }) => {
           </View>
         </View>
       </Modal>
+      <Toast visible={toastVisible} type={iconType} message={message} />
     </View>
   );
 };

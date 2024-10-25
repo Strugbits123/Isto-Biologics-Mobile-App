@@ -1,7 +1,6 @@
 import { useFonts } from "expo-font";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import { LoadingIndicator } from "./LoadingIndicator/LoadingIndicator";
 import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 const CMModal = ({ options, modalStyle }) => {

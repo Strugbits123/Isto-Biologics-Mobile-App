@@ -6,27 +6,33 @@ import {
   Modal,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import menAvatar from "../../assets/Images/menAvatar.png";
 import { Avatar } from "react-native-paper";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import { useFonts } from "expo-font";
-import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 import MenIcon from "../../Icons/MenIcon";
 import CMModal from "../CMModal";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../Icons/BackIcon";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { token } from "../../utils/constants";
 import { useWixSession } from "../../authentication/session";
+import CMLoader from "../CMLoader";
+import * as SecureStore from "expo-secure-store";
+import { useQueryClient } from "@tanstack/react-query";
+import { CurrentMemberContext } from "../CurrentMemberHandler";
 
 const CMHomeHeader = ({
   useInScreen,
   navigationOnPage,
   profileImage = "",
   name = "",
+  fullName = ""
 }) => {
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
   const { newVisitorSession } = useWixSession();
   const [modalVisible, setModalVisible] = useState(false);
   const [greeting, setGreeting] = useState("Good Morning");
@@ -51,7 +57,7 @@ const CMHomeHeader = ({
   };
 
   if (!fontsLoaded) {
-    return <LoadingIndicator />;
+    return <CMLoader />;
   }
 
   const options = [
@@ -64,11 +70,13 @@ const CMHomeHeader = ({
     },
     {
       label: "Logout",
-      onPress: () => {
-        navigation.replace("login");
-        async () => {
-          await newVisitorSession();
-        };
+      onPress: async () => {
+        console.log("logout");
+        await SecureStore.deleteItemAsync("wixSession");
+        await newVisitorSession();
+        updateCurrentMemberData(null);
+        // queryClient.removeQueries(["currentMember"]);
+        navigation.navigate("login");
         setModalVisible(!modalVisible);
       },
       textStyle: { color: "red" },
@@ -81,7 +89,7 @@ const CMHomeHeader = ({
       {useInScreen === "home" ? (
         <View>
           <Text style={styles.greetingText}>{greeting}</Text>
-          <Text style={styles.nameText}>{name ? name : "Name"}</Text>
+          <Text style={styles.nameText}>{fullName ? fullName : name}</Text>
         </View>
       ) : (
         <View>
