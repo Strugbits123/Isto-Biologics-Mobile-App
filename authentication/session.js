@@ -48,13 +48,13 @@ export function WixSessionProvider(props) {
   React.useEffect(() => {
     setSessionLoading(true);
     SecureStore.getItemAsync("wixSession").then((wixSession) => {
-      console.log("wixSession on firstTime", wixSession);
+      // console.log("wixSession on firstTime", wixSession);
       if (!wixSession) {
         newVisitorSession();
         // console.log("wixSession not found");
       } else {
         const { tokens, clientId } = JSON.parse(wixSession);
-        console.log("tokens in useEffect",tokens)
+        // console.log("tokens in useEffect",tokens)
         if (clientId !== props.clientId) {
           newVisitorSession();
           // console.log("wixSession not found");

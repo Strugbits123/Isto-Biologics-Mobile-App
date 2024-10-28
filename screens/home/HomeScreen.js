@@ -54,12 +54,11 @@ const HomeScreen = ({ isLoggedIn }) => {
         .queryDataItems(options)
         .eq("user_id", memberId)
         .find();
-
-      setLeaderboardData(getLeaderboardDataByUserIdRes._items[0].data);
-      console.log(
-        "getLeaderboardDataByUserIdRes",
-        getLeaderboardDataByUserIdRes,
-      );
+      // console.log(
+      //   "getLeaderboardDataByUserIdRes",
+      //   getLeaderboardDataByUserIdRes,
+      // );
+      setLeaderboardData(getLeaderboardDataByUserIdRes?._items[0]?.data);
     } catch (error) {
       console.log("error in getLeaderboardDataByUserId ==>", error);
     } finally {
@@ -68,20 +67,20 @@ const HomeScreen = ({ isLoggedIn }) => {
   };
 
   useEffect(() => {
-    console.log("currentMember home", currentMember);
+    // console.log("currentMember home", currentMember);
     updateCurrentMemberData(currentMember);
   }, [currentMember]);
 
   useEffect(() => {
     if (currentMember?._id) {
-      console.log("first time getLeaderboardDataByUserId run ");
-      getLeaderboardDataByUserId(currentMember._id);
+      // console.log("first time getLeaderboardDataByUserId run ");
+      getLeaderboardDataByUserId(currentMember?._id);
     }
   }, [currentMember]);
 
   // Invalidate and refetch the query when login state changes
   useEffect(() => {
-    console.log("isLogged in Home", isLoggedIn);
+    // console.log("isLogged in Home", isLoggedIn);
     if (isLoggedIn) {
       queryClient.invalidateQueries(["currentMember"]); // This will refetch the current member data after login
     }
@@ -134,7 +133,10 @@ const HomeScreen = ({ isLoggedIn }) => {
         <View style={styles.cardContainer}>
           <CMHomeCard
             isLoading={isLoading}
+            totalPointsProducts={leaderboardData?.total_products_points}
             totalPointsLeaderboard={leaderboardData?.total_entries_points}
+            totalHospitalPoints={leaderboardData?.total_hospital_points}
+            totalDoctorPoints={leaderboardData?.total_doctor_points}
             profileImage={
               currentMemberData?.profile?.photo?.url || profile?.photo?.url
             }

@@ -124,7 +124,7 @@ function LoginHandlerInvisibleWebview(props) {
             myWixClient.auth
               .getMemberTokens(code, state, props.loginState.data)
               .then((tokens) => {
-                console.log("props.rememberMe", props.rememberMe);
+                // console.log("props.rememberMe", props.rememberMe);
                 setSession(tokens, props.rememberMe);
                 props.setLoginState(null);
               });

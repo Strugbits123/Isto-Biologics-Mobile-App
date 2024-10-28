@@ -130,12 +130,13 @@ const CMEntryCard = ({ currentMember, id }) => {
       //   " selectedItem.data.user_id._id",
       //   selectedItem.data.user_id._id,
       // );
-      //get leaderboard data for subtract points
+      // get leaderboard data for subtract points
       const getLeaderboardUsers = await myWixClient.items
         .queryDataItems(leaderboardOptions)
         .eq("user_id", selectedItem.data.user_id._id)
         .find();
-      // console.log("getLeaderboardUsers", getLeaderboardUsers);
+      console.log("selectedItem.data", selectedItem.data);
+      console.log("getLeaderboardUsers", getLeaderboardUsers.items[0].data);
 
       const updateLeaderboardPoints = {
         user_id: selectedItem.data.user_id._id,
@@ -160,6 +161,15 @@ const CMEntryCard = ({ currentMember, id }) => {
         total_entries_points:
           getLeaderboardUsers._items[0].data.total_entries_points -
           selectedItem.data.total_entry_points,
+        total_hospital_points:
+          getLeaderboardUsers._items[0].data.total_hospital_points -
+          selectedItem.data.hospital_points,
+        total_doctor_points:
+          getLeaderboardUsers._items[0].data.total_doctor_points -
+          selectedItem.data.doctor_points,
+        total_products_points:
+          getLeaderboardUsers._items[0].data.total_products_points -
+          selectedItem.data.products_points,
       };
       // console.log("updateLeaderboardPoints", updateLeaderboardPoints);
       const updateLeaderboardOptions = {
@@ -176,14 +186,24 @@ const CMEntryCard = ({ currentMember, id }) => {
         getLeaderboardUsers._items[0]._id,
         updateLeaderboardOptions,
       );
-      updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
+      updatePoints({
+        total_leaderboard_points:
+          resLeaderboardUpdate.dataItem.data.total_entries_points,
+        total_doctor_points:
+          resLeaderboardUpdate.dataItem.data.total_doctor_points,
+        total_hospital_points:
+          resLeaderboardUpdate.dataItem.data.total_hospital_points,
+        total_products_points:
+          resLeaderboardUpdate.dataItem.data.total_products_points,
+      });
+      // updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
       setToastVisible(true);
       setIconType("success");
       setErrorMessage("Entry Deleted Successfully!");
       setTimeout(() => {
         setToastVisible(false);
         setRefresh(!refresh);
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.log("error in handleDeleteEntry", error);
     }

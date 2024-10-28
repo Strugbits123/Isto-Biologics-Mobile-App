@@ -71,11 +71,10 @@ const CMHomeHeader = ({
     {
       label: "Logout",
       onPress: async () => {
-        console.log("logout");
+        // console.log("logout");
         await SecureStore.deleteItemAsync("wixSession");
         await newVisitorSession();
         updateCurrentMemberData(null);
-        // queryClient.removeQueries(["currentMember"]);
         navigation.navigate("login");
         setModalVisible(!modalVisible);
       },
@@ -89,7 +88,7 @@ const CMHomeHeader = ({
       {useInScreen === "home" ? (
         <View>
           <Text style={styles.greetingText}>{greeting}</Text>
-          <Text style={styles.nameText}>{fullName ? fullName : name}</Text>
+          <Text style={styles.nameText}>{fullName ? fullName : name}!</Text>
         </View>
       ) : (
         <View>

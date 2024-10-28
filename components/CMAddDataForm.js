@@ -72,20 +72,22 @@ const CMAddDataForm = ({
         inqu_category,
         fibrant_category,
         proteios_category,
+        total_entry_points,
       } = isUpdateItem.data;
-      // console.log(
-      //   "isUpdateItem.data destrued",
-      //   doctor_firstname,
-      //   doctor_lastname,
-      //   hospital_name,
-      //   first_case_date,
-      //   magellan_category,
-      //   influx_category,
-      //   sparc_category,
-      //   inqu_category,
-      //   fibrant_category,
-      //   proteios_category,
-      // );
+      console.log(
+        // "isUpdateItem.data destrued",
+        doctor_firstname,
+        doctor_lastname,
+        hospital_name,
+        first_case_date,
+        magellan_category,
+        influx_category,
+        sparc_category,
+        inqu_category,
+        fibrant_category,
+        proteios_category,
+        total_entry_points,
+      );
 
       // Set initial form data
       setData({
@@ -193,7 +195,12 @@ const CMAddDataForm = ({
       //de structure points for hospital or doctor
       // console.log("checkedForms", checkedForms);
       const { doctorChecked, hospitalChecked } = checkedForms;
-
+      console.log(
+        "doctorChecked",
+        doctorChecked,
+        "hospitalChecked",
+        hospitalChecked,
+      );
       //Points distributions
       const doctorPoints = doctorChecked ? 3 : 0;
       const hospitalPoints = hospitalChecked ? 5 : 0;
@@ -270,6 +277,7 @@ const CMAddDataForm = ({
         proteios_points: proteiOSPoints,
         doctor_points: doctorPoints,
         hospital_points: hospitalPoints,
+        products_points: totalEntryPoints - (doctorPoints + hospitalPoints),
         total_entry_points: totalEntryPoints,
       };
       // console.log("dataItem==>: ", dataToSend);
@@ -300,8 +308,8 @@ const CMAddDataForm = ({
           .queryDataItems(leaderboardOptions)
           .eq("user_id", response.dataItem.data.user_id)
           .find();
-        // console.log("getLeaderboardUsers", getLeaderboardUsers);
-        // console.log("response of update entry", response);
+        console.log("getLeaderboardUsers", getLeaderboardUsers._items[0].data);
+        console.log("response of update entry", response);
 
         //data to send for minus when user update the entry old points minus from total leaderboard points
         const dataToSendInLeaderboardForUpdatePoints = {
@@ -327,6 +335,15 @@ const CMAddDataForm = ({
           total_entries_points:
             getLeaderboardUsers._items[0].data.total_entries_points -
             isUpdateItem.data.total_entry_points,
+          total_doctor_points:
+            getLeaderboardUsers._items[0].data.total_doctor_points -
+            isUpdateItem.data.doctor_points,
+          total_hospital_points:
+            getLeaderboardUsers._items[0].data.total_hospital_points -
+            isUpdateItem.data.hospital_points,
+          total_products_points:
+            getLeaderboardUsers._items[0].data.total_products_points -
+            isUpdateItem.data.products_points,
         };
         const updateLeaderboardOptions = {
           dataCollectionId: "leaderboard",
@@ -339,10 +356,7 @@ const CMAddDataForm = ({
             getLeaderboardUsers._items[0]._id,
             updateLeaderboardOptions,
           );
-        updatePoints(
-          resLeaderboardUpdatePoints.dataItem.data.total_entries_points,
-        );
-        // console.log("resLeaderboardUpdatePoints", resLeaderboardUpdatePoints);
+        console.log("resLeaderboardUpdatePoints", resLeaderboardUpdatePoints);
       }
 
       //Now again call for addition of points when user enter new entry points
@@ -368,6 +382,9 @@ const CMAddDataForm = ({
           total_fibrant_points: response.dataItem.data.fibrant_points,
           total_proteios_points: response.dataItem.data.proteios_points,
           total_entries_points: response.dataItem.data.total_entry_points,
+          total_doctor_points: response.dataItem.data.doctor_points,
+          total_hospital_points: response.dataItem.data.hospital_points,
+          total_products_points: response.dataItem.data.products_points,
         };
 
         const addLeaderboardOptions = {
@@ -380,7 +397,19 @@ const CMAddDataForm = ({
           addLeaderboardOptions,
         );
         // console.log("resLeaderboardNewEntry", resLeaderboardNewEntry);
-        updatePoints(resLeaderboardNewEntry.dataItem.data.total_entries_points);
+        updatePoints(
+          {
+            total_leaderboard_points:
+              resLeaderboardNewEntry.dataItem.data.total_entries_points,
+            total_doctor_points:
+              resLeaderboardNewEntry.dataItem.data.total_doctor_points,
+            total_hospital_points:
+              resLeaderboardNewEntry.dataItem.data.total_hospital_points,
+            total_products_points:
+              resLeaderboardNewEntry.dataItem.data.total_products_points,
+          },
+          // resLeaderboardNewEntry.dataItem.data.total_entries_points
+        );
       } else {
         // console.log("item found");
         const dataToSendInLeaderboardForUpdate = {
@@ -406,6 +435,15 @@ const CMAddDataForm = ({
           total_entries_points:
             response.dataItem.data.total_entry_points +
             getLeaderboardUsers._items[0].data.total_entries_points,
+          total_doctor_points:
+            response.dataItem.data.doctor_points +
+            getLeaderboardUsers._items[0].data.total_doctor_points,
+          total_hospital_points:
+            response.dataItem.data.hospital_points +
+            getLeaderboardUsers._items[0].data.total_hospital_points,
+          total_products_points:
+            response.dataItem.data.products_points +
+            getLeaderboardUsers._items[0].data.total_products_points,
         };
 
         const updateLeaderboardOptions = {
@@ -419,8 +457,18 @@ const CMAddDataForm = ({
           getLeaderboardUsers._items[0]._id,
           updateLeaderboardOptions,
         );
-        // console.log("resLeaderboardUpdate", resLeaderboardUpdate.dataItem.data.total_entries_points)
-        updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
+        console.log("resLeaderboardUpdate", resLeaderboardUpdate.dataItem.data);
+        updatePoints({
+          total_leaderboard_points:
+            resLeaderboardUpdate.dataItem.data.total_entries_points,
+          total_doctor_points:
+            resLeaderboardUpdate.dataItem.data.total_doctor_points,
+          total_hospital_points:
+            resLeaderboardUpdate.dataItem.data.total_hospital_points,
+          total_products_points:
+            resLeaderboardUpdate.dataItem.data.total_products_points,
+        });
+        // updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
       }
 
       if (!isUpdateItem) {

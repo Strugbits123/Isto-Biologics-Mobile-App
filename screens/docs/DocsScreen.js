@@ -9,22 +9,9 @@ import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 
 const DocsScreen = () => {
   const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
-  const [currentMember, setCurrentMember] = useState({});
-  // useEffect(() => {
-  //   const fetchCurrentMember = async () => {
-  //     const { member } = await myWixClient.members.getCurrentMember({
-  //       fieldSet: "FULL",
-  //     });
-
-  //     setCurrentMember(member);
-  //   };
-  //   fetchCurrentMember();
-  // }, []);
-
-  // console.log("currentMember", currentMember);
   const { profile } = currentMemberData || {};
 
-  if (!currentMember) {
+  if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
   return (

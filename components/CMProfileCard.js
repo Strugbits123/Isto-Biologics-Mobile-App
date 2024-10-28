@@ -106,7 +106,7 @@ const CMProfileCard = () => {
         throw new Error("File upload failed");
       }
       const uploadData = uploadResponse.data; // Assuming the response is JSON
-      console.log("uploadData", uploadData);
+      // console.log("uploadData", uploadData);
       setImageUri(uploadData.file.url);
       // const file = await getFileDescriptor(uploadData.file.id); // Calling the getFileDescriptor function with the file ID
       // return file;
@@ -122,7 +122,7 @@ const CMProfileCard = () => {
     try {
       let imageResponse;
       let updatedMemberDataToSend;
-      console.log("image", image);
+      // console.log("image", image);
       if (!image) {
         updatedMemberDataToSend = {
           contact: {
@@ -131,7 +131,7 @@ const CMProfileCard = () => {
         };
       } else {
         imageResponse = await uploadMyFile(image);
-        console.log("imageResponse", imageResponse);
+        // console.log("imageResponse", imageResponse);
         updatedMemberDataToSend = {
           contact: {
             firstName: name,
@@ -144,12 +144,12 @@ const CMProfileCard = () => {
           },
         };
       }
-      console.log("updatedMemberDataToSend", updatedMemberDataToSend);
+      // console.log("updatedMemberDataToSend", updatedMemberDataToSend);
       const updatedMemberResponse = await myWixClient.members.updateMember(
         currentMemberData?._id,
         updatedMemberDataToSend,
       );
-      console.log("updatedMemberResponse", updatedMemberResponse);
+      // console.log("updatedMemberResponse", updatedMemberResponse);
       if (updatedMemberResponse) {
         showToast(true, "success", "Profile updated Successfully!");
         setTimeout(() => {

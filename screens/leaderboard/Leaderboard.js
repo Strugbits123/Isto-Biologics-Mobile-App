@@ -344,9 +344,9 @@ const Leaderboard = () => {
                     style={{
                       justifyContent: "center",
                       alignItems: "center",
-                      width: 65,
-                      height: 65,
-                      borderRadius: 30,
+                      width: 70,
+                      height: 70,
+                      borderRadius: 60,
                     }}
                   />
                 ) : (

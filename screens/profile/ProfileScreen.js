@@ -10,19 +10,6 @@ import CMLoader from "../../components/CMLoader";
 
 const ProfileScreen = () => {
   const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
-  // useEffect(() => {
-  //   const fetchCurrentMember = async () => {
-  //     const { member } = await myWixClient.members.getCurrentMember({
-  //       fieldSet: "FULL",
-  //     });
-
-  //     setCurrentMember(member);
-  //   };
-  //   fetchCurrentMember();
-  // }, []);
-
-  // console.log("currentMember", currentMember);
-  // console.log("currentMemberData",currentMemberData);
   const { profile } = currentMemberData || {};
 
   if (!currentMemberData) {

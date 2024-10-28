@@ -17,7 +17,10 @@ import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 
 const CMHomeCard = ({
+  totalPointsProducts = "00",
   totalPointsLeaderboard = "00",
+  totalHospitalPoints = "00",
+  totalDoctorPoints = "00",
   profileImage = "",
   fullName = "",
   name = "",
@@ -25,9 +28,10 @@ const CMHomeCard = ({
   id,
 }) => {
   const { totalPoints, updatePoints } = useContext(PointsContext);
-  const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const navigation = useNavigation();
-  
+
   const { profile } = currentMemberData || {};
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
@@ -69,7 +73,11 @@ const CMHomeCard = ({
           {isLoading ? (
             <CMLoader color={"#ffffff"} size={20} />
           ) : (
-            <Text style={styles.pointsText}>{totalPoints !== 0 ? totalPoints  : totalPointsLeaderboard}</Text>
+            <Text style={styles.pointsText}>
+              {totalPoints.total_leaderboard_points !== 0
+                ? totalPoints.total_leaderboard_points
+                : totalPointsLeaderboard}
+            </Text>
           )}
         </LinearGradient>
       </View>
@@ -80,11 +88,27 @@ const CMHomeCard = ({
         </View>
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>New Doctor</Text>
-          <Text style={styles.pointsNumber}>3</Text>
+          <Text style={styles.pointsNumber}>
+            {totalPoints.total_doctor_points !== 0
+              ? totalPoints.total_doctor_points
+              : totalDoctorPoints}
+          </Text>
         </View>
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>New Hospital</Text>
-          <Text style={styles.pointsNumber}>5</Text>
+          <Text style={styles.pointsNumber}>
+            {totalPoints.total_hospital_points !== 0
+              ? totalPoints.total_hospital_points
+              : totalHospitalPoints}
+          </Text>
+        </View>
+        <View style={styles.pointsInfoContainer}>
+          <Text style={styles.pointsTextInfo}>Product Line</Text>
+          <Text style={styles.pointsNumber}>
+            {totalPoints.total_products_points !== 0
+              ? totalPoints.total_products_points
+              : totalPointsProducts}
+          </Text>
         </View>
         <CMline />
       </View>
