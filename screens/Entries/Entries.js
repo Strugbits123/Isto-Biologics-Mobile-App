@@ -1,54 +1,47 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMEntryCard from "../../components/CMEntryCard";
-import { myWixClient } from "../../utils/createClient";
 import CMLoader from "../../components/CMLoader";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 
 const Entries = () => {
-  const route = useRoute();
-  const { id } = route.params || {};
-  const { currentMemberData, updateCurrentMemberData } =
-    useContext(CurrentMemberContext);
-
-  const { profile } = currentMemberData || {};
-
+  // Access current member context to get member data and updater function
+  const { currentMemberData } = useContext(CurrentMemberContext);
+  const { profile } = currentMemberData || {}; // Destructure profile from currentMemberData
+  // Show loader if member data is not available
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
-
   return (
-    <>
-      <View style={styles.mainContainer}>
-        {/*  Header component */}
-        <View style={styles.headerContainer}>
-          <CMHomeHeader
-            profileImage={profile?.photo?.url}
-            name={profile?.nickname}
-          />
+    <View style={styles.mainContainer}>
+      {/* Header Component with profile image and name */}
+      <View style={styles.headerContainer}>
+        <CMHomeHeader
+          profileImage={profile?.photo?.url} // Optional chaining for safety
+          name={profile?.nickname}
+        />
+      </View>
+      {/* ScrollView with heading and entries */}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Heading for the Entries Page */}
+        <View style={styles.headingContainer}>
+          <Text style={styles.headingText}>Entries</Text>
         </View>
-        <View
-          style={{ top: 90 }}
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {/*  heading of Entries page  */}
-          <View style={styles.headingContainer}>
-            <Text style={styles.headingText}>Entires</Text>
-          </View>
-        </View>
-        {/*  Entries Card Component  */}
+        {/* Entry Card Component */}
         <View style={styles.cardContainer}>
           <CMEntryCard
-            id={currentMemberData?._id}
+            id={currentMemberData?._id} // Pass member ID and data
             currentMember={currentMemberData}
           />
         </View>
-      </View>
-    </>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -56,26 +49,29 @@ export default Entries;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
-    backgroundColor: ThemeBgColors.mainBg,
+    flex: 1, // Full screen layout
+    backgroundColor: ThemeBgColors.mainBg, // Background color from theme
   },
   headerContainer: {
-    top: 60,
+    marginTop: 60, // Push header down
   },
-  cardContainer: {
-    paddingHorizontal: 29,
-    top: 100,
-  },
-  headingContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 27,
-  },
-  headingText: {
-    fontFamily: "Jakarta-Sans-bold",
-    fontSize: 28,
-    color: ThemeTextColors.darkGray1,
+  scrollView: {
+    marginTop: 90, // Position content below header
   },
   scrollViewContent: {
-    paddingBottom: 150, // Add some bottom padding to prevent content being hidden
+    paddingBottom: 150, // Add bottom padding to prevent hidden content
+  },
+  headingContainer: {
+    flexDirection: "row", // Align heading elements in a row
+    paddingHorizontal: 27, // Add horizontal padding
+  },
+  headingText: {
+    fontFamily: "Jakarta-Sans-bold", // Custom font for heading
+    fontSize: 28, // Heading font size
+    color: ThemeTextColors.darkGray1, // Text color from theme
+  },
+  cardContainer: {
+    paddingHorizontal: 29, // Add padding around the card
+    marginTop: 100, // Position cards below the heading
   },
 });

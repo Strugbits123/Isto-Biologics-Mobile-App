@@ -126,7 +126,7 @@ const CMHomeCard = ({
             style={styles.simpleButton}
             textStyle={styles.buttonText}
             onPress={() => {
-              navigation.navigate("entries", { id });
+              navigation.navigate("entries");
             }}
           />
         </View>

@@ -18,16 +18,14 @@ const CMAddDataForm = ({
 }) => {
   const navigation = useNavigation();
   const { totalPoints, updatePoints } = useContext(PointsContext);
-  const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [toastVisible, setToastVisible] = useState(false);
-  const [iconType, setIconType] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [data, setData] = useState({}); // Holds form input data
+  const [isLoading, setIsLoading] = useState(false); // Loading state for submission
+  const [errors, setErrors] = useState({}); // Holds validation errors
+  const [toastVisible, setToastVisible] = useState(false); // Toast visibility state
+  const [iconType, setIconType] = useState(""); // Icon type for toast
+  const [errorMessage, setErrorMessage] = useState(""); // Error or success message for toast
 
-  // console.log("currentMember", currentMember._id);
-
-  // State to hold checkbox values categorized
+  // Checkbox product selection state categorized by product
   const [selectedProducts, setSelectedProducts] = useState({
     Magellan: [],
     Influx: [],
@@ -51,68 +49,80 @@ const CMAddDataForm = ({
           ProteiOS: [],
         });
       }
-      return () => {
-        // Cleanup when screen loses focus
-      };
+      return () => {};
     }, [isUpdateItem]),
   );
-  //checks when is updateItem comes it means update form so set all fields.
+
+  // Reset form if not updating an item when screen refocuses
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!isUpdateItem) {
+        resetForm();
+      }
+      return () => {};
+    }, [isUpdateItem]),
+  );
+
+  // Prefill the form when updating an existing item
   useEffect(() => {
     if (isUpdateItem) {
-      const {
-        doctor_firstname,
-        doctor_lastname,
-        hospital_name,
-        first_case_date,
-        magellan_category,
-        influx_category,
-        sparc_category,
-        inqu_category,
-        fibrant_category,
-        proteios_category,
-        total_entry_points,
-      } = isUpdateItem.data;
-      // console.log(
-      //   // "isUpdateItem.data destrued",
-      //   doctor_firstname,
-      //   doctor_lastname,
-      //   hospital_name,
-      //   first_case_date,
-      //   magellan_category,
-      //   influx_category,
-      //   sparc_category,
-      //   inqu_category,
-      //   fibrant_category,
-      //   proteios_category,
-      //   total_entry_points,
-      // );
-
-      // Set initial form data
-      setData({
-        doctorFirstName: doctor_firstname,
-        doctorLastName: doctor_lastname,
-        hospitalName: hospital_name,
-        firstCaseDate: first_case_date || "",
-      });
-
-      // Set selected products
-      setSelectedProducts({
-        Magellan: magellan_category || [],
-        Influx: influx_category || [],
-        SPARC: sparc_category || [],
-        InQu: inqu_category || [],
-        Fibrant: fibrant_category || [],
-        ProteiOS: proteios_category || [],
-      });
+      prefillForm(isUpdateItem.data);
     }
   }, [isUpdateItem]);
 
+  // Reset form fields
+  const resetForm = () => {
+    setData({});
+    setSelectedProducts({
+      Magellan: [],
+      Influx: [],
+      SPARC: [],
+      InQu: [],
+      Fibrant: [],
+      ProteiOS: [],
+    });
+    setErrors({});
+  };
+
+  // Prefill form with existing item data for update
+  const prefillForm = (itemData) => {
+    const {
+      doctor_firstname,
+      doctor_lastname,
+      hospital_name,
+      first_case_date,
+      magellan_category,
+      influx_category,
+      sparc_category,
+      inqu_category,
+      fibrant_category,
+      proteios_category,
+    } = itemData;
+
+    setData({
+      doctorFirstName: doctor_firstname || "",
+      doctorLastName: doctor_lastname || "",
+      hospitalName: hospital_name || "",
+      firstCaseDate: first_case_date || "",
+    });
+
+    setSelectedProducts({
+      Magellan: magellan_category || [],
+      Influx: influx_category || [],
+      SPARC: sparc_category || [],
+      InQu: inqu_category || [],
+      Fibrant: fibrant_category || [],
+      ProteiOS: proteios_category || [],
+    });
+  };
+
+  // Update input field data and clear corresponding errors
   const handle_onChange_Text = (field, value) => {
-    setData((pre) => ({ ...pre, [field]: value }));
+    setData((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: null }));
   };
 
-  // Handle checkbox change
+  // Toggle checkbox state for product selection
   const handleCheckboxChange = (category, product) => {
     setSelectedProducts((prev) => {
       const currentProducts = prev[category];
@@ -132,31 +142,23 @@ const CMAddDataForm = ({
     });
   };
 
-  //form validations function
+  // Form field validation
   const validateFields = () => {
-    let validationErrors = {};
+    const validationErrors = {};
 
-    // Check required fields for the doctor submission type
-    if (submisionType === "doctor") {
-      if (!data.doctorFirstName) {
-        validationErrors.doctorFirstName = "Doctor's first name is required";
-      }
-      // if (!data.doctorLastName) {
-      //   validationErrors.doctorLastName = "Doctor's last name is required";
-      // }
+    if (submisionType === "doctor" && !data.doctorFirstName) {
+      validationErrors.doctorFirstName = "Doctor's first name is required";
     }
 
-    // Hospital name is required for both doctor and hospital submission
     if (!data.hospitalName) {
       validationErrors.hospitalName = "Hospital/Facility name is required";
     }
 
-    // First case date is required
     if (!data.firstCaseDate) {
       validationErrors.firstCaseDate = "First case date is required";
     }
 
-    // Check if at least one product is selected from any category
+    // Ensure at least one product is selected
     const hasSelectedProducts = Object.values(selectedProducts).some(
       (products) => products.length > 0,
     );
@@ -191,18 +193,11 @@ const CMAddDataForm = ({
       const { Magellan, Influx, SPARC, InQu, Fibrant, ProteiOS } =
         selectedProducts;
       //de structure points for hospital or doctor
-      // console.log("checkedForms", checkedForms);
       const { doctorChecked, hospitalChecked } = checkedForms;
-      // console.log(
-      //   "doctorChecked",
-      //   doctorChecked,
-      //   "hospitalChecked",
-      //   hospitalChecked,
-      // );
       //Points distributions
       const doctorPoints = doctorChecked ? 3 : 0;
       const hospitalPoints = hospitalChecked ? 5 : 0;
-
+      //points calculation
       const magellanPoints = Magellan.length;
       const influxPoints = Influx.length;
       const sparcPoints = SPARC.length;
@@ -241,7 +236,6 @@ const CMAddDataForm = ({
           fibrantPoints +
           proteiOSPoints;
       }
-
       // Clear doctor names if the doctor is unchecked
       if (!doctorChecked) {
         setData({
@@ -249,7 +243,6 @@ const CMAddDataForm = ({
           doctorLastName: "",
         });
       }
-
       // Clear doctor names in dataToSend if the doctor is unchecked
       const doctorFirstNameToSend = doctorChecked ? doctorFirstName : "";
       const doctorLastNameToSend = doctorChecked ? doctorLastName : "";
@@ -285,7 +278,6 @@ const CMAddDataForm = ({
           data: dataToSend,
         },
       };
-
       //this part is checking if when user update the entry else condition will run for update
       let response;
       if (!isUpdateItem) {
@@ -308,7 +300,6 @@ const CMAddDataForm = ({
           .find();
         // console.log("getLeaderboardUsers", getLeaderboardUsers._items[0].data);
         // console.log("response of update entry", response);
-
         //data to send for minus when user update the entry old points minus from total leaderboard points
         const dataToSendInLeaderboardForUpdatePoints = {
           user_id: currentMember._id,

@@ -27,19 +27,19 @@ import Toast from "./Toast/Toast";
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false); // For handling modal visibility
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Check error");
-  const [image, setImage] = useState(null);
-  const [imageUri, setImageUri] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null); // For storing the selected image
+  const [imageUri, setImageUri] = useState(null); // For displaying the image URI
+  const [loading, setLoading] = useState(false); // To show loading spinner during update
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [message, setMessage] = useState("");
-  const { profile, loginEmail, contact } = currentMemberData || {};
-  const queryClient = useQueryClient();
+  const { profile, loginEmail, contact } = currentMemberData || {}; // Destructure member data
+  const queryClient = useQueryClient(); // TanStack Query client for cache and updates
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
     "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
@@ -47,19 +47,20 @@ const CMProfileCard = () => {
     "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
-
+  // Helper function to show toast notifications
   const showToast = (visible, typeOfIcon, message) => {
     setToastVisible(visible);
     setIconType(typeOfIcon);
     setMessage(message);
   };
 
+  // Set the profile image URI and name on component mount
   useEffect(() => {
     setImageUri(profile?.photo?.url);
     setName(contact?.firstName);
   }, [currentMemberData]);
 
-  // https://www.mysite.com/_functions/myFunction/John/Doe
+  // Generate a signed URL for file upload
   const generateUploadUrl = async (mimeType) => {
     try {
       const urlResponse = await axios.get(
@@ -71,71 +72,61 @@ const CMProfileCard = () => {
     }
   };
 
+  // Function to upload file to the server
   async function uploadMyFile(fileUri) {
     try {
       let mimeType = fileUri.assets[0].mimeType;
       let fileName = fileUri.assets[0].fileName;
       let filePath = fileUri.assets[0].uri; // The URI of the file
-      // console.log("mimeType", mimeType);
-      // console.log("file Uri", fileUri);
-      // console.log("fileName", fileName);
+
+      // Get upload URL from server
       const uploadUrl = await generateUploadUrl(mimeType);
-      // console.log("uploadUrl", uploadUrl);
-      // Read the file content as binary using FileSystem
+
+      // Read file contents as Base64
       const fileContents = await FileSystem.readAsStringAsync(filePath, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      // Convert the Base64 data to a Buffer
+      // Convert the Base64 data to Buffer
       const fileBuffer = Buffer.from(fileContents, "base64");
-      // Image upload request code with wix actual documentation
-      const params = { filename: `${Date.now()}_${fileName}` };
-      const headers = {
-        "Content-Type": mimeType,
-      };
 
-      // Upload the file using PUT request
+      const params = { filename: `${Date.now()}_${fileName}` };
+      const headers = { "Content-Type": mimeType };
+
+      // Upload file to the server
       const uploadResponse = await axios.put(uploadUrl, fileBuffer, {
         headers,
         params,
       });
 
-      // Handle response
-      // console.log("uploadResponse", uploadResponse);
       if (uploadResponse.status !== 200) {
         throw new Error("File upload failed");
       }
-      const uploadData = uploadResponse.data; // Assuming the response is JSON
-      // console.log("uploadData", uploadData);
-      setImageUri(uploadData.file.url);
-      // const file = await getFileDescriptor(uploadData.file.id); // Calling the getFileDescriptor function with the file ID
-      // return file;
+
+      const uploadData = uploadResponse.data;
+      setImageUri(uploadData.file.url); // Set uploaded image URL in state
       return uploadData;
     } catch (error) {
       return error;
-      // console.log("error in uploadMyFile", error);
     }
   }
 
+  // Update user profile with new image or details
   const updateUser = async (id) => {
     setLoading(true);
     try {
       let imageResponse;
       let updatedMemberDataToSend;
-      // console.log("image", image);
+
       if (!image) {
+        // Update only name if no image is selected
         updatedMemberDataToSend = {
-          contact: {
-            firstName: name,
-          },
+          contact: { firstName: name },
         };
       } else {
         imageResponse = await uploadMyFile(image);
-        // console.log("imageResponse", imageResponse);
         updatedMemberDataToSend = {
-          contact: {
-            firstName: name,
-          },
+          contact: { firstName: name },
           profile: {
             photo: {
               _id: imageResponse?.file?.id,
@@ -144,18 +135,18 @@ const CMProfileCard = () => {
           },
         };
       }
-      // console.log("updatedMemberDataToSend", updatedMemberDataToSend);
+
+      // Update member data in the server
       const updatedMemberResponse = await myWixClient.members.updateMember(
         currentMemberData?._id,
         updatedMemberDataToSend,
       );
-      // console.log("updatedMemberResponse", updatedMemberResponse);
-      if (updatedMemberResponse) {
-        showToast(true, "success", "Profile updated Successfully!");
-        setTimeout(() => {
-          setToastVisible(false);
-        }, 5000);
 
+      if (updatedMemberResponse) {
+        showToast(true, "success", "Profile updated successfully!");
+        setTimeout(() => setToastVisible(false), 5000);
+
+        // Update local member data
         updateCurrentMemberData({
           ...currentMemberData,
           contact: {
@@ -172,51 +163,26 @@ const CMProfileCard = () => {
             },
           }),
         });
-        // Update local state
-        setImage(null);
-        // if (!image) {
-        //   setImage(null);
-        //   updateCurrentMemberData({
-        //     ...currentMemberData,
-        //     firstName: updatedMemberResponse?.contact?.firstName,
-        //   });
-        // } else {
-        //   setImage(null);
-        //   updateCurrentMemberData({
-        //     ...currentMemberData,
-        //     profile: {
-        //       photo: {
-        //         _id: imageResponse?.file?.id,
-        //         url: imageResponse?.file?.url,
-        //       },
-        //     },
-        //     firstName: updatedMemberResponse?.contact?.firstName,
-        //   });
-        // }
+        setImage(null); // Reset image after update
       }
     } catch (error) {
-      console.log("Error in updateMember ", error);
-      setLoading(false);
+      console.log("Error in updateMember", error);
     } finally {
       setLoading(false);
     }
   };
 
-  //Pick image from galery
+  // Pick an image from the gallery
   const pickImageFromGallery = async () => {
-    // check permision of galery
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       showToast(true, "error", "Permission to access gallery is required!");
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 5000);
+      setTimeout(() => setToastVisible(false), 5000);
       return;
     }
 
-    // take image from galery
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -224,21 +190,16 @@ const CMProfileCard = () => {
       quality: 1,
     });
 
-    // console.log("result of image launchImageLibraryAsync", result);
     if (!result.canceled) {
       const fileSizeInMB = result.assets[0].fileSize / (1024 * 1024); // Convert file size from bytes to MB
-      // console.log("File Size (MB):", fileSizeInMB);
+
       if (fileSizeInMB > 2) {
-        // Show message if file size exceeds 3M
-        setVisible(false);
         showToast(
           true,
           "error",
           "Selected image exceeds 2MB, please choose a smaller image.",
         );
-        setTimeout(() => {
-          setToastVisible(false);
-        }, 5000);
+        setTimeout(() => setToastVisible(false), 5000);
         return;
       }
 
@@ -248,20 +209,16 @@ const CMProfileCard = () => {
     setVisible(false);
   };
 
-  // Take image from camera
+  // Capture an image using the camera
   const takeImageWithCamera = async () => {
-    // check camera permision
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      showToast(true, "error", "Permission to access gallery is required!");
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 5000);
+      showToast(true, "error", "Permission to access camera is required!");
+      setTimeout(() => setToastVisible(false), 5000);
       return;
     }
 
-    // Camera se image lena
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -270,19 +227,14 @@ const CMProfileCard = () => {
 
     if (!result.canceled) {
       const fileSizeInMB = result.assets[0].fileSize / (1024 * 1024); // Convert file size from bytes to MB
-      // console.log("File Size (MB):", fileSizeInMB);
 
       if (fileSizeInMB > 2) {
-        setVisible(false);
-        // Show message if file size exceeds 3MB
         showToast(
           true,
           "error",
           "Captured image exceeds 2MB, please reduce the image size.",
         );
-        setTimeout(() => {
-          setToastVisible(false);
-        }, 5000);
+        setTimeout(() => setToastVisible(false), 5000);
         return;
       }
       setImage(result);
@@ -291,13 +243,13 @@ const CMProfileCard = () => {
     setVisible(false);
   };
 
-  // console.log("image in CMProfileCard ===>", image);
-  // console.log("Wix upload imageUrl ", wixUploadUrl);
-
+  // Hide the modal dialog
   const hideDialog = () => setVisible(false);
+
   if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+    return <CMLoader size={20} />; // Show loader if fonts aren't loaded
   }
+
   return (
     <View style={styles.container}>
       {/* Container of profile in card  */}
@@ -413,7 +365,6 @@ const CMProfileCard = () => {
     </View>
   );
 };
-
 export default CMProfileCard;
 
 const styles = StyleSheet.create({

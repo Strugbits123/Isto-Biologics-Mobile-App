@@ -64,7 +64,6 @@ const CMLoginForm = () => {
     return valid;
   };
 
-  // console.log("isChecked", isChecked);
   //handle login when user submit the login form
   const handleLogin = async () => {
     if (!validateInputs()) return;

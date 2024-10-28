@@ -1,23 +1,24 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
-import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
 
 const ProfileScreen = () => {
-  const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
+  // Accessing the current member data from context
+  const { currentMemberData } = useContext(CurrentMemberContext);
   const { profile } = currentMemberData || {};
 
+  // Show a loader if the current member data is not available
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
 
   return (
     <View style={styles.mainContainer}>
-      {/*  Header component */}
+      {/* Header section with profile image and nickname */}
       <View style={styles.headerContainer}>
         <CMHomeHeader
           profileImage={profile?.photo?.url}
@@ -25,17 +26,18 @@ const ProfileScreen = () => {
         />
       </View>
 
+      {/* Scrollable content section for profile details */}
       <ScrollView
         style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of profile page  */}
+        {/* Heading for the profile section */}
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Profile</Text>
         </View>
 
-        {/*  Profile Card Component  */}
+        {/* Profile card with user's information */}
         <View style={styles.cardContainer}>
           <CMProfileCard />
         </View>
@@ -49,25 +51,25 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: ThemeBgColors.mainBg,
+    backgroundColor: ThemeBgColors.mainBg, // Background color theme
   },
   headerContainer: {
-    top: 60,
+    top: 60, // Positioning header below top
   },
   cardContainer: {
-    paddingHorizontal: 29,
-    top: 30,
+    paddingHorizontal: 29, // Left and right padding for profile card
+    top: 30, // Positioning card with margin from top
   },
   headingContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 27,
+    flexDirection: "row", // Ensuring proper layout for heading
+    paddingHorizontal: 27, // Padding for the heading
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold",
-    fontSize: 28,
-    color: ThemeTextColors.darkGray1,
+    fontFamily: "Jakarta-Sans-bold", // Custom font for heading text
+    fontSize: 28, // Font size of heading
+    color: ThemeTextColors.darkGray1, // Theme-based text color
   },
   scrollViewContent: {
-    paddingBottom: 150, // Add some bottom padding to prevent content being hidden
+    paddingBottom: 150, // Bottom padding to ensure scrolling content isn't cut off
   },
 });

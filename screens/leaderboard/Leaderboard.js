@@ -141,7 +141,6 @@ const Leaderboard = () => {
     await getLeaderboardData(); // Refresh data
     setRefreshing(false); // End refreshing state
   };
-
   useEffect(() => {
     getLeaderboardData();
   }, [headerData]);
@@ -163,7 +162,6 @@ const Leaderboard = () => {
   }, [productCategory]);
 
   // Render a single leaderboard item
-
   // console.log("leaderboardData==>", LeaderboardData);
 
   //flatlist rederItem function for render list

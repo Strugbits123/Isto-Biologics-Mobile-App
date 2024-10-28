@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Isto Biologics",
-    "slug": "Isto Biologics",
+    "slug": "istobiologics",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +12,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.wixmobileheadless"
@@ -26,6 +28,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "485035d5-b2ee-4f5c-a2b5-d0f05e11a8f8"
+      }
     }
   }
 }

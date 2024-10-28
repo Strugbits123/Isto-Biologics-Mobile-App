@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
 import { useFonts } from "expo-font";
@@ -15,53 +15,51 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
 import CMLoader from "../../components/CMLoader";
-import { LoginHandler } from "../../authentication/LoginHandler";
-import { WixSessionProvider } from "../../authentication/session";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import * as SecureStore from "expo-secure-store";
 
 const LoginScreen = () => {
-  const queryClient = new QueryClient();
+  // Load custom fonts for the app
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
 
+  // Show a loader while fonts are being loaded
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.loaderContainer}>
         <CMLoader size={30} />
       </View>
     );
   }
 
   return (
+    // KeyboardAvoidingView to handle keyboard overlap on input fields
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={{ flex: 1 }}
+      style={styles.flex}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={styles.flexGrow}>
+        {/* Background gradient for the screen */}
         <LinearGradient
           colors={["#00293F", "#006BA5"]}
           style={styles.container}
         >
           <View style={styles.topContainer}>
-            <View style={{ height: 225 }}>
-              <Image
-                style={{ height: 214, width: "100%" }}
-                source={LoginDesign}
-              />
-              <View style={styles.LogoTextContainer}>
-                {/* <Image source={LoginLogo} /> */}
+            {/* Image and logo container */}
+            <View style={styles.imageWrapper}>
+              <Image style={styles.image} source={LoginDesign} />
+              <View style={styles.logoTextContainer}>
                 <LoginIcon />
                 <Text style={styles.text}>Welcome back!</Text>
               </View>
             </View>
+
+            {/* Bottom container holds the login form */}
             <View style={styles.bottomContainer}>
               <ScrollView
                 contentContainerStyle={styles.scrollableContent}
                 showsVerticalScrollIndicator={false}
               >
-                <View style={styles.LoginContainer}>
+                <View>
                   <CMLoginForm />
                 </View>
               </ScrollView>
@@ -76,34 +74,52 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+  flexGrow: {
+    flexGrow: 1,
+  },
+  loaderContainer: {
+    flex: 1, // Full-screen loading indicator
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
-    flexDirection: "column",
+    flexDirection: "column", // Main container for the screen
     height: "100%",
     width: "100%",
   },
   topContainer: {
-    flexDirection: "column",
+    flexDirection: "column", // Container for image and logo
+  },
+  imageWrapper: {
+    height: 225,
+  },
+  image: {
+    height: 214, // Height of the image
+    width: "100%", // Full-width image
   },
   text: {
-    fontFamily: "Jakarta-Sans-bold",
-    color: ThemeTextColors.white,
-    fontSize: 30,
+    fontFamily: "Jakarta-Sans-bold", // Custom font for text
+    color: ThemeTextColors.white, // Text color from theme
+    fontSize: 30, // Font size for the welcome message
   },
-  LogoTextContainer: {
-    position: "absolute",
-    top: 90,
-    left: 31,
-    gap: 33,
+  logoTextContainer: {
+    position: "absolute", // Positioned over the image
+    top: 90, // Distance from the top
+    left: 31, // Distance from the left
+    gap: 33, // Spacing between logo and text
   },
   bottomContainer: {
-    top: 80,
-    backgroundColor: ThemeBgColors.white,
+    top: 80, // Positioned below the image
+    backgroundColor: ThemeBgColors.white, // Background color from theme
     width: "100%",
     height: "100%",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    paddingTop: 30,
-    paddingHorizontal: 30,
-    justifyContent: "space-between",
+    borderTopLeftRadius: 25, // Rounded top left corner
+    borderTopRightRadius: 25, // Rounded top right corner
+    paddingTop: 30, // Padding at the top
+    paddingHorizontal: 30, // Horizontal padding
+    justifyContent: "space-between", // Evenly space elements
   },
 });

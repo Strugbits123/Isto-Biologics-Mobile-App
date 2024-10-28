@@ -1,22 +1,24 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMDocsCard from "../../components/CMDocs/CMDocsCard";
 import CMLoader from "../../components/CMLoader";
-import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 
 const DocsScreen = () => {
-  const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
+  // Access current member data and update function from context
+  const { currentMemberData } = useContext(CurrentMemberContext);
   const { profile } = currentMemberData || {};
 
+  // Display a loader if member data is not yet available
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
+
   return (
     <View style={styles.mainContainer}>
-      {/*  Header component */}
+      {/* Header section with profile information */}
       <View style={styles.headerContainer}>
         <CMHomeHeader
           profileImage={profile?.photo?.url}
@@ -24,17 +26,18 @@ const DocsScreen = () => {
         />
       </View>
 
+      {/* Scrollable content area for contest rules */}
       <ScrollView
-        style={{ top: 90 }}
+        style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of Entries page  */}
+        {/* Heading section */}
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Contest Rules & Guidelines</Text>
         </View>
 
-        {/*  Entries Card Component  */}
+        {/* Documentation card */}
         <View style={styles.cardContainer}>
           <CMDocsCard />
         </View>
@@ -45,17 +48,20 @@ const DocsScreen = () => {
 
 export default DocsScreen;
 
+// Styling for DocsScreen components
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: ThemeBgColors.mainBg,
   },
   headerContainer: {
-    top: 60,
+    marginTop: 60, // Separate header placement from content for clarity
   },
-  cardContainer: {
-    paddingHorizontal: 29,
-    top: 30,
+  scrollView: {
+    marginTop: 90, // Avoid using inline styling in component for reusability
+  },
+  scrollViewContent: {
+    paddingBottom: 150, // Add space at the bottom to avoid content cutoff
   },
   headingContainer: {
     flexDirection: "row",
@@ -66,7 +72,8 @@ const styles = StyleSheet.create({
     fontSize: 27,
     color: ThemeTextColors.darkGray1,
   },
-  scrollViewContent: {
-    paddingBottom: 150, // Add some bottom padding to prevent content being hidden
+  cardContainer: {
+    paddingHorizontal: 29,
+    marginTop: 30, // Improves readability over "top" styling
   },
 });
