@@ -10,10 +10,9 @@ import ThreeDotIcon from "../Icons/ThreeDotIcon";
 import CMModal from "./CMModal";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
-import { items } from "@wix/data";
-import { createClient, OAuthStrategy } from "@wix/sdk";
 import { PointsContext } from "./PointsHandler";
 import Toast from "./Toast/Toast";
+import { myWixClient } from "../utils/createClient";
 
 const CMDetailEntryCard = () => {
   const route = useRoute();
@@ -26,14 +25,6 @@ const CMDetailEntryCard = () => {
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const myWixClient = createClient({
-    modules: { items },
-    auth: OAuthStrategy({
-      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-    }),
-    // Include the auth strategy and host as relevant
-  });
 
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),

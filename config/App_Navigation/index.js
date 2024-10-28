@@ -8,7 +8,6 @@ import SplashScreen from "../../screens/splash/SplashScreen";
 import LoginScreen from "../../screens/login/LoginScreen";
 import ProfileScreen from "../../screens/profile/ProfileScreen";
 import CMLoader from "../../components/CMLoader";
-import { token } from "../../utils/constants";
 import { useWixSession } from "../../authentication/session";
 import * as SecureStore from "expo-secure-store";
 import { CodeChallengeMethod } from "expo-auth-session";
@@ -19,23 +18,6 @@ const App_Navigation = () => {
   const { session } = useWixSession();
   const [isLoggedIn, setIsLoggedIn] = useState(null); // null to handle splash state
   const [isLoading, setIsLoading] = useState(true); // null to handle splash state
-
-  // useEffect(() => {
-  //   const checkAuthToken = async () => {
-  //     try {
-  //       session.refreshToken.role !== "member"
-  //         ? setIsLoggedIn(false)
-  //         : setIsLoggedIn(true);
-  //     } catch (error) {
-  //       setIsLoggedIn(false);
-  //       console.error("Error fetching auth token:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   checkAuthToken();
-  // }, []);
 
   useEffect(() => {
     const checkAuthToken = async () => {

@@ -16,8 +16,6 @@ import ThreeDotIcon from "../Icons/ThreeDotIcon";
 import CMModal from "./CMModal";
 import { useNavigation } from "@react-navigation/native";
 import CMConfirmationModal from "./CMConfirmationModal";
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { items } from "@wix/data";
 import { myWixClient } from "../utils/createClient";
 import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
@@ -135,8 +133,8 @@ const CMEntryCard = ({ currentMember, id }) => {
         .queryDataItems(leaderboardOptions)
         .eq("user_id", selectedItem.data.user_id._id)
         .find();
-      console.log("selectedItem.data", selectedItem.data);
-      console.log("getLeaderboardUsers", getLeaderboardUsers.items[0].data);
+      // console.log("selectedItem.data", selectedItem.data);
+      // console.log("getLeaderboardUsers", getLeaderboardUsers.items[0].data);
 
       const updateLeaderboardPoints = {
         user_id: selectedItem.data.user_id._id,

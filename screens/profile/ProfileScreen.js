@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
-import { fetchCurrentMember } from "../../authentication/getCurrentMember";
 import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";

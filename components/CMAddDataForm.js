@@ -5,8 +5,6 @@ import CMDateInput from "./CMDateInput";
 import CMProductLine from "./CMProductLine";
 import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { items } from "@wix/data";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { myWixClient } from "../utils/createClient";
 import { PointsContext } from "./PointsHandler";
@@ -74,20 +72,20 @@ const CMAddDataForm = ({
         proteios_category,
         total_entry_points,
       } = isUpdateItem.data;
-      console.log(
-        // "isUpdateItem.data destrued",
-        doctor_firstname,
-        doctor_lastname,
-        hospital_name,
-        first_case_date,
-        magellan_category,
-        influx_category,
-        sparc_category,
-        inqu_category,
-        fibrant_category,
-        proteios_category,
-        total_entry_points,
-      );
+      // console.log(
+      //   // "isUpdateItem.data destrued",
+      //   doctor_firstname,
+      //   doctor_lastname,
+      //   hospital_name,
+      //   first_case_date,
+      //   magellan_category,
+      //   influx_category,
+      //   sparc_category,
+      //   inqu_category,
+      //   fibrant_category,
+      //   proteios_category,
+      //   total_entry_points,
+      // );
 
       // Set initial form data
       setData({
@@ -195,12 +193,12 @@ const CMAddDataForm = ({
       //de structure points for hospital or doctor
       // console.log("checkedForms", checkedForms);
       const { doctorChecked, hospitalChecked } = checkedForms;
-      console.log(
-        "doctorChecked",
-        doctorChecked,
-        "hospitalChecked",
-        hospitalChecked,
-      );
+      // console.log(
+      //   "doctorChecked",
+      //   doctorChecked,
+      //   "hospitalChecked",
+      //   hospitalChecked,
+      // );
       //Points distributions
       const doctorPoints = doctorChecked ? 3 : 0;
       const hospitalPoints = hospitalChecked ? 5 : 0;
@@ -308,8 +306,8 @@ const CMAddDataForm = ({
           .queryDataItems(leaderboardOptions)
           .eq("user_id", response.dataItem.data.user_id)
           .find();
-        console.log("getLeaderboardUsers", getLeaderboardUsers._items[0].data);
-        console.log("response of update entry", response);
+        // console.log("getLeaderboardUsers", getLeaderboardUsers._items[0].data);
+        // console.log("response of update entry", response);
 
         //data to send for minus when user update the entry old points minus from total leaderboard points
         const dataToSendInLeaderboardForUpdatePoints = {
@@ -356,7 +354,7 @@ const CMAddDataForm = ({
             getLeaderboardUsers._items[0]._id,
             updateLeaderboardOptions,
           );
-        console.log("resLeaderboardUpdatePoints", resLeaderboardUpdatePoints);
+        // console.log("resLeaderboardUpdatePoints", resLeaderboardUpdatePoints);
       }
 
       //Now again call for addition of points when user enter new entry points
@@ -457,7 +455,7 @@ const CMAddDataForm = ({
           getLeaderboardUsers._items[0]._id,
           updateLeaderboardOptions,
         );
-        console.log("resLeaderboardUpdate", resLeaderboardUpdate.dataItem.data);
+        // console.log("resLeaderboardUpdate", resLeaderboardUpdate.dataItem.data);
         updatePoints({
           total_leaderboard_points:
             resLeaderboardUpdate.dataItem.data.total_entries_points,

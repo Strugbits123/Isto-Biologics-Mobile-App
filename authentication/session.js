@@ -1,4 +1,3 @@
-import { createClient, OAuthStrategy } from "@wix/sdk";
 import * as SecureStore from "expo-secure-store";
 import * as React from "react";
 import { View } from "react-native";

@@ -1,8 +1,6 @@
 import * as Linking from "expo-linking";
 import * as React from "react";
 import { useWixSession } from "./session";
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { members } from "@wix/members";
 import validator from "validator";
 import WebView from "react-native-webview";
 import { myWixClient } from "../utils/createClient";

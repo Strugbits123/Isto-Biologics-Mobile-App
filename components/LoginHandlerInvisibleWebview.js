@@ -2,19 +2,10 @@
 import { WebView } from "react-native-webview";
 import * as Linking from "expo-linking";
 import { useWixSession } from "../authentication/session";
-import { createClient, OAuthStrategy } from "@wix/sdk";
+import { myWixClient } from "../utils/createClient";
 
 export function LoginHandlerInvisibleWebview(props) {
   const { setSession } = useWixSession();
-
-  console.log("props in LoginHandlerInvisibleWebview", props);
-
-  //Wix headless create client method for auth clientId
-  const myWixClient = createClient({
-    auth: OAuthStrategy({
-      clientId: "0715f53d-fb36-46bd-8fce-7f151bf279ee",
-    }),
-  });
 
   if (!props.loginState) {
     return null;

@@ -15,7 +15,6 @@ import MenIcon from "../../Icons/MenIcon";
 import CMModal from "../CMModal";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../Icons/BackIcon";
-import { token } from "../../utils/constants";
 import { useWixSession } from "../../authentication/session";
 import CMLoader from "../CMLoader";
 import * as SecureStore from "expo-secure-store";
