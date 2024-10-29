@@ -20,7 +20,6 @@ import { Link, useNavigation } from "@react-navigation/native";
 import CMLoader from "./CMLoader";
 import { useLoginHandler } from "../authentication/LoginHandler";
 import Toast from "./Toast/Toast";
-import CMFonts from "../utils/CMfonts";
 import {
   useFonts,
   PlusJakartaSans_400Regular,

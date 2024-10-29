@@ -15,7 +15,6 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
 import CMLoader from "../../components/CMLoader";
-import CMFonts from "../../utils/CMfonts";
 import {
   useFonts,
   PlusJakartaSans_700Bold,
