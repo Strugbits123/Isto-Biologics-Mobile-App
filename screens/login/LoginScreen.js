@@ -10,16 +10,24 @@ import {
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
 import CMLoader from "../../components/CMLoader";
+import CMFonts from "../../utils/CMfonts";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const LoginScreen = () => {
   // Load custom fonts for the app
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
   });
 
   // Show a loader while fonts are being loaded
@@ -101,7 +109,8 @@ const styles = StyleSheet.create({
     width: "100%", // Full-width image
   },
   text: {
-    fontFamily: "Jakarta-Sans-bold", // Custom font for text
+    // fontFamily: "Jakarta-Sans-bold", // Custom font for text
+    fontFamily: "PlusJakartaSans_700Bold",
     color: ThemeTextColors.white, // Text color from theme
     fontSize: 30, // Font size for the welcome message
   },

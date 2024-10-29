@@ -5,10 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { HelperText } from "react-native-paper";
 import OpenEyeIcon from "../Icons/OpenEyeIcon";
 import ClosedEyeIcon from "../Icons/ClosedEyeIcon";
@@ -19,6 +20,14 @@ import { Link, useNavigation } from "@react-navigation/native";
 import CMLoader from "./CMLoader";
 import { useLoginHandler } from "../authentication/LoginHandler";
 import Toast from "./Toast/Toast";
+import CMFonts from "../utils/CMfonts";
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const CMLoginForm = () => {
   const navigation = useNavigation();
@@ -32,10 +41,16 @@ const CMLoginForm = () => {
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
   });
 
   //Inputfields handleOnChange
@@ -94,99 +109,89 @@ const CMLoginForm = () => {
 
   return (
     <>
-      {!fontsLoaded ? (
-        <CMLoader size={20} />
-      ) : (
-        <View style={styles.container}>
-          <Text style={styles.LoginText}>Login</Text>
-          {/* inputs under this container */}
-          <View>
-            {/* This is container of email input */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputTitle}>Email</Text>
+      <View style={styles.container}>
+        <Text style={styles.LoginText}>Login</Text>
+        {/* inputs under this container */}
+        <View>
+          {/* This is container of email input */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Email</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => {
+                handle_onChange_Text("email", text);
+              }}
+              value={data.email}
+              placeholderTextColor={ThemeTextColors.placeholder}
+              autoCorrect={false}
+              autoCapitalize="none"
+              placeholder={"Enter your email"}
+            />
+            {errors.email && (
+              <HelperText type="error" visible={true}>
+                {errors.email}
+              </HelperText>
+            )}
+          </View>
+          {/* This is container of password input  */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Password</Text>
+            <View style={{ justifyContent: "center", alignItems: "flex-end" }}>
               <TextInput
                 style={styles.input}
-                onChangeText={(text) => {
-                  handle_onChange_Text("email", text);
-                }}
-                value={data.email}
+                secureTextEntry={isPasswordVisible}
+                value={data.password}
                 placeholderTextColor={ThemeTextColors.placeholder}
+                onChangeText={(text) => {
+                  handle_onChange_Text("password", text);
+                }}
                 autoCorrect={false}
                 autoCapitalize="none"
-                placeholder={"Enter your email"}
+                placeholder={"Enter your password"}
               />
-              {errors.email && (
-                <HelperText type="error" visible={true}>
-                  {errors.email}
-                </HelperText>
-              )}
-            </View>
-            {/* This is container of password input  */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputTitle}>Password</Text>
-              <View
-                style={{ justifyContent: "center", alignItems: "flex-end" }}
+              {/* input icon of eye close and open */}
+              <TouchableOpacity
+                style={{ position: "absolute", paddingHorizontal: 17 }}
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               >
-                <TextInput
-                  style={styles.input}
-                  secureTextEntry={isPasswordVisible}
-                  value={data.password}
-                  placeholderTextColor={ThemeTextColors.placeholder}
-                  onChangeText={(text) => {
-                    handle_onChange_Text("password", text);
-                  }}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  placeholder={"Enter your password"}
-                />
-                {/* input icon of eye close and open */}
-                <TouchableOpacity
-                  style={{ position: "absolute", paddingHorizontal: 17 }}
-                  onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                >
-                  {isPasswordVisible ? (
-                    <OpenEyeIcon width={20} height={12} />
-                  ) : (
-                    <ClosedEyeIcon width={20} height={15} />
-                  )}
-                </TouchableOpacity>
-              </View>
-              {errors.password && (
-                <HelperText type="error" visible={true}>
-                  {errors.password}
-                </HelperText>
-              )}
+                {isPasswordVisible ? (
+                  <OpenEyeIcon width={20} height={12} />
+                ) : (
+                  <ClosedEyeIcon width={20} height={15} />
+                )}
+              </TouchableOpacity>
             </View>
+            {errors.password && (
+              <HelperText type="error" visible={true}>
+                {errors.password}
+              </HelperText>
+            )}
           </View>
-          {/* This is the container of Remember me checkbox and forgot password */}
-          <View style={styles.forgotPasswordAndCheckboxConatiner}>
-            <View style={styles.checkboxContainer}>
-              <Checkbox
-                value={isChecked}
-                onValueChange={() => {
-                  setIsChecked(!isChecked);
-                }}
-                style={styles.checkbox}
-                color={isChecked ? ThemeTextColors.darkOrange : undefined}
-              />
-              <Text style={styles.checkboxlabel}>Remember me</Text>
-            </View>
-            {/* This link tag for forgot password */}
-            <Text style={styles.forgotPasswordText}> Forgot Password ?</Text>
-          </View>
-          <CMThemedButton
-            title="Login"
-            icon={<ArrowRight width={20} height={20} />}
-            loading={isLoading}
-            onPress={handleLogin}
-          />
-          <Toast
-            visible={toastVisible}
-            type={iconType}
-            message={errorMessage}
-          />
         </View>
-      )}
+        {/* This is the container of Remember me checkbox and forgot password */}
+        <View style={styles.forgotPasswordAndCheckboxConatiner}>
+          <View style={styles.checkboxContainer}>
+            <Checkbox
+              value={isChecked}
+              onValueChange={() => {
+                setIsChecked(!isChecked);
+              }}
+              style={styles.checkbox}
+              color={isChecked ? ThemeTextColors.darkOrange : undefined}
+            />
+            <Text style={styles.checkboxlabel}>Remember me</Text>
+          </View>
+          {/* This link tag for forgot password */}
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        </View>
+        <CMThemedButton
+          title="Login"
+          icon={<ArrowRight width={20} height={20} />}
+          loading={isLoading}
+          onPress={handleLogin}
+        />
+        <Toast visible={toastVisible} type={iconType} message={errorMessage} />
+      </View>
     </>
   );
 };
@@ -197,14 +202,14 @@ const styles = StyleSheet.create({
     gap: 18,
   },
   LoginText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 36,
   },
   inputContainer: {
     marginTop: 15,
   },
   input: {
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     minWidth: "100%",
     paddingHorizontal: 15,
     paddingVertical: 9,
@@ -215,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.darkGray1,
     marginBottom: 10,
@@ -238,7 +243,7 @@ const styles = StyleSheet.create({
   checkboxlabel: {
     paddingHorizontal: 8,
     paddingBottom: 4,
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     fontSize: 14,
     color: ThemeTextColors.gray1,
     justifyContent: "center",
@@ -246,7 +251,7 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontSize: 14,
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     color: ThemeTextColors.gray,
   },
 });

@@ -7,6 +7,10 @@ import { myWixClient } from "../../utils/createClient";
 import CMLoader from "../../components/CMLoader";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const Entries = () => {
   const route = useRoute();
@@ -19,6 +23,9 @@ const Entries = () => {
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+  });
 
   return (
     <>
@@ -71,7 +78,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 28,
     color: ThemeTextColors.darkGray1,
   },

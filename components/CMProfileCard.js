@@ -10,7 +10,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CameraIcon from "../Icons/CameraIcon";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import CMLoader from "./CMLoader";
@@ -23,6 +23,12 @@ import * as FileSystem from "expo-file-system";
 import { Buffer } from "buffer";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -40,13 +46,19 @@ const CMProfileCard = () => {
   const [message, setMessage] = useState("");
   const { profile, loginEmail, contact } = currentMemberData || {}; // Destructure member data
   const queryClient = useQueryClient(); // TanStack Query client for cache and updates
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
   });
+
   // Helper function to show toast notifications
   const showToast = (visible, typeOfIcon, message) => {
     setToastVisible(visible);
@@ -394,7 +406,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   nameText: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 12,
     color: ThemeTextColors.extraLightGray,
   },
@@ -402,7 +414,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     minWidth: "100%",
     paddingHorizontal: 15,
     paddingVertical: 8,
@@ -413,7 +425,7 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.darkGray1,
     marginBottom: 10,
@@ -432,7 +444,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   modalButton: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 15,
     color: ThemeTextColors.extraLightGray,
   },

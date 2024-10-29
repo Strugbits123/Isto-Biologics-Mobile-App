@@ -4,11 +4,15 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { myWixClient } from "../../utils/createClient";
 import { PointsContext } from "../../components/PointsHandler";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const AddData = () => {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -16,8 +20,11 @@ const AddData = () => {
   const { item } = route.params || {}; // Safely destructure item from params
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
   });
 
   const { profile } = currentMemberData || {};
@@ -89,7 +96,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 28,
     color: ThemeTextColors.darkGray1,
   },

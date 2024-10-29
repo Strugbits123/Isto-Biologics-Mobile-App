@@ -1,14 +1,23 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import BackIcon from "../../Icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import CMLoader from "../CMLoader";
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   const navigation = useNavigation();
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -46,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerText: {
-    fontFamily: "Jakarta-Sans-SemiBold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 28,
   },
 });

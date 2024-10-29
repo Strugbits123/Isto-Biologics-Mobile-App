@@ -7,13 +7,21 @@ import CMDetailEntryCard from "../../components/CMDetailEntryCard";
 import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const DetailedEntry = () => {
   // Get current member data from context
   const { currentMemberData, updateCurrentMemberData } =
-  useContext(CurrentMemberContext);
- // Destructure profile safely
+    useContext(CurrentMemberContext);
+  // Destructure profile safely
   const { profile } = currentMemberData || {};
+
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+  });
 
   // Show loader until get currentMember
   if (!currentMemberData) {
@@ -68,7 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 28,
     color: ThemeTextColors.darkGray1,
   },

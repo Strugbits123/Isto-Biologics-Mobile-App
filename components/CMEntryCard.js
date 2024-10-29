@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-import { isLoading, useFonts } from "expo-font";
+// import { isLoading, useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 import HospitalIcon from "../Icons/HospitalIcon";
@@ -20,6 +20,11 @@ import { myWixClient } from "../utils/createClient";
 import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const CMEntryCard = ({ currentMember, id }) => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -39,13 +44,18 @@ const CMEntryCard = ({ currentMember, id }) => {
   const [errorMessage, setErrorMessage] = useState("");
   // console.log("currentMember", currentMember._id);
 
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // });
+
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_600SemiBold,
   });
 
   // Method to get all entries of user
@@ -84,10 +94,6 @@ const CMEntryCard = ({ currentMember, id }) => {
   useEffect(() => {
     getUserEntries();
   }, [refresh, currentMemberData]);
-
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
 
   // Three dot press opens a dropdown for view entry, update, and delete
   const handleThreeDotPress = (item, index) => {
@@ -235,6 +241,10 @@ const CMEntryCard = ({ currentMember, id }) => {
     },
   ];
 
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
+
   // Render each entry card
   const renderItem = ({ item, index }) => (
     <View style={styles.cardContainer}>
@@ -376,17 +386,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   EntryTitleText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 21,
     color: ThemeTextColors.darkGray1,
   },
   fieldTitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.darkGray1,
   },
   fieldValue: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 14,
     color: ThemeTextColors.placeholder,
   },

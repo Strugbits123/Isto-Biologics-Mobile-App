@@ -2,12 +2,21 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import UpArrowIcon from "../../Icons/UpArrowIcon";
 import CMLoader from "../CMLoader";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMOpenedPointCard = ({ onPress, listNumber, title, points=[] }) => {
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // });
+
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -49,17 +58,17 @@ export default CMOpenedPointCard;
 const styles = StyleSheet.create({
   TextContainer: { flexDirection: "row", gap: 5 },
   orderListNumber: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.white,
   },
   openOrderListNumber: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
   },
   title: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.white,
     maxWidth: 220,
@@ -70,7 +79,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   openedCardtitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
     maxWidth: 220,
@@ -85,13 +94,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   bulletPoint: {
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     fontSize: 16,
     color: ThemeTextColors.extraLightGray,
     marginRight: 5,
   },
   listText: {
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     fontSize: 16,
     color: ThemeTextColors.extraLightGray,
   },

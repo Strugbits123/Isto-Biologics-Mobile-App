@@ -1,11 +1,18 @@
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import CMLoader from "./CMLoader";
 import CMline from "./CMline";
+import {
+  useFonts,
+  PlusJakartaSans_500Medium,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMModal = ({ options, modalStyle }) => {
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_500Medium,
   });
 
   if (!fontsLoaded) {
@@ -43,7 +50,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalText: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 14,
     paddingHorizontal: 10,
     paddingVertical: 5,

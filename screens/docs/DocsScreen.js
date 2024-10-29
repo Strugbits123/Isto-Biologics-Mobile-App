@@ -5,6 +5,10 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMDocsCard from "../../components/CMDocs/CMDocsCard";
 import CMLoader from "../../components/CMLoader";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const DocsScreen = () => {
   // Access current member data and update function from context
@@ -15,6 +19,10 @@ const DocsScreen = () => {
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
+
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+  });
 
   return (
     <View style={styles.mainContainer}>
@@ -67,7 +75,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 27,
     color: ThemeTextColors.darkGray1,
   },

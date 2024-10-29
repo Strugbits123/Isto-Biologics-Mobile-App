@@ -6,12 +6,17 @@ import CMHomeCard from "../../components/CMHomeCard";
 import CMLoader from "../../components/CMLoader";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { myWixClient } from "../../utils/createClient";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import Toast from "../../components/Toast/Toast";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const HomeScreen = ({ isLoggedIn }) => {
-  const { currentMemberData, updateCurrentMemberData } = useContext(CurrentMemberContext);
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const queryClient = useQueryClient();
 
   // State variables
@@ -20,8 +25,11 @@ const HomeScreen = ({ isLoggedIn }) => {
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
   });
   const [leaderboardData, setLeaderboardData] = useState(null);
   const [currentMember, setCurrentMember] = useState(null);
@@ -44,7 +52,10 @@ const HomeScreen = ({ isLoggedIn }) => {
         dataCollectionId: "leaderboard",
         referencedItemOptions: [{ fieldName: "user_id", limit: 100 }],
       };
-      const response = await myWixClient.items.queryDataItems(options).eq("user_id", memberId).find();
+      const response = await myWixClient.items
+        .queryDataItems(options)
+        .eq("user_id", memberId)
+        .find();
       setLeaderboardData(response?._items[0]?.data);
     } catch (error) {
       console.error("Error in getLeaderboardDataByUserId:", error);
@@ -98,14 +109,20 @@ const HomeScreen = ({ isLoggedIn }) => {
       {/* Header with profile information */}
       <View style={styles.headerContainer}>
         <CMHomeHeader
-          profileImage={currentMemberData?.profile?.photo?.url || profile?.photo?.url}
+          profileImage={
+            currentMemberData?.profile?.photo?.url || profile?.photo?.url
+          }
           name={currentMemberData?.profile?.nickname || profile?.nickname}
           fullName={currentMemberData?.contact?.firstName || contact?.firstName}
           useInScreen={"home"}
         />
       </View>
       {/* Scrollable content section */}
-      <ScrollView style={{ top: 90 }} contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ top: 90 }}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Statistics</Text>
         </View>
@@ -117,8 +134,12 @@ const HomeScreen = ({ isLoggedIn }) => {
             totalPointsLeaderboard={leaderboardData?.total_entries_points}
             totalHospitalPoints={leaderboardData?.total_hospital_points}
             totalDoctorPoints={leaderboardData?.total_doctor_points}
-            profileImage={currentMemberData?.profile?.photo?.url || profile?.photo?.url}
-            fullName={currentMemberData?.contact?.firstName || contact?.firstName}
+            profileImage={
+              currentMemberData?.profile?.photo?.url || profile?.photo?.url
+            }
+            fullName={
+              currentMemberData?.contact?.firstName || contact?.firstName
+            }
             name={currentMemberData?.profile?.nickname || profile?.nickname}
             id={currentMember?._id}
             setReloadData={setReloadData}
@@ -146,7 +167,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 28,
     color: ThemeTextColors.darkGray1,
   },

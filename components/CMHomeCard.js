@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import MenIcon from "../Icons/MenIcon";
 import BagdeHomeCardIcon from "../Icons/BagdeHomeCardIcon";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import CMThemedButton from "./CMThemedButton";
 import { stubArray } from "lodash";
@@ -15,6 +15,23 @@ import { useNavigation } from "@react-navigation/native";
 import CMline from "./CMline";
 import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
+import {
+  useFonts,
+  PlusJakartaSans_200ExtraLight,
+  PlusJakartaSans_300Light,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+  PlusJakartaSans_200ExtraLight_Italic,
+  PlusJakartaSans_300Light_Italic,
+  PlusJakartaSans_400Regular_Italic,
+  PlusJakartaSans_500Medium_Italic,
+  PlusJakartaSans_600SemiBold_Italic,
+  PlusJakartaSans_700Bold_Italic,
+  PlusJakartaSans_800ExtraBold_Italic,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const CMHomeCard = ({
   totalPointsProducts = "00",
@@ -33,13 +50,29 @@ const CMHomeCard = ({
   const navigation = useNavigation();
 
   const { profile } = currentMemberData || {};
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_200ExtraLight,
+    PlusJakartaSans_300Light,
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    PlusJakartaSans_200ExtraLight_Italic,
+    PlusJakartaSans_300Light_Italic,
+    PlusJakartaSans_400Regular_Italic,
+    PlusJakartaSans_500Medium_Italic,
+    PlusJakartaSans_600SemiBold_Italic,
+    PlusJakartaSans_700Bold_Italic,
+    PlusJakartaSans_800ExtraBold_Italic,
   });
 
   if (!fontsLoaded) {
@@ -172,22 +205,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   nameText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 21,
     color: ThemeTextColors.darkGray1,
   },
   pointsInfoHeading: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 14,
     color: ThemeTextColors.darkGray1,
   },
   pointsTextInfo: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 14,
     color: ThemeTextColors.extraLightGray,
   },
   pointsNumber: {
-    fontFamily: "Jakarta-Sans-Extra-bold",
+    fontFamily: "PlusJakartaSans_800ExtraBold",
     fontSize: 14,
     color: ThemeTextColors.extraLightGray,
   },
@@ -206,7 +239,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   TotalPointsText: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.darkOrange,
   },
@@ -220,7 +253,7 @@ const styles = StyleSheet.create({
   pointsText: {
     color: ThemeTextColors.white,
     fontSize: 16,
-    fontFamily: "Jakarta-Sans-Italic-bold",
+    fontFamily: "PlusJakartaSans_700Bold_Italic",
   },
   buttonsContainer: {
     flexDirection: "row",
@@ -235,12 +268,12 @@ const styles = StyleSheet.create({
     alignContent: "center",
   },
   themeButtonText: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 14,
     color: ThemeTextColors.white,
   },
   buttonText: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 14,
     color: ThemeTextColors.orange,
   },

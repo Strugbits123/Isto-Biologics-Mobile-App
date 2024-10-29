@@ -10,7 +10,7 @@ import React, { useContext, useEffect, useState } from "react";
 import menAvatar from "../../assets/Images/menAvatar.png";
 import { Avatar } from "react-native-paper";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import MenIcon from "../../Icons/MenIcon";
 import CMModal from "../CMModal";
 import { useNavigation } from "@react-navigation/native";
@@ -20,13 +20,18 @@ import CMLoader from "../CMLoader";
 import * as SecureStore from "expo-secure-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { CurrentMemberContext } from "../CurrentMemberHandler";
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 
 const CMHomeHeader = ({
   useInScreen,
   navigationOnPage,
   profileImage = "",
   name = "",
-  fullName = ""
+  fullName = "",
 }) => {
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
@@ -35,9 +40,13 @@ const CMHomeHeader = ({
   const { newVisitorSession } = useWixSession();
   const [modalVisible, setModalVisible] = useState(false);
   const [greeting, setGreeting] = useState("Good Morning");
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_600SemiBold,
   });
   useEffect(() => {
     const currentHour = new Date().getHours();
@@ -157,12 +166,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   greetingText: {
-    fontFamily: "Jakarta-Sans-SemiBold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 22,
     color: ThemeTextColors.darkBlue,
   },
   nameText: {
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     fontSize: 22,
     color: ThemeTextColors.darkBlue,
   },

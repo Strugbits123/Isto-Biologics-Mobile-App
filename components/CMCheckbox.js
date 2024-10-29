@@ -2,8 +2,21 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Checkbox from "expo-checkbox";
 import { ThemeTextColors } from "../theme/theme";
+import {
+  useFonts,
+  PlusJakartaSans_500Medium,
+} from "@expo-google-fonts/plus-jakarta-sans";
+const CMCheckbox = ({
+  value,
+  checkoxStyle,
+  lable,
+  onValueChange,
+  lableStyle,
+}) => {
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_500Medium,
+  });
 
-const CMCheckbox = ({ value, checkoxStyle, lable, onValueChange, lableStyle }) => {
   return (
     <View style={styles.checkboxContainer}>
       <Checkbox
@@ -35,7 +48,7 @@ const styles = StyleSheet.create({
   checkboxlabel: {
     paddingHorizontal: 8,
     paddingBottom: 4,
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 17,
     color: ThemeTextColors.darkGray1,
     justifyContent: "center",

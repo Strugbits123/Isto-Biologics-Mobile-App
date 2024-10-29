@@ -18,7 +18,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import CMHeader from "../../components/CMHeader/CMHeader";
 import MenIcon from "../../Icons/MenIcon";
 import CMLoader from "../../components/CMLoader";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font"
+import {
+  useFonts,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 import CrownIcon from "../../Icons/CrownIcon";
 import CMline from "../../components/CMline";
 import { myWixClient } from "../../utils/createClient";
@@ -96,10 +102,15 @@ const Leaderboard = () => {
   const [refreshing, setRefreshing] = useState(false);
   const { profile } = currentMemberData || {};
 
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    PlusJakartaSans_600SemiBold,
   });
 
   // let leaderboardData = [];
@@ -291,7 +302,7 @@ const Leaderboard = () => {
             </View>
             <Text
               style={{
-                fontFamily: "Jakarta-Sans-bold",
+                fontFamily: "PlusJakartaSans_700Bold",
                 fontSize: 15,
                 color: headerData.rankingName,
               }}
@@ -356,7 +367,7 @@ const Leaderboard = () => {
             </View>
             <Text
               style={{
-                fontFamily: "Jakarta-Sans-bold",
+                fontFamily: "PlusJakartaSans_700Bold",
                 fontSize: 15,
                 color: headerData.rankingName,
               }}
@@ -377,7 +388,7 @@ const Leaderboard = () => {
             >
               <Text
                 style={{
-                  fontFamily: "Jakarta-Sans-Extra-bold",
+                  fontFamily: "PlusJakartaSans_800ExtraBold",
                   fontSize: 46,
                   color: ThemeTextColors.white,
                 }}
@@ -410,7 +421,7 @@ const Leaderboard = () => {
             </View>
             <Text
               style={{
-                fontFamily: "Jakarta-Sans-bold",
+                fontFamily: "PlusJakartaSans_700Bold",
                 fontSize: 15,
                 color: headerData.rankingName,
               }}
@@ -546,7 +557,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   name: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 13,
     color: "white",
   },
@@ -574,7 +585,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   numberText: {
-    fontFamily: "Jakarta-Sans-Extra-bold",
+    fontFamily: "PlusJakartaSans_800ExtraBold",
     fontSize: 34,
     color: ThemeTextColors.white,
   },
@@ -593,7 +604,7 @@ const styles = StyleSheet.create({
     borderBottomColor: ThemeTextColors.darkOrange,
   },
   categoryText: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.extraLightGray,
   },
@@ -615,7 +626,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF4E0", // Light background for top ranks
   },
   rankText: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.extraLightGray,
     paddingRight: 15,
@@ -640,14 +651,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   nameText: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     flex: 1,
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
     paddingLeft: 20,
   },
   scoreText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 19,
     color: ThemeTextColors.extraLightGray,
   },

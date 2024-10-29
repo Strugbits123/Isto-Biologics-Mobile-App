@@ -1,30 +1,34 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import CMLoader from "../CMLoader";
 import CMOpenedPointCard from "./CMOpenedPointCard";
 import CMClosedPointCard from "./CMClosedPointCard";
-
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_600SemiBold_Italic,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMDocsCard = () => {
   // Manage the open/close state of point cards
   const [point1Card, setPoint1Card] = useState(false);
   const [point2Card, setPoint2Card] = useState(false);
 
   // Load custom fonts and show loader until fonts are ready
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Italic-bold": require("../../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-Medium": require("../../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-    "Jakarta-Sans-Semi-bold-Italic": require("../../assets/fonts/static/PlusJakartaSans-SemiBoldItalic.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Italic-bold": require("../../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-Medium": require("../../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  //   "Jakarta-Sans-Semi-bold-Italic": require("../../assets/fonts/static/PlusJakartaSans-SemiBoldItalic.ttf"),
+  // });
+
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_600SemiBold_Italic,
   });
 
   if (!fontsLoaded) {
@@ -82,9 +86,8 @@ const CMDocsCard = () => {
 
         {/* Note section */}
         <Text style={styles.noteText}>
-          *New doctors and/or new product approvals do not count until the
-          first case has taken place. Case information is required for
-          submission.
+          *New doctors and/or new product approvals do not count until the first
+          case has taken place. Case information is required for submission.
         </Text>
       </View>
     </View>
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   mainHeadingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 21,
     marginBottom: 20,
     color: ThemeTextColors.orange,
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     gap: 20, // Add space between cards
   },
   noteText: {
-    fontFamily: "Jakarta-Sans-Semi-bold-Italic",
+    fontFamily: "PlusJakartaSans_600SemiBold_Italic",
     fontSize: 19,
     color: ThemeTextColors.darkGray1,
     marginTop: 20, // Added margin for readability

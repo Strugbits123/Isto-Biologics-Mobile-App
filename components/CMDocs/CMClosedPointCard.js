@@ -2,12 +2,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import DownArrowIcon from "../../Icons/DownArrowIcon";
 import CMLoader from "../CMLoader";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import { ThemeTextColors } from "../../theme/theme";
-
+import {
+  useFonts,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMClosedPointCard = ({ onPress, listNumber, title }) => {
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -45,17 +51,17 @@ const styles = StyleSheet.create({
   },
   TextContainer: { flexDirection: "row", gap: 5 },
   orderListNumber: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.white,
   },
   openOrderListNumber: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
   },
   title: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.white,
     maxWidth: 220,

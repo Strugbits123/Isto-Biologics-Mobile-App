@@ -2,17 +2,28 @@ import { Modal, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { ThemeTextColors } from "../theme/theme";
 import DeleteIcon from "../Icons/DeleteIcon";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
 import CMButton from "./CMButton";
-
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMConfirmationModal = ({ onCancel, onConfirm }) => {
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // });
+
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -27,7 +38,9 @@ const CMConfirmationModal = ({ onCancel, onConfirm }) => {
             <DeleteIcon width={76} height={76} />
           </View>
           <View style={{ maxWidth: 200, marginTop: 10 }}>
-            <Text style={styles.text}>Are you sure you want to delete this?</Text>
+            <Text style={styles.text}>
+              Are you sure you want to delete this?
+            </Text>
           </View>
           <View style={styles.buttonsContainer}>
             <CMButton
@@ -40,7 +53,7 @@ const CMConfirmationModal = ({ onCancel, onConfirm }) => {
                 backgroundColor: "red",
               }}
               textStyle={{
-                fontFamily: "Jakarta-Sans-Medium",
+                fontFamily: "PlusJakartaSans_500Medium",
                 fontSize: 14,
                 color: ThemeTextColors.white,
               }}
@@ -77,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.darkGray1,
     textAlign: "center",
@@ -90,7 +103,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
     fontSize: 14,
     color: "red",
   },

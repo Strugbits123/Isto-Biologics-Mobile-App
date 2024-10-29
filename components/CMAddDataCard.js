@@ -1,32 +1,36 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 import HospitalIcon from "../Icons/HospitalIcon";
 import DoctorIcon from "../Icons/DoctorIcon";
 import CMCheckbox from "./CMCheckbox";
 import CMAddDataForm from "./CMAddDataForm";
-
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_500Medium,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
   const [checkedState, setCheckedState] = useState({
     doctorChecked: false,
     hospitalChecked: true,
   });
   // console.log("isUpdateItem", isUpdateItem);
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-    "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-    "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
+  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_500Medium,
   });
-
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
 
   // Initialize checkbox state based on the passed isUpdateItem
   useEffect(() => {
@@ -58,7 +62,9 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
   };
 
   // console.log("check", checkedState);
-
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -116,13 +122,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   mainHeadingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 21,
     marginBottom: 20,
     color: ThemeTextColors.darkGray1,
   },
   selectionContainer: {
-    fontFamily: "Jakarta-Sans-Medium",
+    fontFamily: "PlusJakartaSans_500Medium",
   },
   insideSelectionContainer: {
     flexDirection: "row",

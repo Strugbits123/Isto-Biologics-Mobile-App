@@ -2,7 +2,12 @@ import { StyleSheet, Text, View,TextInput  } from "react-native";
 import React from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
-
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMInput = ({
   title,
   titleStyle,
@@ -14,6 +19,11 @@ const CMInput = ({
   errorMessage,
   editable = true,
 }) => {
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+  });
   return (
     <View style={styles.inputContainer}>
       <Text style={[styles.inputTitle, titleStyle]}>{title}</Text>
@@ -43,7 +53,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    fontFamily: "Jakarta-Sans",
+    fontFamily: "PlusJakartaSans_400Regular",
     minWidth: "100%",
     paddingHorizontal: 15,
     paddingVertical: 8,
@@ -54,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 16,
     color: ThemeTextColors.darkGray1,
     marginBottom: 10,

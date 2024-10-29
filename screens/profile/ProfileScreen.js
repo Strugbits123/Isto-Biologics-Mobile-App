@@ -5,15 +5,30 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
-
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const ProfileScreen = () => {
   // Accessing the current member data from context
   const { currentMemberData } = useContext(CurrentMemberContext);
   const { profile } = currentMemberData || {};
 
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_700Bold,
+  });
   // Show a loader if the current member data is not available
   if (!currentMemberData) {
     return <CMLoader size={30} />;
+  }
+
+  // Show a loader while fonts are being loaded
+  if (!fontsLoaded) {
+    return (
+      <View style={styles.loaderContainer}>
+        <CMLoader size={30} />
+      </View>
+    );
   }
 
   return (
@@ -65,11 +80,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27, // Padding for the heading
   },
   headingText: {
-    fontFamily: "Jakarta-Sans-bold", // Custom font for heading text
+    fontFamily: "PlusJakartaSans_700Bold", // Custom font for heading text
     fontSize: 28, // Font size of heading
     color: ThemeTextColors.darkGray1, // Theme-based text color
   },
   scrollViewContent: {
     paddingBottom: 150, // Bottom padding to ensure scrolling content isn't cut off
+  },
+  loaderContainer: {
+    flex: 1, // Full-screen loading indicator
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

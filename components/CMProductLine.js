@@ -1,13 +1,18 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
 import CMCheckbox from "./CMCheckbox";
 import DownArrowIcon from "../Icons/DownArrowIcon";
 import CMline from "./CMline";
 import { ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
-
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_600SemiBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 const CMProductLine = ({
   checkboxes,
   onCheckboxChange,
@@ -66,20 +71,25 @@ const CMProductLine = ({
   ];
 
   // Load custom fonts
-  const [fontsLoaded] = useFonts({
-    "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-    "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-    "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  // const [fontsLoaded] = useFonts({
+  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
+  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
+  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
+  // });
+  let [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_600SemiBold,
   });
-
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
 
   const toggleDropdown = (categoryName) => {
     // Toggle the dropdown visibility
     setVisibleCategory(visibleCategory === categoryName ? null : categoryName);
   };
+
+  if (!fontsLoaded) {
+    return <CMLoader size={20} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -123,7 +133,7 @@ const CMProductLine = ({
                   lable={product.label}
                   checkoxStyle={{ borderColor: ThemeTextColors.gray1 }}
                   lableStyle={{
-                    fontFamily: "Jakarta-Sans",
+                    fontFamily: "PlusJakartaSans_400Regular",
                     fontSize: 14,
                     color: ThemeTextColors.gray1,
                   }}
@@ -147,7 +157,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   titleHeading: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 21,
     color: ThemeTextColors.darkOrange,
   },
@@ -172,7 +182,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   selectorTitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
   },
