@@ -143,6 +143,7 @@ const CMDetailEntryCard = () => {
     }
   };
 
+  //Options for header dropdown
   const options = [
     {
       label: "Edit",
@@ -239,7 +240,6 @@ const CMDetailEntryCard = () => {
         <View>
           <Text style={styles.titleHeading}>Product Line</Text>
         </View>
-
         <View style={{ paddingTop: 10 }}>
           {/* Reuse the renderCategory function for each category */}
           {renderCategory("Magellan", item.data.magellan_category)}
@@ -250,7 +250,7 @@ const CMDetailEntryCard = () => {
           {renderCategory("ProteiOS", item.data.proteios_category)}
         </View>
       </View>
-
+      {/* drop down  modal */}
       {modalVisible && (
         <CMModal
           options={options}

@@ -28,7 +28,7 @@ const DocsScreen = () => {
 
       {/* Scrollable content area for contest rules */}
       <ScrollView
-        style={styles.scrollView}
+        style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
@@ -49,19 +49,18 @@ const DocsScreen = () => {
 export default DocsScreen;
 
 // Styling for DocsScreen components
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: ThemeBgColors.mainBg,
   },
   headerContainer: {
-    marginTop: 60, // Separate header placement from content for clarity
+    top: 60,
   },
-  scrollView: {
-    marginTop: 90, // Avoid using inline styling in component for reusability
-  },
-  scrollViewContent: {
-    paddingBottom: 150, // Add space at the bottom to avoid content cutoff
+  cardContainer: {
+    paddingHorizontal: 29,
+    top: 30,
   },
   headingContainer: {
     flexDirection: "row",
@@ -72,8 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 27,
     color: ThemeTextColors.darkGray1,
   },
-  cardContainer: {
-    paddingHorizontal: 29,
-    marginTop: 30, // Improves readability over "top" styling
+  scrollViewContent: {
+    paddingBottom: 150, // Add some bottom padding to prevent content being hidden
   },
 });

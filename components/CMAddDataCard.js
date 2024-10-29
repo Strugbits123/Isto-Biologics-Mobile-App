@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { useFonts } from "expo-font";
@@ -10,13 +10,11 @@ import CMCheckbox from "./CMCheckbox";
 import CMAddDataForm from "./CMAddDataForm";
 
 const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
-  // Local state to track checkbox values for doctor and hospital
   const [checkedState, setCheckedState] = useState({
     doctorChecked: false,
     hospitalChecked: true,
   });
-
-  // Load custom fonts using Expo's useFonts hook
+  // console.log("isUpdateItem", isUpdateItem);
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
     "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
@@ -26,48 +24,47 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
     "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
   });
 
-  // Show loader until fonts are fully loaded
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
   }
 
-  // Effect to initialize the checkbox states when updating existing data
+  // Initialize checkbox state based on the passed isUpdateItem
   useEffect(() => {
     if (isUpdateItem && isUpdateItem.data) {
       const { doctor_points, hospital_points } = isUpdateItem.data;
 
       setCheckedState({
-        doctorChecked: doctor_points === 3 || doctor_points === 5, // Check doctor checkbox if points match
-        hospitalChecked: hospital_points > 0, // Check hospital checkbox if there are any hospital points
+        doctorChecked: doctor_points === 3 || doctor_points === 5,
+        hospitalChecked: hospital_points > 0,
       });
     }
   }, [isUpdateItem]);
 
-  // Function to handle checkbox state changes
+  // handle checkbox when which one is checked
   const handleCheckboxChange = (type) => {
     setCheckedState((prevState) => {
       const updatedState = {
         ...prevState,
-        [`${type}Checked`]: !prevState[`${type}Checked`], // Toggle checkbox value
+        [`${type}Checked`]: !prevState[`${type}Checked`],
       };
 
       // Ensure at least one checkbox remains checked
       if (!updatedState.doctorChecked && !updatedState.hospitalChecked) {
-        return prevState; // Prevent unchecking both checkboxes
+        return prevState; // Don't update state if both are unchecked
       }
 
-      return updatedState; // Return updated state if one checkbox is checked
+      return updatedState;
     });
   };
 
+  // console.log("check", checkedState);
+
   return (
     <View style={styles.container}>
-      {/* Main heading */}
       <View>
         <Text style={styles.mainHeadingText}>New Approval Achieved</Text>
       </View>
 
-      {/* Checkbox selection for Hospital and Doctor */}
       <View style={styles.selectionContainer}>
         <View style={styles.insideSelectionContainer}>
           {/* Hospital Checkbox */}
@@ -80,7 +77,7 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
             <HospitalIcon width={40} height={40} />
           </View>
         </View>
-        <CMline /> {/* Divider line */}
+        <CMline />
         <View style={styles.insideSelectionContainer}>
           {/* Doctor Checkbox */}
           <CMCheckbox
@@ -92,16 +89,15 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
             <DoctorIcon width={40} height={40} />
           </View>
         </View>
-        <CMline /> {/* Divider line */}
+        <CMline />
       </View>
-
-      {/* Render the form for adding or updating data */}
+      {/* Always render the Doctor form */}
       <View>
         <CMAddDataForm
-          currentMember={currentMember} // Pass the current member data
-          checkedForms={checkedState} // Pass which forms (Doctor/Hospital) are checked
-          submisionType={checkedState.doctorChecked ? "doctor" : "hospital"} // Determine which form type is active
-          isUpdateItem={isUpdateItem} // Pass the update item if applicable
+          currentMember={currentMember}
+          checkedForms={checkedState}
+          submisionType={checkedState.doctorChecked ? "doctor" : "hospital"}
+          isUpdateItem={isUpdateItem}
         />
       </View>
     </View>
@@ -112,24 +108,25 @@ export default CMAddDataCard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: ThemeTextColors.white, // White background for the card
-    borderRadius: 20, // Rounded corners
-    width: "100%", // Full width of the parent
-    paddingVertical: 25, // Vertical padding inside the card
-    paddingHorizontal: 30, // Horizontal padding inside the card
+    backgroundColor: ThemeTextColors.white,
+    borderRadius: 20,
+    width: "100%",
+    height: "auto",
+    paddingVertical: 25,
+    paddingHorizontal: 30,
   },
   mainHeadingText: {
-    fontFamily: "Jakarta-Sans-bold", // Bold font style for the heading
-    fontSize: 21, // Font size for the heading
-    marginBottom: 20, // Space below the heading text
-    color: ThemeTextColors.darkGray1, // Dark gray text color from theme
+    fontFamily: "Jakarta-Sans-bold",
+    fontSize: 21,
+    marginBottom: 20,
+    color: ThemeTextColors.darkGray1,
   },
   selectionContainer: {
-    fontFamily: "Jakarta-Sans-Medium", // Medium font style for selections
+    fontFamily: "Jakarta-Sans-Medium",
   },
   insideSelectionContainer: {
-    flexDirection: "row", // Arrange items horizontally in a row
-    justifyContent: "space-between", // Space items evenly with space between
-    paddingVertical: 10, // Vertical padding between checkbox and icon
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
   },
 });

@@ -5,64 +5,64 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import { myWixClient } from "../../utils/createClient";
+import { PointsContext } from "../../components/PointsHandler";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
 
 const AddData = () => {
-  // State to track if the current screen is for updating an existing item
   const [isUpdate, setIsUpdate] = useState(false);
-
-  // Extract route parameters safely
   const route = useRoute();
-  const { item } = route.params || {}; 
-
-  // Get current member data from context
-  const { currentMemberData } = useContext(CurrentMemberContext);
-  const { profile } = currentMemberData || {}; // Destructure profile safely
-
-  // Load custom fonts
+  const { item } = route.params || {}; // Safely destructure item from params
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const [fontsLoaded] = useFonts({
     "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
   });
 
-  // useEffect to set update mode if editing an existing item
+  const { profile } = currentMemberData || {};
+
+  // Use useEffect to determine if it's an update when the screen is first loaded
   useEffect(() => {
-    setIsUpdate(!!item); // If item exists, set to update mode, otherwise set to add mode
+    if (item) {
+      setIsUpdate(true); // Set update mode if item exists
+    } else {
+      setIsUpdate(false); // Otherwise, it's adding new data
+    }
   }, [item]);
 
-  // Show loader until fonts are fully loaded
+  // console.log("isUpdate", isUpdate);
   if (!fontsLoaded) {
     return <CMLoader size={20} />;
   }
 
   return (
     <View style={styles.mainContainer}>
-      {/* Header component with member's profile image and name */}
+      {/*  Header component */}
       <View style={styles.headerContainer}>
         <CMHomeHeader
-          profileImage={profile?.photo?.url} // Safely access profile photo URL
-          name={profile?.nickname} // Safely access member nickname
+          profileImage={profile?.photo?.url}
+          name={profile?.nickname}
         />
       </View>
 
-      {/* Scrollable content area for the form and heading */}
       <ScrollView
-        style={styles.scrollView}
+        style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Heading text indicating whether it's Add or Update mode */}
+        {/*  heading of Add data */}
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>
             {isUpdate ? "Update Data" : "Add Data"}
           </Text>
         </View>
 
-        {/* Add or Update data card component */}
+        {/*  add data Card Component  */}
         <View style={styles.cardContainer}>
           <CMAddDataCard
-            currentMember={currentMemberData} // Pass current member data
-            isUpdateItem={item} // Pass the item if updating
+            currentMember={currentMemberData}
+            isUpdateItem={item}
           />
         </View>
       </ScrollView>
@@ -74,29 +74,26 @@ export default AddData;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1, // Full-screen layout
-    backgroundColor: ThemeBgColors.mainBg, // Set background color from theme
+    flex: 1,
+    backgroundColor: ThemeBgColors.mainBg,
   },
   headerContainer: {
-    marginTop: 60, // Position header with margin from the top
-  },
-  scrollView: {
-    marginTop: 90, // Position ScrollView content below the header
-  },
-  scrollViewContent: {
-    paddingBottom: 150, // Add padding to avoid hidden content at the bottom
-  },
-  headingContainer: {
-    flexDirection: "row", // Arrange heading text horizontally
-    paddingHorizontal: 27, // Add horizontal padding
-  },
-  headingText: {
-    fontFamily: "Jakarta-Sans-bold", // Custom bold font for heading
-    fontSize: 28, // Set heading font size
-    color: ThemeTextColors.darkGray1, // Heading text color from theme
+    top: 60,
   },
   cardContainer: {
-    paddingHorizontal: 29, // Add horizontal padding for the card
-    marginTop: 30, // Add margin to position the card below the heading
+    paddingHorizontal: 29,
+    top: 30,
+  },
+  headingContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 27,
+  },
+  headingText: {
+    fontFamily: "Jakarta-Sans-bold",
+    fontSize: 28,
+    color: ThemeTextColors.darkGray1,
+  },
+  scrollViewContent: {
+    paddingBottom: 150, // Add some bottom padding to prevent content being hidden
   },
 });

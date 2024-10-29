@@ -9,11 +9,13 @@ import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
 
 const DetailedEntry = () => {
+  // Get current member data from context
   const { currentMemberData, updateCurrentMemberData } =
   useContext(CurrentMemberContext);
-
+ // Destructure profile safely
   const { profile } = currentMemberData || {};
 
+  // Show loader until get currentMember
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
