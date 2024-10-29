@@ -7,14 +7,20 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "istobiologics",
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/static/PlusJakartaSans-Bold.ttf"]
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splashScreen.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.wixmobileheadless"
