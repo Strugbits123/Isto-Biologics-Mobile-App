@@ -5,10 +5,11 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMDocsCard from "../../components/CMDocs/CMDocsCard";
 import CMLoader from "../../components/CMLoader";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import {
-  useFonts,
-  PlusJakartaSans_700Bold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const DocsScreen = () => {
   // Access current member data and update function from context
@@ -20,10 +21,18 @@ const DocsScreen = () => {
     return <CMLoader size={30} />;
   }
 
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   return (
     <View style={styles.mainContainer}>
       {/* Header section with profile information */}

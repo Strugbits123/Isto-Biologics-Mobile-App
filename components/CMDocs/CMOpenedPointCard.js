@@ -1,26 +1,30 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import UpArrowIcon from "../../Icons/UpArrowIcon";
-import CMLoader from "../CMLoader";
-// import { useFonts } from "expo-font";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-const CMOpenedPointCard = ({ onPress, listNumber, title, points=[] }) => {
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  // });
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 
-  let [fontsLoaded] = useFonts({
+SplashScreen.preventAutoHideAsync();
+
+const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_600SemiBold,
   });
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
   return (
     <View style={styles.openedCardContainer}>

@@ -7,37 +7,33 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginDesign from "../../assets/Images/LoginDesign.png";
-// import { useFonts } from "expo-font";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMLoginForm from "../../components/CMLoginForm";
 import LoginIcon from "../../Icons/LoginIcon";
-import CMLoader from "../../components/CMLoader";
-import {
-  useFonts,
-  PlusJakartaSans_700Bold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+
+SplashScreen.preventAutoHideAsync();
 
 const LoginScreen = () => {
   // Load custom fonts for the app
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
 
-  // Show a loader while fonts are being loaded
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.loaderContainer}>
-        <CMLoader size={30} />
-      </View>
-    );
-  }
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   return (
     // KeyboardAvoidingView to handle keyboard overlap on input fields
     <KeyboardAvoidingView

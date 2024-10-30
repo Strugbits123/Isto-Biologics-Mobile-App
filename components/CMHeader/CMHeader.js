@@ -1,27 +1,32 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-// import { useFonts } from "expo-font";
 import BackIcon from "../../Icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
-import CMLoader from "../CMLoader";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   const navigation = useNavigation();
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_600SemiBold,
   });
 
-  if (!fontsLoaded) {
-    return <CMLoader />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   return (

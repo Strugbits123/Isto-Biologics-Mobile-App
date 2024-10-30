@@ -1,18 +1,20 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-// import { useFonts } from "expo-font";
-import CMLoader from "./CMLoader";
 import CMCheckbox from "./CMCheckbox";
 import DownArrowIcon from "../Icons/DownArrowIcon";
 import CMline from "./CMline";
 import { ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMProductLine = ({
   checkboxes,
   onCheckboxChange,
@@ -70,13 +72,7 @@ const CMProductLine = ({
     },
   ];
 
-  // Load custom fonts
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_700Bold,
     PlusJakartaSans_600SemiBold,
@@ -87,10 +83,15 @@ const CMProductLine = ({
     setVisibleCategory(visibleCategory === categoryName ? null : categoryName);
   };
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.titleHeading}>Product Line</Text>

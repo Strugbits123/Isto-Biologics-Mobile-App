@@ -1,23 +1,26 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import DownArrowIcon from "../../Icons/DownArrowIcon";
-import CMLoader from "../CMLoader";
-// import { useFonts } from "expo-font";
 import { ThemeTextColors } from "../../theme/theme";
-import {
-  useFonts,
-  PlusJakartaSans_600SemiBold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_600SemiBold } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMClosedPointCard = ({ onPress, listNumber, title }) => {
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_600SemiBold,
   });
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
   return (
     <View style={styles.closedCardContainer}>

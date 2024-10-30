@@ -6,13 +6,13 @@ import CMHomeCard from "../../components/CMHomeCard";
 import CMLoader from "../../components/CMLoader";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { myWixClient } from "../../utils/createClient";
-// import { useFonts } from "expo-font";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import Toast from "../../components/Toast/Toast";
-import {
-  useFonts,
-  PlusJakartaSans_700Bold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const HomeScreen = ({ isLoggedIn }) => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -25,10 +25,8 @@ const HomeScreen = ({ isLoggedIn }) => {
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
   const [leaderboardData, setLeaderboardData] = useState(null);
@@ -93,12 +91,22 @@ const HomeScreen = ({ isLoggedIn }) => {
   }
 
   // Show loader while data or fonts are still loading
-  if (getCurrentMemberRes.isLoading || !currentMember || !fontsLoaded) {
+  if (getCurrentMemberRes.isLoading || !currentMember) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <CMLoader size={50} />
       </View>
     );
+  }
+
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   // Destructure data for ease of use

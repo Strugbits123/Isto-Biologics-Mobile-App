@@ -4,15 +4,12 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
-// import { useFonts } from "expo-font";
-import { myWixClient } from "../../utils/createClient";
-import { PointsContext } from "../../components/PointsHandler";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import CMLoader from "../../components/CMLoader";
-import {
-  useFonts,
-  PlusJakartaSans_700Bold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const AddData = () => {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -20,10 +17,7 @@ const AddData = () => {
   const { item } = route.params || {}; // Safely destructure item from params
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
 
@@ -38,9 +32,14 @@ const AddData = () => {
     }
   }, [item]);
 
-  // console.log("isUpdate", isUpdate);
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   return (

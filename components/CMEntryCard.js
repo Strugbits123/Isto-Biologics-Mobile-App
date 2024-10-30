@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-// import { isLoading, useFonts } from "expo-font";
 import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 import HospitalIcon from "../Icons/HospitalIcon";
@@ -21,10 +20,13 @@ import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
 import {
-  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const CMEntryCard = ({ currentMember, id }) => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -44,16 +46,7 @@ const CMEntryCard = ({ currentMember, id }) => {
   const [errorMessage, setErrorMessage] = useState("");
   // console.log("currentMember", currentMember._id);
 
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  // });
-
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_600SemiBold,
   });
@@ -241,10 +234,15 @@ const CMEntryCard = ({ currentMember, id }) => {
     },
   ];
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   // Render each entry card
   const renderItem = ({ item, index }) => (
     <View style={styles.cardContainer}>

@@ -1,13 +1,17 @@
-import { StyleSheet, Text, View,TextInput  } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMInput = ({
   title,
   titleStyle,
@@ -19,11 +23,21 @@ const CMInput = ({
   errorMessage,
   editable = true,
 }) => {
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
   });
+
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   return (
     <View style={styles.inputContainer}>
       <Text style={[styles.inputTitle, titleStyle]}>{title}</Text>

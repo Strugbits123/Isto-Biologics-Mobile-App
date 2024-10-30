@@ -18,9 +18,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import CMHeader from "../../components/CMHeader/CMHeader";
 import MenIcon from "../../Icons/MenIcon";
 import CMLoader from "../../components/CMLoader";
-// import { useFonts } from "expo-font"
 import {
-  useFonts,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_800ExtraBold,
@@ -30,6 +28,11 @@ import CMline from "../../components/CMline";
 import { myWixClient } from "../../utils/createClient";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 //leaderboard object data for dynamic pages
 const productCategoryConfig = {
   Magellan: {
@@ -102,12 +105,7 @@ const Leaderboard = () => {
   const [refreshing, setRefreshing] = useState(false);
   const { profile } = currentMemberData || {};
 
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_800ExtraBold,
     PlusJakartaSans_600SemiBold,
@@ -245,10 +243,15 @@ const Leaderboard = () => {
     );
   };
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   return (
     <LinearGradient
       colors={

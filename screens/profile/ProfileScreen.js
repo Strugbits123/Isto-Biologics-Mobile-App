@@ -4,17 +4,18 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import CMLoader from "../../components/CMLoader";
-import {
-  useFonts,
-  PlusJakartaSans_700Bold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+
+SplashScreen.preventAutoHideAsync();
+
 const ProfileScreen = () => {
   // Accessing the current member data from context
   const { currentMemberData } = useContext(CurrentMemberContext);
   const { profile } = currentMemberData || {};
 
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
   // Show a loader if the current member data is not available
@@ -22,13 +23,14 @@ const ProfileScreen = () => {
     return <CMLoader size={30} />;
   }
 
-  // Show a loader while fonts are being loaded
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.loaderContainer}>
-        <CMLoader size={30} />
-      </View>
-    );
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   return (

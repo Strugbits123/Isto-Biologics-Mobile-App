@@ -13,10 +13,14 @@ import CalenderIcon from "../Icons/CalenderIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { HelperText } from "react-native-paper";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMDateInput = ({
   title,
   titleStyle,
@@ -31,7 +35,7 @@ const CMDateInput = ({
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(value ? new Date(value) : new Date());
 
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, errorFonts] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_600SemiBold,
   });
@@ -48,6 +52,16 @@ const CMDateInput = ({
       setShowPicker(true);
     }
   };
+
+  useEffect(() => {
+    if (fontsLoaded || errorFonts) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, errorFonts]);
+
+  if (!fontsLoaded && !errorFonts) {
+    return null;
+  }
 
   return (
     <View style={styles.inputContainer}>

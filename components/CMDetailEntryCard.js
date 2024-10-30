@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useContext, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-// import { useFonts } from "expo-font";
-import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 import HospitalIcon from "../Icons/HospitalIcon";
 import DoctorIcon from "../Icons/DoctorIcon";
@@ -14,11 +12,15 @@ import { PointsContext } from "./PointsHandler";
 import Toast from "./Toast/Toast";
 import { myWixClient } from "../utils/createClient";
 import {
-  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMDetailEntryCard = () => {
   const route = useRoute();
   const { item } = route.params;
@@ -31,15 +33,7 @@ const CMDetailEntryCard = () => {
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
@@ -167,11 +161,16 @@ const CMDetailEntryCard = () => {
       textStyle: { color: "red" },
     },
   ];
-  
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
-  }
 
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
 
   // Reusable component for rendering a product category
   const renderCategory = (categoryName, products) => {

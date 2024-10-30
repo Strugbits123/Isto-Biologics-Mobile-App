@@ -2,10 +2,12 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Checkbox from "expo-checkbox";
 import { ThemeTextColors } from "../theme/theme";
-import {
-  useFonts,
-  PlusJakartaSans_500Medium,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_500Medium } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMCheckbox = ({
   value,
   checkoxStyle,
@@ -13,9 +15,19 @@ const CMCheckbox = ({
   onValueChange,
   lableStyle,
 }) => {
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_500Medium,
   });
+
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
 
   return (
     <View style={styles.checkboxContainer}>

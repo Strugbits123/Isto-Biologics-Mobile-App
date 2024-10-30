@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import MenIcon from "../Icons/MenIcon";
 import BagdeHomeCardIcon from "../Icons/BagdeHomeCardIcon";
-// import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import CMThemedButton from "./CMThemedButton";
 import { stubArray } from "lodash";
@@ -16,7 +15,6 @@ import CMline from "./CMline";
 import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import {
-  useFonts,
   PlusJakartaSans_200ExtraLight,
   PlusJakartaSans_300Light,
   PlusJakartaSans_400Regular,
@@ -32,6 +30,10 @@ import {
   PlusJakartaSans_700Bold_Italic,
   PlusJakartaSans_800ExtraBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const CMHomeCard = ({
   totalPointsProducts = "00",
@@ -50,15 +52,8 @@ const CMHomeCard = ({
   const navigation = useNavigation();
 
   const { profile } = currentMemberData || {};
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_200ExtraLight,
     PlusJakartaSans_300Light,
     PlusJakartaSans_400Regular,
@@ -74,9 +69,14 @@ const CMHomeCard = ({
     PlusJakartaSans_700Bold_Italic,
     PlusJakartaSans_800ExtraBold_Italic,
   });
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   return (

@@ -1,38 +1,35 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-// import { useFonts } from "expo-font";
-import CMLoader from "../CMLoader";
 import CMOpenedPointCard from "./CMOpenedPointCard";
 import CMClosedPointCard from "./CMClosedPointCard";
 import {
-  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMDocsCard = () => {
   // Manage the open/close state of point cards
   const [point1Card, setPoint1Card] = useState(false);
   const [point2Card, setPoint2Card] = useState(false);
 
-  // Load custom fonts and show loader until fonts are ready
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Extra-bold": require("../../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  //   "Jakarta-Sans-Semi-bold-Italic": require("../../assets/fonts/static/PlusJakartaSans-SemiBoldItalic.ttf"),
-  // });
-
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_600SemiBold_Italic,
   });
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   return (

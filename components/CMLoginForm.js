@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-// import { useFonts } from "expo-font";
 import { HelperText } from "react-native-paper";
 import OpenEyeIcon from "../Icons/OpenEyeIcon";
 import ClosedEyeIcon from "../Icons/ClosedEyeIcon";
@@ -17,16 +16,18 @@ import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import Checkbox from "expo-checkbox";
 import { Link, useNavigation } from "@react-navigation/native";
-import CMLoader from "./CMLoader";
 import { useLoginHandler } from "../authentication/LoginHandler";
 import Toast from "./Toast/Toast";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+
+SplashScreen.preventAutoHideAsync();
 
 const CMLoginForm = () => {
   const navigation = useNavigation();
@@ -40,12 +41,7 @@ const CMLoginForm = () => {
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
@@ -105,6 +101,16 @@ const CMLoginForm = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
 
   return (
     <>

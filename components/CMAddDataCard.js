@@ -1,33 +1,27 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
-// import { useFonts } from "expo-font";
-import CMLoader from "./CMLoader";
 import CMline from "./CMline";
 import HospitalIcon from "../Icons/HospitalIcon";
 import DoctorIcon from "../Icons/DoctorIcon";
 import CMCheckbox from "./CMCheckbox";
 import CMAddDataForm from "./CMAddDataForm";
 import {
-  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
 const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
   const [checkedState, setCheckedState] = useState({
     doctorChecked: false,
     hospitalChecked: true,
   });
-  // console.log("isUpdateItem", isUpdateItem);
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-bold": require("../assets/fonts/static/PlusJakartaSans-Bold.ttf"),
-  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_500Medium,
   });
@@ -61,9 +55,14 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
     });
   };
 
-  // console.log("check", checkedState);
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
   return (
     <View style={styles.container}>

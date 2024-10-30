@@ -2,15 +2,14 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
-import CMEntryCard from "../../components/CMEntryCard";
 import CMDetailEntryCard from "../../components/CMDetailEntryCard";
-import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
-import {
-  useFonts,
-  PlusJakartaSans_700Bold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const DetailedEntry = () => {
   // Get current member data from context
@@ -19,14 +18,24 @@ const DetailedEntry = () => {
   // Destructure profile safely
   const { profile } = currentMemberData || {};
 
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
 
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
   // Show loader until get currentMember
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
+
   return (
     <View style={styles.mainContainer}>
       {/*  Header component */}

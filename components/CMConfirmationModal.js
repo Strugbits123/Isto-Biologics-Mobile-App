@@ -2,34 +2,33 @@ import { Modal, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { ThemeTextColors } from "../theme/theme";
 import DeleteIcon from "../Icons/DeleteIcon";
-// import { useFonts } from "expo-font";
-import CMLoader from "./CMLoader";
 import CMButton from "./CMButton";
 import {
-  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-const CMConfirmationModal = ({ onCancel, onConfirm }) => {
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  // });
 
-  let [fontsLoaded] = useFonts({
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
+const CMConfirmationModal = ({ onCancel, onConfirm }) => {
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
   });
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />;
+  if (!fontsLoaded && !error) {
+    return null;
   }
-
   return (
     <Modal transparent={true} animationType="fade" visible={true}>
       <View style={styles.modalBackground}>

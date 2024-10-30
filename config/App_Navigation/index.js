@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Bottom_Navigation from "./Bottom_Navigation";
-import SplashScreen from "../../screens/splash/SplashScreen";
 import LoginScreen from "../../screens/login/LoginScreen";
-import ProfileScreen from "../../screens/profile/ProfileScreen";
 import CMLoader from "../../components/CMLoader";
 import { useWixSession } from "../../authentication/session";
 import * as SecureStore from "expo-secure-store";
-import { CodeChallengeMethod } from "expo-auth-session";
 
 const Stack = createNativeStackNavigator();
 

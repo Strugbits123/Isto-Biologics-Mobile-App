@@ -7,24 +7,23 @@ import {
   Image,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import menAvatar from "../../assets/Images/menAvatar.png";
-import { Avatar } from "react-native-paper";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
-// import { useFonts } from "expo-font";
 import MenIcon from "../../Icons/MenIcon";
 import CMModal from "../CMModal";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../Icons/BackIcon";
 import { useWixSession } from "../../authentication/session";
-import CMLoader from "../CMLoader";
 import * as SecureStore from "expo-secure-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { CurrentMemberContext } from "../CurrentMemberHandler";
 import {
-  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const CMHomeHeader = ({
   useInScreen,
@@ -40,11 +39,8 @@ const CMHomeHeader = ({
   const { newVisitorSession } = useWixSession();
   const [modalVisible, setModalVisible] = useState(false);
   const [greeting, setGreeting] = useState("Good Morning");
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans": require("../../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-SemiBold": require("../../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_600SemiBold,
   });
@@ -64,8 +60,14 @@ const CMHomeHeader = ({
     setModalVisible(!modalVisible); // Open modal on profile press
   };
 
-  if (!fontsLoaded) {
-    return <CMLoader />;
+  useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
   }
 
   const options = [

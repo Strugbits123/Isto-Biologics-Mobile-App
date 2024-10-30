@@ -10,7 +10,6 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CameraIcon from "../Icons/CameraIcon";
-// import { useFonts } from "expo-font";
 import CMThemedButton from "./CMThemedButton";
 import ArrowRight from "../Icons/ArrowRight";
 import CMLoader from "./CMLoader";
@@ -24,11 +23,14 @@ import { Buffer } from "buffer";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
 import {
-  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -46,14 +48,8 @@ const CMProfileCard = () => {
   const [message, setMessage] = useState("");
   const { profile, loginEmail, contact } = currentMemberData || {}; // Destructure member data
   const queryClient = useQueryClient(); // TanStack Query client for cache and updates
-  // const [fontsLoaded] = useFonts({
-  //   "Jakarta-Sans-Extra-bold": require("../assets/fonts/static/PlusJakartaSans-ExtraBold.ttf"),
-  //   "Jakarta-Sans-Italic-bold": require("../assets/fonts/static/PlusJakartaSans-BoldItalic.ttf"),
-  //   "Jakarta-Sans-Semi-bold": require("../assets/fonts/static/PlusJakartaSans-SemiBold.ttf"),
-  //   "Jakarta-Sans": require("../assets/fonts/static/PlusJakartaSans-Regular.ttf"),
-  //   "Jakarta-Sans-Medium": require("../assets/fonts/static/PlusJakartaSans-Medium.ttf"),
-  // });
-  let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded, errorFonts] = useFonts({
     PlusJakartaSans_700Bold,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
@@ -258,8 +254,14 @@ const CMProfileCard = () => {
   // Hide the modal dialog
   const hideDialog = () => setVisible(false);
 
-  if (!fontsLoaded) {
-    return <CMLoader size={20} />; // Show loader if fonts aren't loaded
+  useEffect(() => {
+    if (fontsLoaded || errorFonts) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, errorFonts]);
+
+  if (!fontsLoaded && !errorFonts) {
+    return null;
   }
 
   return (
