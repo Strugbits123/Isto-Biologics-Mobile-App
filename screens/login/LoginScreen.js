@@ -19,7 +19,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const LoginScreen = () => {
   // Load custom fonts for the app
@@ -27,11 +27,11 @@ const LoginScreen = () => {
     PlusJakartaSans_700Bold,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

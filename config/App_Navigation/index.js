@@ -8,12 +8,27 @@ import CMLoader from "../../components/CMLoader";
 import { useWixSession } from "../../authentication/session";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
+import {
+  PlusJakartaSans_700Bold,
+  useFonts,
+} from "@expo-google-fonts/plus-jakarta-sans";
+import * as SplashScreen from "expo-splash-screen";
+
+// Prevent auto-hiding of the splash screen
+SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 
 const App_Navigation = () => {
   const { session } = useWixSession();
   const [isLoggedIn, setIsLoggedIn] = useState(null); // null to handle splash state
   const [isLoading, setIsLoading] = useState(true); // null to handle splash state
+  const [fontsLoaded, fontsError] = useFonts({ PlusJakartaSans_700Bold });
+
+  useEffect(() => {
+    if (fontsLoaded || fontsError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontsError]);
 
   useEffect(() => {
     const checkAuthToken = async () => {
@@ -39,6 +54,11 @@ const App_Navigation = () => {
 
     checkAuthToken();
   }, []);
+
+  if (!fontsLoaded && !fontsError) {
+    return null; // Show nothing until fonts are loaded
+  }
+
   return isLoading ? (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <CMLoader size={50} />
