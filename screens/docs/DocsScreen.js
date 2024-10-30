@@ -5,8 +5,10 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMDocsCard from "../../components/CMDocs/CMDocsCard";
 import CMLoader from "../../components/CMLoader";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

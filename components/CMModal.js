@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import CMline from "./CMline";
-import { PlusJakartaSans_500Medium } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
+import {
+  useFonts,
+  PlusJakartaSans_500Medium,
+} from "@expo-google-fonts/plus-jakarta-sans";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

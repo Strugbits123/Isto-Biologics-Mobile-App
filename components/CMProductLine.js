@@ -6,11 +6,11 @@ import CMline from "./CMline";
 import { ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
 import {
+  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

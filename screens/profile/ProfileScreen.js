@@ -4,9 +4,8 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
-import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_700Bold, useFonts } from "@expo-google-fonts/plus-jakarta-sans";
 
 // SplashScreen.preventAutoHideAsync();
 

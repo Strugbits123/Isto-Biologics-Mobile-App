@@ -5,8 +5,7 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
+import { useFonts,PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

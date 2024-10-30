@@ -20,10 +20,10 @@ import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
 import {
+  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

@@ -3,10 +3,10 @@ import React from "react";
 import UpArrowIcon from "../../Icons/UpArrowIcon";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import {
+  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

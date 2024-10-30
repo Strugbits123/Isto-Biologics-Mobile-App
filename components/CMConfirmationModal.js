@@ -4,11 +4,11 @@ import { ThemeTextColors } from "../theme/theme";
 import DeleteIcon from "../Icons/DeleteIcon";
 import CMButton from "./CMButton";
 import {
+  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

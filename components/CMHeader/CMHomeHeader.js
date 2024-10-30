@@ -17,10 +17,11 @@ import * as SecureStore from "expo-secure-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { CurrentMemberContext } from "../CurrentMemberHandler";
 import {
+  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
+
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

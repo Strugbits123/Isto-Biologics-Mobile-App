@@ -18,9 +18,9 @@ import Checkbox from "expo-checkbox";
 import { Link, useNavigation } from "@react-navigation/native";
 import { useLoginHandler } from "../authentication/LoginHandler";
 import Toast from "./Toast/Toast";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 import {
+  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,

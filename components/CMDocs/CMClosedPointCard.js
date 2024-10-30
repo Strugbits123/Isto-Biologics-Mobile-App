@@ -2,8 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import DownArrowIcon from "../../Icons/DownArrowIcon";
 import { ThemeTextColors } from "../../theme/theme";
-import { PlusJakartaSans_600SemiBold } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
+import {useFonts, PlusJakartaSans_600SemiBold } from "@expo-google-fonts/plus-jakarta-sans";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

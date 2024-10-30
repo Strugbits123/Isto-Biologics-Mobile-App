@@ -2,8 +2,10 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Checkbox from "expo-checkbox";
 import { ThemeTextColors } from "../theme/theme";
-import { PlusJakartaSans_500Medium } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
+import {
+  useFonts,
+  PlusJakartaSans_500Medium,
+} from "@expo-google-fonts/plus-jakarta-sans";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

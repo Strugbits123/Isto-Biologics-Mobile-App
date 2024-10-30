@@ -3,11 +3,11 @@ import React from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
 import {
+  useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

@@ -15,6 +15,7 @@ import CMline from "./CMline";
 import { PointsContext } from "./PointsHandler";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import {
+  useFonts,
   PlusJakartaSans_200ExtraLight,
   PlusJakartaSans_300Light,
   PlusJakartaSans_400Regular,
@@ -30,7 +31,6 @@ import {
   PlusJakartaSans_700Bold_Italic,
   PlusJakartaSans_800ExtraBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

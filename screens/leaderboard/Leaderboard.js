@@ -19,6 +19,7 @@ import CMHeader from "../../components/CMHeader/CMHeader";
 import MenIcon from "../../Icons/MenIcon";
 import CMLoader from "../../components/CMLoader";
 import {
+  useFonts,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_800ExtraBold,
@@ -28,7 +29,6 @@ import CMline from "../../components/CMline";
 import { myWixClient } from "../../utils/createClient";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();

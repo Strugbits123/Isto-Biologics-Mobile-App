@@ -4,10 +4,10 @@ import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMOpenedPointCard from "./CMOpenedPointCard";
 import CMClosedPointCard from "./CMClosedPointCard";
 import {
+  useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();
