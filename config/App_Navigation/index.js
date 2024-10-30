@@ -7,7 +7,7 @@ import LoginScreen from "../../screens/login/LoginScreen";
 import CMLoader from "../../components/CMLoader";
 import { useWixSession } from "../../authentication/session";
 import * as SecureStore from "expo-secure-store";
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
 const Stack = createNativeStackNavigator();
 
 const App_Navigation = () => {
