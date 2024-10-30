@@ -4,9 +4,9 @@ import Checkbox from "expo-checkbox";
 import { ThemeTextColors } from "../theme/theme";
 import { PlusJakartaSans_500Medium } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMCheckbox = ({
   value,
@@ -19,11 +19,11 @@ const CMCheckbox = ({
     PlusJakartaSans_500Medium,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

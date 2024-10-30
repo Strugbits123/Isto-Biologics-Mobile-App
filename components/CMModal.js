@@ -1,25 +1,22 @@
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import CMline from "./CMline";
-import {
-  useFonts,
-  PlusJakartaSans_500Medium,
-} from "@expo-google-fonts/plus-jakarta-sans";
+import { PlusJakartaSans_500Medium } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMModal = ({ options, modalStyle }) => {
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_500Medium,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

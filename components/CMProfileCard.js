@@ -28,9 +28,9 @@ import {
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -254,11 +254,11 @@ const CMProfileCard = () => {
   // Hide the modal dialog
   const hideDialog = () => setVisible(false);
 
-  useEffect(() => {
-    if (fontsLoaded || errorFonts) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, errorFonts]);
+  // useEffect(() => {
+  //   if (fontsLoaded || errorFonts) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, errorFonts]);
 
   if (!fontsLoaded && !errorFonts) {
     return null;

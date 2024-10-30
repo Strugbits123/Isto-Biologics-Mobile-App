@@ -8,9 +8,9 @@ import {
   PlusJakartaSans_600SemiBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMDocsCard = () => {
   // Manage the open/close state of point cards
@@ -22,11 +22,11 @@ const CMDocsCard = () => {
     PlusJakartaSans_600SemiBold_Italic,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

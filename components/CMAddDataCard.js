@@ -11,9 +11,9 @@ import {
   PlusJakartaSans_500Medium,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
   const [checkedState, setCheckedState] = useState({
@@ -55,11 +55,11 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
     });
   };
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

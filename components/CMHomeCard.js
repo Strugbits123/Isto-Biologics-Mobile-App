@@ -31,9 +31,9 @@ import {
   PlusJakartaSans_800ExtraBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMHomeCard = ({
   totalPointsProducts = "00",
@@ -69,11 +69,11 @@ const CMHomeCard = ({
     PlusJakartaSans_700Bold_Italic,
     PlusJakartaSans_800ExtraBold_Italic,
   });
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

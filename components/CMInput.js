@@ -8,9 +8,9 @@ import {
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMInput = ({
   title,
@@ -23,19 +23,19 @@ const CMInput = ({
   errorMessage,
   editable = true,
 }) => {
-  let [fontsLoaded, error] = useFonts({
+  let [fontsLoaded, errorFonts] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || errorFonts) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, errorFonts]);
 
-  if (!fontsLoaded && !error) {
+  if (!fontsLoaded && !errorFonts) {
     return null;
   }
   return (

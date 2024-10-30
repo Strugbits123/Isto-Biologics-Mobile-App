@@ -7,9 +7,9 @@ import CMLoader from "../../components/CMLoader";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const DocsScreen = () => {
   // Access current member data and update function from context
@@ -24,11 +24,11 @@ const DocsScreen = () => {
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

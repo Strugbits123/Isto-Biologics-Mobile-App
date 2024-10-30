@@ -17,9 +17,9 @@ import {
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMDateInput = ({
   title,
@@ -53,11 +53,11 @@ const CMDateInput = ({
     }
   };
 
-  useEffect(() => {
-    if (fontsLoaded || errorFonts) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, errorFonts]);
+  // useEffect(() => {
+  //   if (fontsLoaded || errorFonts) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, errorFonts]);
 
   if (!fontsLoaded && !errorFonts) {
     return null;

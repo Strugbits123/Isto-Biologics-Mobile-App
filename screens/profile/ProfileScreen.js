@@ -5,10 +5,10 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMProfileCard from "../../components/CMProfileCard";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const ProfileScreen = () => {
   // Accessing the current member data from context
@@ -23,11 +23,11 @@ const ProfileScreen = () => {
     return <CMLoader size={30} />;
   }
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;

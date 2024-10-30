@@ -11,9 +11,9 @@ import {
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const CMProductLine = ({
   checkboxes,
@@ -72,7 +72,7 @@ const CMProductLine = ({
     },
   ];
 
-  let [fontsLoaded, error] = useFonts({
+  let [fontsLoaded, errorFonts] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_700Bold,
     PlusJakartaSans_600SemiBold,
@@ -83,13 +83,13 @@ const CMProductLine = ({
     setVisibleCategory(visibleCategory === categoryName ? null : categoryName);
   };
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || errorFonts) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, errorFonts]);
 
-  if (!fontsLoaded && !error) {
+  if (!fontsLoaded && !errorFonts) {
     return null;
   }
   return (

@@ -10,9 +10,9 @@ import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import Toast from "../../components/Toast/Toast";
 import { PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const HomeScreen = ({ isLoggedIn }) => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -99,11 +99,11 @@ const HomeScreen = ({ isLoggedIn }) => {
     );
   }
 
-  useEffect(() => {
-    if (fontsLoaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, error]);
+  // useEffect(() => {
+  //   if (fontsLoaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
