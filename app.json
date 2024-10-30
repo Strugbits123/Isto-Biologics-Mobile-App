@@ -17,6 +17,10 @@
         }
       ]
     ],
+    "androidStatusBar": {
+      "backgroundColor": "#000000",
+      "translucent": false
+    },
     "splash": {
       "image": "./assets/splashScreen.png",
       "resizeMode": "cover",
