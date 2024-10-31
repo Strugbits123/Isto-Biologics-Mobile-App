@@ -25,6 +25,7 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 15,
+          paddingRight:30
         }}
       >
         <View style={styles.TextContainer}>
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
     maxWidth: 220,
+    flexShrink:1
   },
   listContainer: {
     paddingHorizontal: 20,

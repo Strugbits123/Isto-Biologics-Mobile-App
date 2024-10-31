@@ -30,7 +30,6 @@ const CMModal = ({ options, modalStyle }) => {
           <Text style={[styles.modalText, option.textStyle]}>
             {option.label}
           </Text>
-          <CMline />
         </TouchableOpacity>
       ))}
     </View>

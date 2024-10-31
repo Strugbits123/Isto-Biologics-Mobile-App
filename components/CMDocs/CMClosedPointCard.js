@@ -23,6 +23,7 @@ const CMClosedPointCard = ({ onPress, listNumber, title }) => {
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 15,
+          paddingRight: 30,
         }}
       >
         <View style={styles.TextContainer}>
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingVertical: 20,
   },
-  TextContainer: { flexDirection: "row", gap: 5 },
+  TextContainer: { flexDirection: "row", gap: 0 },
   orderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
@@ -61,5 +62,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: ThemeTextColors.white,
     maxWidth: 220,
+    flexShrink: 1,
   },
 });
