@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMOpenedPointCard from "./CMOpenedPointCard";
@@ -8,12 +14,8 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
-
-// SplashScreen.preventAutoHideAsync();
 
 const CMDocsCard = () => {
-  // Manage the open/close state of point cards
   const [point1Card, setPoint1Card] = useState(false);
   const [point2Card, setPoint2Card] = useState(false);
 
@@ -22,25 +24,19 @@ const CMDocsCard = () => {
     PlusJakartaSans_600SemiBold_Italic,
   });
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
 
   return (
     <View style={styles.container}>
-      {/* Main Heading */}
-      <Text style={styles.mainHeadingText}>How do I get points?</Text>
-
-      {/* Container for point cards */}
-      <View style={styles.cardsContainer}>
-        {/* First point card */}
+      <View>
+        <Text style={styles.mainHeadingText}>How do I get points?</Text>
+      </View>
+      {/* this container use for list down cards for points */}
+      <View style={{ gap: 20 }}>
         {point1Card ? (
+          // reusable component when point card open show these component
           <CMOpenedPointCard
             title={"New product approval at a hospital or facility"}
             listNumber={"1"}
@@ -53,15 +49,15 @@ const CMDocsCard = () => {
             ]}
           />
         ) : (
+          // reusable component when point card close show these component
           <CMClosedPointCard
             title={"New product approval at a hospital or facility"}
             onPress={() => setPoint1Card(!point1Card)}
             listNumber={"1"}
           />
         )}
-
-        {/* Second point card */}
         {point2Card ? (
+          // reusable component when point card open show these component
           <CMOpenedPointCard
             title={"New doctor using Isto product"}
             listNumber={"2"}
@@ -74,18 +70,27 @@ const CMDocsCard = () => {
             ]}
           />
         ) : (
+          // reusable component when point card close show these component
           <CMClosedPointCard
             title={"New doctor using Isto product"}
             onPress={() => setPoint2Card(!point2Card)}
             listNumber={"2"}
           />
         )}
-
-        {/* Note section */}
-        <Text style={styles.noteText}>
-          *New doctors and/or new product approvals do not count until the first
-          case has taken place. Case information is required for submission.
-        </Text>
+        {/* container for text which is show on note in docs page */}
+        <View>
+          <Text
+            style={{
+              fontFamily: "Jakarta-Sans-Semi-bold-Italic",
+              fontSize: 19,
+              color: ThemeTextColors.darkGray1,
+            }}
+          >
+            *New doctors and/or new product approvals do not count until the
+            first case has taken place. Case information is required for
+            submission
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -98,22 +103,47 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeTextColors.white,
     borderRadius: 20,
     width: "100%",
+    height: "auto",
     paddingVertical: 25,
     paddingHorizontal: 20,
   },
   mainHeadingText: {
-    fontFamily: "PlusJakartaSans_700Bold",
+    fontFamily: "Jakarta-Sans-bold",
     fontSize: 21,
     marginBottom: 20,
     color: ThemeTextColors.orange,
   },
-  cardsContainer: {
-    gap: 20, // Add space between cards
+  closedCardContainer: {
+    backgroundColor: ThemeTextColors.darkGray1,
+    borderRadius: 14,
+    paddingVertical: 20,
   },
-  noteText: {
-    fontFamily: "PlusJakartaSans_600SemiBold_Italic",
-    fontSize: 19,
+  TextContainer: { flexDirection: "row", gap: 5 },
+  orderListNumber: {
+    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontSize: 18,
+    color: ThemeTextColors.white,
+  },
+  openOrderListNumber: {
+    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontSize: 18,
     color: ThemeTextColors.darkGray1,
-    marginTop: 20, // Added margin for readability
+  },
+  title: {
+    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontSize: 18,
+    color: ThemeTextColors.white,
+    maxWidth: 220,
+  },
+  openedCardContainer: {
+    backgroundColor: ThemeBgColors.docsBg,
+    borderRadius: 14,
+    paddingVertical: 20,
+  },
+  openedCardtitle: {
+    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontSize: 18,
+    color: ThemeTextColors.darkGray1,
+    maxWidth: 220,
   },
 });

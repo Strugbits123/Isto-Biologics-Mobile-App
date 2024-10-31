@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
 import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMDocsCard from "../../components/CMDocs/CMDocsCard";
@@ -9,16 +9,12 @@ import {
   useFonts,
   PlusJakartaSans_700Bold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
-
-// SplashScreen.preventAutoHideAsync();
 
 const DocsScreen = () => {
-  // Access current member data and update function from context
-  const { currentMemberData } = useContext(CurrentMemberContext);
+  const { currentMemberData, updateCurrentMemberData } =
+    useContext(CurrentMemberContext);
   const { profile } = currentMemberData || {};
 
-  // Display a loader if member data is not yet available
   if (!currentMemberData) {
     return <CMLoader size={30} />;
   }
@@ -26,18 +22,13 @@ const DocsScreen = () => {
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
   }
   return (
     <View style={styles.mainContainer}>
-      {/* Header section with profile information */}
+      {/*  Header component */}
       <View style={styles.headerContainer}>
         <CMHomeHeader
           profileImage={profile?.photo?.url}
@@ -45,18 +36,17 @@ const DocsScreen = () => {
         />
       </View>
 
-      {/* Scrollable content area for contest rules */}
       <ScrollView
         style={{ top: 90 }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Heading section */}
+        {/*  heading of Entries page  */}
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Contest Rules & Guidelines</Text>
         </View>
 
-        {/* Documentation card */}
+        {/*  Entries Card Component  */}
         <View style={styles.cardContainer}>
           <CMDocsCard />
         </View>
@@ -66,8 +56,6 @@ const DocsScreen = () => {
 };
 
 export default DocsScreen;
-
-// Styling for DocsScreen components
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -86,7 +74,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   headingText: {
-    fontFamily: "PlusJakartaSans_700Bold",
+    fontFamily: "Jakarta-Sans-bold",
     fontSize: 27,
     color: ThemeTextColors.darkGray1,
   },

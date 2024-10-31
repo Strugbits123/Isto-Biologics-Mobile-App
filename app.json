@@ -17,6 +17,11 @@
         }
       ]
     ],
+    "splash": {
+      "image": "./assets/Images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
