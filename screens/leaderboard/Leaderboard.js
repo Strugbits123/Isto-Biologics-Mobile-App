@@ -344,7 +344,7 @@ const Leaderboard = () => {
                   alignItems: "center",
                 }}
               >
-                <CrownIcon width={30} height={30} />
+                <CrownIcon width={35} height={30} />
               </View>
               <View style={styles.imageContainerCrown}>
                 {LeaderboardData.length > 0 &&
