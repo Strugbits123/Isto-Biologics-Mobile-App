@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     width: "100%", // Full-width image
   },
   text: {
-    // fontFamily: "Jakarta-Sans-bold", // Custom font for text
     fontFamily: "PlusJakartaSans_700Bold",
     color: ThemeTextColors.white, // Text color from theme
     fontSize: 30, // Font size for the welcome message

@@ -7,12 +7,14 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
+import CMLoader from "../CMLoader";
 import CMOpenedPointCard from "./CMOpenedPointCard";
 import CMClosedPointCard from "./CMClosedPointCard";
 import {
   useFonts,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold_Italic,
+  PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 
 const CMDocsCard = () => {
@@ -81,7 +83,7 @@ const CMDocsCard = () => {
         <View>
           <Text
             style={{
-              fontFamily: "Jakarta-Sans-Semi-bold-Italic",
+              fontFamily: "PlusJakartaSans_600SemiBold_Italic",
               fontSize: 19,
               color: ThemeTextColors.darkGray1,
             }}
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   mainHeadingText: {
-    fontFamily: "Jakarta-Sans-bold",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 21,
     marginBottom: 20,
     color: ThemeTextColors.orange,
@@ -120,17 +122,17 @@ const styles = StyleSheet.create({
   },
   TextContainer: { flexDirection: "row", gap: 5 },
   orderListNumber: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.white,
   },
   openOrderListNumber: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
   },
   title: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.white,
     maxWidth: 220,
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   openedCardtitle: {
-    fontFamily: "Jakarta-Sans-Semi-bold",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
     color: ThemeTextColors.darkGray1,
     maxWidth: 220,
