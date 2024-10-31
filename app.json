@@ -25,14 +25,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.wixmobileheadless"
+      "bundleIdentifier": "com.istobiologics.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.wixmobileheadless"
+      "package": "com.istobiologics.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
