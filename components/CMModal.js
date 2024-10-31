@@ -34,7 +34,8 @@ const CMModal = ({ options, modalStyle }) => {
           <Text style={[styles.modalText, option.textStyle]}>
             {option.label}
           </Text>
-          <CMline/>
+          {index !== options.length - 1 && <CMline />}
+          {/* Only render CMline if not the last item */}
         </TouchableOpacity>
       ))}
     </View>
