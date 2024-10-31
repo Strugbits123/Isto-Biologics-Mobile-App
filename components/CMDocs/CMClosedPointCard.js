@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingVertical: 20,
   },
-  TextContainer: { flexDirection: "row", gap: 0 },
+  TextContainer: { flexDirection: "row", gap: 5 },
   orderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
     fontSize: 18,
