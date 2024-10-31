@@ -36,8 +36,21 @@ const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   return (
     <View style={styles.container}>
       <View>
-        <TouchableOpacity onPress={() => navigation.navigate("home")}>
-          <BackIcon color={iconColor} width={scaleSize(10)} height={scaleSize(17)} />
+        <TouchableOpacity
+          style={{
+            width: scaleSize(30), // Adjust to be slightly larger than icon width
+            height: scaleSize(30), // Adjust to be slightly larger than icon height
+            borderRadius: scaleSize(30), // Half of the width/height for a fully rounded shape
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={() => navigation.navigate("home")}
+        >
+          <BackIcon
+            color={iconColor}
+            width={scaleSize(10)}
+            height={scaleSize(17)}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.headerTitleContainer}>

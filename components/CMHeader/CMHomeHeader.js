@@ -108,6 +108,13 @@ const CMHomeHeader = ({
       ) : (
         <View>
           <TouchableOpacity
+            style={{
+              width: scaleSize(30), // Adjust to be slightly larger than icon width
+              height: scaleSize(30), // Adjust to be slightly larger than icon height
+              borderRadius: scaleSize(30), // Half of the width/height for a fully rounded shape
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onPress={() => {
               navigationOnPage
                 ? navigation.navigate(navigationOnPage)

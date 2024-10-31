@@ -263,7 +263,16 @@ const CMEntryCard = ({ currentMember, id }) => {
             </>
           )}
         </View>
-        <TouchableOpacity onPress={() => handleThreeDotPress(item, index)}>
+        <TouchableOpacity
+          style={{
+            width: scaleSize(30), // Adjust to be slightly larger than icon width
+            height: scaleSize(30), // Adjust to be slightly larger than icon height
+            borderRadius: scaleSize(30), // Half of the width/height for a fully rounded shape
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={() => handleThreeDotPress(item, index)}
+        >
           <ThreeDotIcon width={scaleSize(8)} height={scaleSize(20)} />
         </TouchableOpacity>
       </View>
@@ -304,7 +313,7 @@ const CMEntryCard = ({ currentMember, id }) => {
           isVisible={modalIndex === index}
           modalStyle={{
             position: "absolute",
-            right: scaleSize(40),
+            right: scaleSize(50),
             top: scaleSize(40),
           }}
         />
