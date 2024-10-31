@@ -30,6 +30,10 @@ const App_Navigation = () => {
     }
   }, [fontsLoaded, fontsError]);
 
+  if (!fontsLoaded && !fontsError) {
+    return null; // Show nothing until fonts are loaded
+  }
+
   useEffect(() => {
     const checkAuthToken = async () => {
       try {
@@ -54,10 +58,6 @@ const App_Navigation = () => {
 
     checkAuthToken();
   }, []);
-
-  if (!fontsLoaded && !fontsError) {
-    return null; // Show nothing until fonts are loaded
-  }
 
   return isLoading ? (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
