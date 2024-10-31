@@ -24,9 +24,18 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMEntryCard = ({ currentMember, id }) => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -234,12 +243,6 @@ const CMEntryCard = ({ currentMember, id }) => {
     },
   ];
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -250,45 +253,45 @@ const CMEntryCard = ({ currentMember, id }) => {
         <View style={styles.EntryTitleIcon}>
           {item.data.doctor_firstname ? (
             <>
-              <DoctorIcon width={40} height={40} />
+              <DoctorIcon width={scaleSize(40)} height={scaleSize(40)} />
               <Text style={styles.EntryTitleText}>Doctor</Text>
             </>
           ) : (
             <>
-              <HospitalIcon width={40} height={40} />
+              <HospitalIcon width={scaleSize(40)} height={scaleSize(40)} />
               <Text style={styles.EntryTitleText}>Hospital/Facility</Text>
             </>
           )}
         </View>
         <TouchableOpacity onPress={() => handleThreeDotPress(item, index)}>
-          <ThreeDotIcon width={8} height={20} />
+          <ThreeDotIcon width={scaleSize(8)} height={scaleSize(20)} />
         </TouchableOpacity>
       </View>
 
-      <View style={{ paddingTop: 10 }}>
+      <View style={{ paddingTop: scaleSize(10) }}>
         {item.data.doctor_firstname ? (
           <>
-            <View style={{ paddingVertical: 12, gap: 5 }}>
+            <View style={{ paddingVertical: scaleSize(12), gap: scaleSize(5) }}>
               <Text style={styles.fieldTitle}>Doctor First Name</Text>
               <Text style={styles.fieldValue}>
                 {item.data.doctor_firstname}
               </Text>
             </View>
             <CMline />
-            <View style={{ paddingVertical: 12, gap: 5 }}>
+            <View style={{ paddingVertical: scaleSize(12), gap: scaleSize(5) }}>
               <Text style={styles.fieldTitle}>Doctor Last Name</Text>
               <Text style={styles.fieldValue}>{item.data.doctor_lastname}</Text>
             </View>
           </>
         ) : (
-          <View style={{ paddingVertical: 12, gap: 5 }}>
+          <View style={{ paddingVertical: scaleSize(12), gap: scaleSize(5) }}>
             <Text style={styles.fieldTitle}>Hospital/Facility</Text>
             <Text style={styles.fieldValue}>{item.data.hospital_name}</Text>
           </View>
         )}
 
         <CMline />
-        <View style={{ paddingVertical: 12, gap: 5 }}>
+        <View style={{ paddingVertical: scaleSize(12), gap: scaleSize(5) }}>
           <Text style={styles.fieldTitle}>First Case Date</Text>
           <Text style={styles.fieldValue}>{item.data.first_case_date}</Text>
         </View>
@@ -301,8 +304,8 @@ const CMEntryCard = ({ currentMember, id }) => {
           isVisible={modalIndex === index}
           modalStyle={{
             position: "absolute",
-            right: 40,
-            top: 40,
+            right: scaleSize(40),
+            top: scaleSize(40),
           }}
         />
       )}
@@ -310,8 +313,8 @@ const CMEntryCard = ({ currentMember, id }) => {
   );
 
   return isLoading ? (
-    <View style={{ top: 100 }}>
-      <CMLoader size={50} />
+    <View style={{ top: scaleSize(100) }}>
+      <CMLoader size={scaleSize(50)} />
     </View>
   ) : (
     <View style={styles.container}>
@@ -320,7 +323,7 @@ const CMEntryCard = ({ currentMember, id }) => {
         renderItem={entriesData.length > 0 ? renderItem : null}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{
-          paddingBottom: 230,
+          paddingBottom: scaleSize(230),
         }}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
@@ -328,7 +331,7 @@ const CMEntryCard = ({ currentMember, id }) => {
           <Text
             style={{
               flex: 1,
-              fontSize: 16,
+              fontSize: scaleFontSize(16),
               color: ThemeTextColors.placeholder,
               justifyContent: "center",
               alignItems: "center",
@@ -360,18 +363,18 @@ export default CMEntryCard;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
   },
   cardContainer: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
-    paddingVertical: 25,
-    paddingHorizontal: 30,
-    marginVertical: 10,
+    paddingVertical: scaleSize(25),
+    paddingHorizontal: scaleSize(30),
+    marginVertical: scaleSize(10),
   },
   headerContainer: {
     flexDirection: "row",
@@ -380,22 +383,22 @@ const styles = StyleSheet.create({
   },
   EntryTitleIcon: {
     flexDirection: "row",
-    gap: 10,
+    gap: scaleSize(10),
     alignItems: "center",
   },
   EntryTitleText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
+    fontSize: scaleFontSize(21),
     color: ThemeTextColors.darkGray1,
   },
   fieldTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkGray1,
   },
   fieldValue: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.placeholder,
   },
 });

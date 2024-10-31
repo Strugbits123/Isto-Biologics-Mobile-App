@@ -12,27 +12,34 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import SuccessIcon from "../../Icons/SuccessIcon";
 import ErrorIcon from "../../Icons/ErrorIcon";
 import WarningIcon from "../../Icons/WarningIcon";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 const Toast = ({ visible, type, message }) => {
   const renderIcon = (type) => {
     switch (type) {
       case "success":
-        return <SuccessIcon width={30} height={30} />;
+        return <SuccessIcon width={scaleSize(30)} height={scaleSize(30)} />;
       case "error":
-        return <ErrorIcon width={30} height={30} />;
+        return <ErrorIcon width={scaleSize(30)} height={scaleSize(30)} />;
       case "warning":
-        return <WarningIcon width={30} height={30} />;
+        return <WarningIcon width={scaleSize(30)} height={scaleSize(30)} />;
       default:
         return null;
     }
   };
 
   const textColor =
-    type === "success"
-      ? "green"
-      : type === "error"
-      ? "red"
-      : "orange"
+    type === "success" ? "green" : type === "error" ? "red" : "orange";
 
   return (
     <SafeAreaProvider>
@@ -49,16 +56,17 @@ const Toast = ({ visible, type, message }) => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <View style={{ flexDirection: "row", gap: 10 }}>
+              <View style={{ flexDirection: "row", gap: scaleSize(10) }}>
                 {/* Render the correct SVG icon */}
                 {renderIcon(type)}
                 <Text
                   style={{
-                    color:textColor,
-                    marginBottom: 15,
+                    color: textColor,
+                    marginBottom: scaleSize(15),
+                    fontSize: scaleFontSize(15),
                     textAlign: "center",
                     justifyContent: "center",
-                    paddingTop: 5,
+                    paddingTop: scaleSize(5),
                   }}
                 >
                   {message}
@@ -75,7 +83,7 @@ const Toast = ({ visible, type, message }) => {
 const styles = StyleSheet.create({
   centeredView: {
     position: "absolute",
-    bottom: 50, // Adjust this value to control how far up from the bottom the toast appears
+    bottom: scaleSize(50), // Adjust this value to control how far up from the bottom the toast appears
     left: 0,
     right: 0,
     justifyContent: "center",
@@ -83,10 +91,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent", // Ensure the background is transparent
   },
   modalView: {
-    margin: 20,
+    margin: scaleSize(20),
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 15,
+    borderRadius: scaleSize(20),
+    padding: scaleSize(15),
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -102,7 +110,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-
 });
 
 export default Toast;

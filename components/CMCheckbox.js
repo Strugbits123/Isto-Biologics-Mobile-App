@@ -6,9 +6,18 @@ import {
   useFonts,
   PlusJakartaSans_500Medium,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMCheckbox = ({
   value,
@@ -20,12 +29,6 @@ const CMCheckbox = ({
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_500Medium,
   });
-
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -51,19 +54,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    left: 5,
+    left: scaleSize(5),
   },
   checkbox: {
     alignSelf: "center",
-    width: 13,
-    height: 13,
+    width: scaleSize(13),
+    height: scaleSize(13),
     borderColor: ThemeTextColors.orange,
   },
   checkboxlabel: {
-    paddingHorizontal: 8,
-    paddingBottom: 4,
+    paddingHorizontal: scaleSize(8),
+    paddingBottom: scaleSize(4),
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 17,
+    fontSize: scaleFontSize(17),
     color: ThemeTextColors.darkGray1,
     justifyContent: "center",
     alignItems: "center",

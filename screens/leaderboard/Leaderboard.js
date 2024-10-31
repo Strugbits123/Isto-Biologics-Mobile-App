@@ -29,9 +29,19 @@ import CMline from "../../components/CMline";
 import { myWixClient } from "../../utils/createClient";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+import CrownFrameIcon from "../../Icons/CrownFrameIcon";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 //leaderboard object data for dynamic pages
 const productCategoryConfig = {
@@ -205,7 +215,7 @@ const Leaderboard = () => {
               />
             ) : (
               <View style={styles.profileImage}>
-                <MenIcon width={25} height={21} />
+                <MenIcon width={scaleSize(25)} height={scaleSize(21)} />
               </View>
             )}
             <Text style={[styles.nameText, styles.myRankText]}>
@@ -227,7 +237,7 @@ const Leaderboard = () => {
               />
             ) : (
               <View style={styles.profileImage}>
-                <MenIcon width={25} height={21} />
+                <MenIcon width={scaleSize(25)} height={scaleSize(21)} />
               </View>
             )}
             <Text style={styles.nameText}>
@@ -242,12 +252,6 @@ const Leaderboard = () => {
       </View>
     );
   };
-
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -278,16 +282,20 @@ const Leaderboard = () => {
         style={{
           flexDirection: "row",
           justifyContent: "center",
-          top: 80,
-          gap: 12,
-          marginHorizontal: 30,
+          top: scaleSize(80),
+          gap: scaleSize(12),
+          marginHorizontal: scaleSize(30),
         }}
       >
         {/* container rank 02 */}
-        <View style={{ gap: 15, top: 65, flex: 1 }}>
+        <View style={{ gap: scaleSize(15), top: scaleSize(40), flex: 1 }}>
           {/* profile and name container */}
           <View
-            style={{ gap: 5, justifyContent: "center", alignItems: "center" }}
+            style={{
+              gap: scaleSize(5),
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             {/* Profile image or placeholder for Rank 02 */}
             <View style={styles.imageContainer}>
@@ -299,14 +307,14 @@ const Leaderboard = () => {
                 />
               ) : (
                 <View style={styles.positionsProfileImage}>
-                  <MenIcon width={30} height={30} />
+                  <MenIcon width={scaleSize(30)} height={scaleSize(30)} />
                 </View>
               )}
             </View>
             <Text
               style={{
                 fontFamily: "PlusJakartaSans_700Bold",
-                fontSize: 15,
+                fontSize: scaleFontSize(15),
                 color: headerData.rankingName,
               }}
             >
@@ -330,48 +338,58 @@ const Leaderboard = () => {
         </View>
 
         {/* container rank 01 */}
-        <View style={{ gap: 15, flex: 1 }}>
+        <View style={{ gap: scaleSize(25), flex: 1 }}>
           {/* profile and name container */}
           <View
-            style={{ gap: 5, justifyContent: "center", alignItems: "center" }}
+            style={{
+              gap: scaleSize(5),
+              justifyContent: "center",
+              alignItems: "center",
+              top: scaleSize(10),
+            }}
           >
             {/* Profile image or placeholder for Rank 01 */}
             <View>
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
                   alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <CrownIcon width={35} height={30} />
-              </View>
-              <View style={styles.imageContainerCrown}>
-                {LeaderboardData.length > 0 &&
-                LeaderboardData[0].data.user_id.profilePhoto ? (
-                  <Image
-                    source={{
-                      uri: LeaderboardData[0].data.user_id.profilePhoto,
-                    }}
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: 70,
-                      height: 70,
-                      borderRadius: 60,
-                    }}
+                <View style={styles.imageContainerCrown}>
+                  {LeaderboardData.length > 0 &&
+                  LeaderboardData[0].data.user_id.profilePhoto ? (
+                    <Image
+                      source={{
+                        uri: LeaderboardData[0].data.user_id.profilePhoto,
+                      }}
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: scaleSize(70),
+                        height: scaleSize(70),
+                        borderRadius: scaleSize(60),
+                      }}
+                    />
+                  ) : (
+                    <View style={styles.positionsProfileImage}>
+                      <MenIcon width={scaleSize(30)} height={scaleSize(30)} />
+                    </View>
+                  )}
+                </View>
+                <View style={styles.crownContainer}>
+                  <CrownFrameIcon
+                    width={scaleSize(94)}
+                    height={scaleSize(92)}
                   />
-                ) : (
-                  <View style={styles.positionsProfileImage}>
-                    <MenIcon width={30} height={30} />
-                  </View>
-                )}
+                  {/* Adjust crown size */}
+                </View>
               </View>
             </View>
             <Text
               style={{
                 fontFamily: "PlusJakartaSans_700Bold",
-                fontSize: 15,
+                fontSize: scaleFontSize(15),
                 color: headerData.rankingName,
               }}
             >
@@ -392,7 +410,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: "PlusJakartaSans_800ExtraBold",
-                  fontSize: 46,
+                  fontSize: scaleFontSize(46),
                   color: ThemeTextColors.white,
                 }}
               >
@@ -403,10 +421,14 @@ const Leaderboard = () => {
         </View>
 
         {/* container rank 03 */}
-        <View style={{ gap: 15, top: 75, flex: 1 }}>
+        <View style={{ gap: scaleSize(15), top: scaleSize(45), flex: 1 }}>
           {/* profile and name container */}
           <View
-            style={{ gap: 5, justifyContent: "center", alignItems: "center" }}
+            style={{
+              gap: scaleSize(5),
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             {/* Profile image or placeholder for Rank 03 */}
             <View style={styles.imageContainer}>
@@ -418,14 +440,14 @@ const Leaderboard = () => {
                 />
               ) : (
                 <View style={styles.positionsProfileImage}>
-                  <MenIcon width={30} height={30} />
+                  <MenIcon width={scaleSize(30)} height={scaleSize(30)} />
                 </View>
               )}
             </View>
             <Text
               style={{
                 fontFamily: "PlusJakartaSans_700Bold",
-                fontSize: 15,
+                fontSize: scaleFontSize(15),
                 color: headerData.rankingName,
               }}
             >
@@ -480,8 +502,8 @@ const Leaderboard = () => {
           </ScrollView>
         </View>
         {isLoading ? (
-          <View style={{ flex: 1, top: 50 }}>
-            <CMLoader size={50} />
+          <View style={{ flex: 1, top: scaleSize(50) }}>
+            <CMLoader size={scaleSize(50)} />
           </View>
         ) : (
           <View style={{ flex: 1 }}>
@@ -490,7 +512,7 @@ const Leaderboard = () => {
               keyExtractor={(item, index) => index.toString()}
               renderItem={LeaderboardData.length > 0 ? renderItem : null}
               contentContainerStyle={{
-                paddingBottom: 415,
+                paddingBottom: scaleSize(415),
                 flexGrow: 1, // Ensure the FlatList takes the full height
               }}
               ListEmptyComponent={
@@ -498,7 +520,7 @@ const Leaderboard = () => {
                 <Text
                   style={{
                     flex: 1,
-                    fontSize: 16,
+                    fontSize: scaleFontSize(16),
                     color: ThemeTextColors.placeholder,
                     justifyContent: "center",
                     alignItems: "center",
@@ -527,88 +549,86 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerContainer: {
-    top: 60,
+    top: scaleSize(60),
   },
   bottomContainer: {
-    top: 80,
+    top: scaleSize(70),
     backgroundColor: ThemeBgColors.white,
     width: "100%",
     height: "100%",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    paddingTop: 10,
+    borderTopLeftRadius: scaleSize(25),
+    borderTopRightRadius: scaleSize(25),
+    paddingTop: scaleSize(10),
     justifyContent: "space-between",
   },
   imageContainer: {
-    width: 60,
-    height: 60,
+    width: scaleSize(60),
+    height: scaleSize(60),
     backgroundColor: ThemeBgColors.white,
-    borderRadius: 40,
+    borderRadius: scaleSize(40),
     alignItems: "center",
     justifyContent: "center",
     borderColor: ThemeTextColors.white,
-    borderWidth: 2,
+    borderWidth: scaleSize(2),
   },
   imageContainerCrown: {
-    width: 75,
-    height: 75,
+    width: scaleSize(73),
+    height: scaleSize(73),
     backgroundColor: ThemeBgColors.white,
-    borderRadius: 60,
+    borderRadius: scaleSize(60),
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#F5A534",
-    borderWidth: 2,
   },
   name: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 13,
+    fontSize: scaleFontSize(13),
     color: "white",
   },
   numberBox1: {
     width: "100%",
-    height: 90,
+    height: scaleSize(90),
     alignItems: "center",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: scaleSize(10),
+    borderTopRightRadius: scaleSize(10),
     justifyContent: "center",
-    paddingBottom: 20,
+    paddingBottom: scaleSize(20),
   },
   numberBox2: {
     width: "100%",
-    height: 70,
+    height: scaleSize(70),
     alignItems: "center",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: scaleSize(10),
+    borderTopRightRadius: scaleSize(10),
   },
   numberBox3: {
     width: "100%",
-    height: 60,
+    height: scaleSize(60),
     alignItems: "center",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: scaleSize(10),
+    borderTopRightRadius: scaleSize(10),
   },
   numberText: {
     fontFamily: "PlusJakartaSans_800ExtraBold",
-    fontSize: 34,
+    fontSize: scaleFontSize(34),
     color: ThemeTextColors.white,
   },
   categorylistContainer: {
     flexDirection: "row",
-    gap: 10,
-    paddingVertical: 20,
-    paddingLeft: 30,
+    gap: scaleSize(10),
+    paddingVertical: scaleSize(20),
+    paddingLeft: scaleSize(30),
   },
   categoryButton: {
-    paddingBottom: 10,
-    marginRight: 15,
+    paddingBottom: scaleSize(10),
+    marginRight: scaleSize(15),
   },
   activeCategoryButton: {
-    borderBottomWidth: 2, // Red bottom border for active category
+    borderBottomWidth: scaleSize(2), // Red bottom border for active category
     borderBottomColor: ThemeTextColors.darkOrange,
   },
   categoryText: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.extraLightGray,
   },
   activeCategoryText: {
@@ -616,23 +636,23 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flexGrow: 1, // Allows the FlatList to grow
-    paddingBottom: 415, // Optional: Add some padding
+    paddingBottom: scaleSize(415), // Optional: Add some padding
   },
   itemContainer: {
-    paddingHorizontal: 30,
+    paddingHorizontal: scaleSize(30),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    paddingVertical: scaleSize(10),
   },
   topRankContainer: {
     backgroundColor: "#FFF4E0", // Light background for top ranks
   },
   rankText: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.extraLightGray,
-    paddingRight: 15,
+    paddingRight: scaleSize(15),
   },
   topRankText: {
     color: "#FF6B6B", // Different color for top ranks
@@ -640,43 +660,48 @@ const styles = StyleSheet.create({
   profileImage: {
     justifyContent: "center",
     alignItems: "center",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: scaleSize(50),
+    height: scaleSize(50),
+    borderRadius: scaleSize(25),
     borderColor: ThemeTextColors.darkGray1,
-    borderWidth: 1,
+    borderWidth: scaleSize(1),
   },
   positionsProfileImage: {
     justifyContent: "center",
     alignItems: "center",
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: scaleSize(60),
+    height: scaleSize(60),
+    borderRadius: scaleSize(30),
   },
   nameText: {
     fontFamily: "PlusJakartaSans_600SemiBold",
     flex: 1,
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
-    paddingLeft: 20,
+    paddingLeft: scaleSize(20),
   },
   scoreText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 19,
+    fontSize: scaleFontSize(19),
     color: ThemeTextColors.extraLightGray,
   },
   topRankScore: {
     color: "#FF6B6B", // Special color for top rank score
   },
   scrollViewContent: {
-    paddingBottom: 410, // Add some bottom padding to prevent content being hidden
+    paddingBottom: scaleSize(410), // Add some bottom padding to prevent content being hidden
   },
   myRankContainer: {
     backgroundColor: "white", // Light red background for my rank
     borderLeftColor: ThemeTextColors.orange,
-    borderLeftWidth: 3,
+    borderLeftWidth: scaleSize(3),
   },
   myRankText: {
     color: "#FF6B6B", // Light red text color for my rank
+  },
+  crownContainer: {
+    position: "absolute",
+    top: scaleSize(-18), // Adjust based on how much overlap you want
+    right: scaleSize(-19), // Adjust to position the crown on the right
   },
 });

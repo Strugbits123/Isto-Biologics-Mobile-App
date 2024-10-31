@@ -28,9 +28,20 @@ import {
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
 
-// SplashScreen.preventAutoHideAsync();
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+
 
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -254,11 +265,6 @@ const CMProfileCard = () => {
   // Hide the modal dialog
   const hideDialog = () => setVisible(false);
 
-  // useEffect(() => {
-  //   if (fontsLoaded || errorFonts) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, errorFonts]);
 
   if (!fontsLoaded && !errorFonts) {
     return null;
@@ -274,11 +280,11 @@ const CMProfileCard = () => {
             <Image
               style={styles.avatarContainer}
               source={{ uri: imageUri }}
-              width={110}
-              height={110}
+              width={scaleSize(110)}
+              height={scaleSize(110)}
             />
           ) : (
-            <CameraIcon width={50} height={43} />
+            <CameraIcon width={scaleSize(50)} height={scaleSize(43)} />
           )}
         </View>
         <TouchableOpacity onPress={() => setVisible(true)}>
@@ -287,7 +293,7 @@ const CMProfileCard = () => {
       </View>
 
       {/* Container of Input fields in card*/}
-      <View style={{ width: "100%", gap: 0, paddingHorizontal: 2 }}>
+      <View style={{ width: "100%", gap: 0, paddingHorizontal: scaleSize(2) }}>
         {/* This is container of full name or team name input */}
         <View style={styles.inputContainer}>
           <Text style={styles.inputTitle}>Full Name</Text>
@@ -323,9 +329,9 @@ const CMProfileCard = () => {
         </View>
       </View>
       {/* Container of Buttons in card add Data btn & View Entires btn & Leaderboard */}
-      <View style={{ width: "100%", height: 45 }}>
+      <View style={{ width: "100%", height: scaleSize(45) }}>
         <CMThemedButton
-          gradientStyle={{ paddingVertical: 10 }}
+          gradientStyle={{ paddingVertical: scaleSize(10) }}
           title="Update"
           onPress={async () => {
             updateUser(currentMemberData?._id);
@@ -333,7 +339,7 @@ const CMProfileCard = () => {
             // console.log("imageResponse", imageResponse);
           }}
           loading={loading}
-          icon={<ArrowRight width={20} height={20} />}
+          icon={<ArrowRight width={scaleSize(20)} height={scaleSize(20)} />}
         />
       </View>
       <Modal transparent={true} animationType="slide" visible={visible}>
@@ -343,13 +349,13 @@ const CMProfileCard = () => {
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
-                  gap: 10,
+                  gap: scaleSize(10),
                   justifyContent: "center",
                   alignItems: "center",
                 }}
                 onPress={pickImageFromGallery}
               >
-                <GalleryIcon width={20} height={20} />
+                <GalleryIcon width={scaleSize(20)} height={scaleSize(20)} />
                 <Text style={styles.modalButton}>Gallery</Text>
               </TouchableOpacity>
             </View>
@@ -357,13 +363,13 @@ const CMProfileCard = () => {
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
-                  gap: 10,
+                  gap: scaleSize(10),
                   justifyContent: "center",
                   alignItems: "center",
                 }}
                 onPress={takeImageWithCamera}
               >
-                <CameraIcon width={20} height={20} />
+                <CameraIcon width={scaleSize(20)} height={scaleSize(20)} />
                 <Text style={styles.modalButton}>Camera</Text>
               </TouchableOpacity>
             </View>
@@ -384,53 +390,53 @@ export default CMProfileCard;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
-    paddingVertical: 45,
-    paddingHorizontal: 30,
+    paddingVertical: scaleSize(45),
+    paddingHorizontal: scaleSize(30),
     alignItems: "center",
-    gap: 20,
+    gap: scaleSize(20),
   },
   profileContainer: {
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: scaleSize(10),
   },
   avatarContainer: {
-    width: 110,
-    height: 110,
+    width: scaleSize(110),
+    height: scaleSize(110),
     backgroundColor: ThemeBgColors.mainBg,
-    borderRadius: 60,
-    borderWidth: 1,
+    borderRadius: scaleSize(60),
+    borderWidth: scaleSize(1),
     borderColor: "#E8ECF4",
     alignItems: "center",
     justifyContent: "center",
   },
   nameText: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 12,
+    fontSize: scaleFontSize(12),
     color: ThemeTextColors.extraLightGray,
   },
   inputContainer: {
-    marginTop: 10,
+    marginTop: scaleSize(10),
   },
   input: {
     fontFamily: "PlusJakartaSans_400Regular",
     minWidth: "100%",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
+    paddingHorizontal: scaleSize(15),
+    paddingVertical: scaleSize(8),
     borderColor: "#E8ECF4",
-    borderWidth: 1,
-    fontSize: 14,
-    borderRadius: 8,
+    borderWidth: scaleSize(1),
+    fontSize: scaleFontSize(14),
+    borderRadius: scaleSize(8),
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkGray1,
-    marginBottom: 10,
+    marginBottom: scaleSize(10),
   },
   modalContainer: {
     flex: 1,
@@ -440,14 +446,14 @@ const styles = StyleSheet.create({
   modalContent: {
     flexDirection: "row",
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
-    padding: 15,
+    padding: scaleSize(15),
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    gap: scaleSize(10),
   },
   modalButton: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 15,
+    fontSize: scaleFontSize(15),
     color: ThemeTextColors.extraLightGray,
   },
 });

@@ -6,8 +6,9 @@ import Svg, {
   LinearGradient,
   Stop,
 } from "react-native-svg";
-const CMCrownFrameIcon = ({ width, height }) => (
+const CrownFrameIcon = ({ width, height }) => (
   <Svg
+  viewBox="0 0 94 92" 
     xmlns="http://www.w3.org/2000/svg"
     width={width}
     height={height}
@@ -33,4 +34,4 @@ const CMCrownFrameIcon = ({ width, height }) => (
     </Defs>
   </Svg>
 );
-export default CMCrownFrameIcon;
+export default CrownFrameIcon;

@@ -11,6 +11,15 @@ import ProfileScreen from "../../screens/profile/ProfileScreen";
 import Entries from "../../screens/Entries/Entries";
 import DetailedEntry from "../../screens/DetailedEntry/DetailedEntry";
 import AddData from "../../screens/addData/AddData";
+import { Dimensions, PixelRatio } from "react-native";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +30,11 @@ const Bottom_Navigation = () => {
         tabBarActiveTintColor: "#FCC34A",
         headerShown: false,
         tabBarStyle: {
-          height: 80, // Set tab bar height to 80px
-          paddingHorizontal: 40,
+          height: scaleSize(80), // Set tab bar height to 80px
+          paddingHorizontal: scaleSize(40),
+          elevation: 0, // Removes shadow on Android
+          shadowOpacity: 0, // Removes shadow on iOS
+          borderTopWidth: 0, // Removes the border
         },
         tabBarHideOnKeyboard: true,
       }}
@@ -31,9 +43,12 @@ const Bottom_Navigation = () => {
         options={{
           tabBarIcon: ({ focused, color, size }) =>
             focused ? (
-              <HomeTabIcon width={24} height={22} />
+              <HomeTabIcon width={scaleSize(24)} height={scaleSize(22)} />
             ) : (
-              <UnActiveHomeTabIcon width={24} height={22} />
+              <UnActiveHomeTabIcon
+                width={scaleSize(24)}
+                height={scaleSize(22)}
+              />
             ),
           tabBarLabel: () => null,
         }}
@@ -43,9 +58,12 @@ const Bottom_Navigation = () => {
       <Tab.Screen
         options={{
           tabBarIcon: ({ color, size }) => (
-            <View style={{ paddingBottom: 57 }}>
+            <View style={{ paddingBottom: scaleSize(59) }}>
               {/* Adjust the padding value as needed */}
-              <LeaderboardTabIcon width={186} height={90} />
+              <LeaderboardTabIcon
+                width={scaleSize(186)}
+                height={scaleSize(90)}
+              />
             </View>
           ),
 
@@ -58,9 +76,12 @@ const Bottom_Navigation = () => {
         options={{
           tabBarIcon: ({ focused, color, size }) =>
             focused ? (
-              <UnActiveDocsTabIcon width={18} height={21} />
+              <UnActiveDocsTabIcon
+                width={scaleSize(18)}
+                height={scaleSize(21)}
+              />
             ) : (
-              <DocsTabIcon width={18} height={21} />
+              <DocsTabIcon width={scaleSize(18)} height={scaleSize(21)} />
             ),
           tabBarLabel: () => null,
         }}

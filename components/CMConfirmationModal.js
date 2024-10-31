@@ -9,9 +9,18 @@ import {
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMConfirmationModal = ({ onCancel, onConfirm }) => {
   let [fontsLoaded, error] = useFonts({
@@ -19,11 +28,6 @@ const CMConfirmationModal = ({ onCancel, onConfirm }) => {
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
   });
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -33,9 +37,9 @@ const CMConfirmationModal = ({ onCancel, onConfirm }) => {
       <View style={styles.modalBackground}>
         <View style={styles.container}>
           <View>
-            <DeleteIcon width={76} height={76} />
+            <DeleteIcon width={scaleSize(76)} height={scaleSize(76)} />
           </View>
-          <View style={{ maxWidth: 200, marginTop: 10 }}>
+          <View style={{ maxWidth: scaleSize(200), marginTop: scaleSize(10) }}>
             <Text style={styles.text}>
               Are you sure you want to delete this?
             </Text>
@@ -52,7 +56,7 @@ const CMConfirmationModal = ({ onCancel, onConfirm }) => {
               }}
               textStyle={{
                 fontFamily: "PlusJakartaSans_500Medium",
-                fontSize: 14,
+                fontSize: scaleFontSize(14),
                 color: ThemeTextColors.white,
               }}
             />
@@ -80,29 +84,29 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "80%",
-    paddingVertical: 30,
-    paddingHorizontal: 30,
+    paddingVertical: scaleSize(30),
+    paddingHorizontal: scaleSize(30),
     justifyContent: "center",
     alignItems: "center",
   },
   text: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkGray1,
     textAlign: "center",
   },
   buttonsContainer: {
     flexDirection: "row",
     width: "100%",
-    height: 44,
-    gap: 10,
-    marginTop: 20,
+    height: scaleSize(44),
+    gap: scaleSize(10),
+    marginTop: scaleSize(20),
   },
   buttonText: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: "red",
   },
   simpleButton: {

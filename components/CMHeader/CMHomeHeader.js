@@ -21,10 +21,20 @@ import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
 
-// import * as SplashScreen from "expo-splash-screen";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMHomeHeader = ({
   useInScreen,
@@ -60,12 +70,6 @@ const CMHomeHeader = ({
   const handleProfilePress = () => {
     setModalVisible(!modalVisible); // Open modal on profile press
   };
-
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -110,7 +114,7 @@ const CMHomeHeader = ({
                 : navigation.goBack();
             }}
           >
-            <BackIcon width={10} height={17} />
+            <BackIcon width={scaleSize(10)} height={scaleSize(17)} />
           </TouchableOpacity>
         </View>
       )}
@@ -123,13 +127,13 @@ const CMHomeHeader = ({
         >
           {profileImage ? (
             <Image
-              style={{ borderRadius: 60, borderWidth: 1 }}
+              style={{ borderRadius: scaleSize(60), borderWidth: scaleSize(1) }}
               source={{ uri: profileImage }}
-              width={50}
-              height={50}
+              width={scaleSize(50)}
+              height={scaleSize(50)}
             />
           ) : (
-            <MenIcon width={17} height={21} />
+            <MenIcon width={scaleSize(17)} height={scaleSize(21)} />
           )}
         </TouchableOpacity>
       </View>
@@ -140,8 +144,8 @@ const CMHomeHeader = ({
           isVisible={modalVisible}
           modalStyle={{
             position: "absolute",
-            right: 80,
-            top: 10,
+            right: scaleSize(80),
+            top: scaleSize(10),
           }}
         />
       )}
@@ -156,26 +160,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 52,
+    height: scaleSize(52),
     width: "100%",
-    paddingHorizontal: 29,
+    paddingHorizontal: scaleSize(29),
   },
   imageContainer: {
-    width: 50,
-    height: 50,
+    width: scaleSize(50),
+    height: scaleSize(50),
     backgroundColor: ThemeBgColors.white,
-    borderRadius: 30,
+    borderRadius: scaleSize(30),
     alignItems: "center",
     justifyContent: "center",
   },
   greetingText: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 22,
+    fontSize: scaleFontSize(22),
     color: ThemeTextColors.darkBlue,
   },
   nameText: {
     fontFamily: "PlusJakartaSans_400Regular",
-    fontSize: 22,
+    fontSize: scaleFontSize(22),
     color: ThemeTextColors.darkBlue,
   },
 });

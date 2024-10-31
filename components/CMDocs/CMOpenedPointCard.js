@@ -7,6 +7,18 @@ import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
   let [fontsLoaded, error] = useFonts({
@@ -24,8 +36,7 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          paddingHorizontal: 15,
-          paddingRight:30
+          paddingHorizontal: scaleSize(15),
         }}
       >
         <View style={styles.TextContainer}>
@@ -33,7 +44,7 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
           <Text style={styles.openedCardtitle}>{title}</Text>
         </View>
         <TouchableOpacity onPress={onPress}>
-          <UpArrowIcon width={20} height={15} />
+          <UpArrowIcon width={scaleSize(20)} height={scaleSize(15)} />
         </TouchableOpacity>
       </View>
       {/* points list dynamic showing  */}
@@ -52,53 +63,52 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
 export default CMOpenedPointCard;
 
 const styles = StyleSheet.create({
-  TextContainer: { flexDirection: "row", gap: 5 },
+  TextContainer: { flexDirection: "row", gap: scaleSize(5) },
   orderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.white,
   },
   openOrderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
   },
   title: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.white,
-    maxWidth: 220,
+    maxWidth: scaleSize(220),
   },
   openedCardContainer: {
     backgroundColor: ThemeBgColors.docsBg,
-    borderRadius: 14,
-    paddingVertical: 20,
+    borderRadius: scaleSize(14),
+    paddingVertical: scaleSize(20),
   },
   openedCardtitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
-    maxWidth: 220,
-    flexShrink:1
+    maxWidth: scaleSize(220),
   },
   listContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: scaleSize(20),
+    paddingVertical: scaleSize(20),
   },
   listItem: {
     flexDirection: "row",
     alignItems: "flex-start",
-    marginBottom: 20,
+    marginBottom: scaleSize(20),
   },
   bulletPoint: {
     fontFamily: "PlusJakartaSans_400Regular",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.extraLightGray,
-    marginRight: 5,
+    marginRight: scaleSize(5),
   },
   listText: {
     fontFamily: "PlusJakartaSans_400Regular",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.extraLightGray,
   },
 });

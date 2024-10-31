@@ -18,20 +18,24 @@ import {
   PlusJakartaSans_700Bold,
   useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const LoginScreen = () => {
   // Load custom fonts for the app
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
   });
-
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -99,32 +103,32 @@ const styles = StyleSheet.create({
     flexDirection: "column", // Container for image and logo
   },
   imageWrapper: {
-    height: 225,
+    height: scaleSize(225),
   },
   image: {
-    height: 214, // Height of the image
+    height: scaleSize(214), // Height of the image
     width: "100%", // Full-width image
   },
   text: {
     fontFamily: "PlusJakartaSans_700Bold",
     color: ThemeTextColors.white, // Text color from theme
-    fontSize: 30, // Font size for the welcome message
+    fontSize: scaleFontSize(30), // Font size for the welcome message
   },
   logoTextContainer: {
     position: "absolute", // Positioned over the image
-    top: 90, // Distance from the top
-    left: 31, // Distance from the left
-    gap: 33, // Spacing between logo and text
+    top: scaleSize(90), // Distance from the top
+    left: scaleSize(31), // Distance from the left
+    gap: scaleSize(33), // Spacing between logo and text
   },
   bottomContainer: {
-    top: 80, // Positioned below the image
+    top: scaleSize(80), // Positioned below the image
     backgroundColor: ThemeBgColors.white, // Background color from theme
     width: "100%",
     height: "100%",
-    borderTopLeftRadius: 25, // Rounded top left corner
-    borderTopRightRadius: 25, // Rounded top right corner
-    paddingTop: 30, // Padding at the top
-    paddingHorizontal: 30, // Horizontal padding
+    borderTopLeftRadius: scaleSize(25), // Rounded top left corner
+    borderTopRightRadius: scaleSize(25), // Rounded top right corner
+    paddingTop: scaleSize(30), // Padding at the top
+    paddingHorizontal: scaleSize(30), // Horizontal padding
     justifyContent: "space-between", // Evenly space elements
   },
 });

@@ -11,9 +11,18 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
   const [checkedState, setCheckedState] = useState({
@@ -55,12 +64,6 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
     });
   };
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -79,7 +82,7 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
             onValueChange={() => handleCheckboxChange("hospital")}
           />
           <View>
-            <HospitalIcon width={40} height={40} />
+            <HospitalIcon width={scaleSize(40)} height={scaleSize(40)} />
           </View>
         </View>
         <CMline />
@@ -91,7 +94,7 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
             onValueChange={() => handleCheckboxChange("doctor")}
           />
           <View>
-            <DoctorIcon width={40} height={40} />
+            <DoctorIcon width={scaleSize(40)} height={scaleSize(40)} />
           </View>
         </View>
         <CMline />
@@ -114,16 +117,16 @@ export default CMAddDataCard;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
-    paddingVertical: 25,
-    paddingHorizontal: 30,
+    paddingVertical: scaleSize(25),
+    paddingHorizontal: scaleSize(30),
   },
   mainHeadingText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
-    marginBottom: 20,
+    fontSize: scaleFontSize(21),
+    marginBottom: scaleSize(20),
     color: ThemeTextColors.darkGray1,
   },
   selectionContainer: {
@@ -132,6 +135,6 @@ const styles = StyleSheet.create({
   insideSelectionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    paddingVertical: scaleSize(10),
   },
 });

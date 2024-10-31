@@ -16,7 +16,18 @@ import {
   PlusJakartaSans_600SemiBold_Italic,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 const CMDocsCard = () => {
   const [point1Card, setPoint1Card] = useState(false);
   const [point2Card, setPoint2Card] = useState(false);
@@ -36,7 +47,7 @@ const CMDocsCard = () => {
         <Text style={styles.mainHeadingText}>How do I get points?</Text>
       </View>
       {/* this container use for list down cards for points */}
-      <View style={{ gap: 20 }}>
+      <View style={{ gap: scaleSize(20) }}>
         {point1Card ? (
           // reusable component when point card open show these component
           <CMOpenedPointCard
@@ -84,7 +95,7 @@ const CMDocsCard = () => {
           <Text
             style={{
               fontFamily: "PlusJakartaSans_600SemiBold_Italic",
-              fontSize: 19,
+              fontSize: scaleFontSize(19),
               color: ThemeTextColors.darkGray1,
             }}
           >
@@ -103,49 +114,49 @@ export default CMDocsCard;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
-    paddingVertical: 25,
-    paddingHorizontal: 20,
+    paddingVertical: scaleSize(25),
+    paddingHorizontal: scaleSize(20),
   },
   mainHeadingText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
-    marginBottom: 20,
+    fontSize: scaleFontSize(21),
+    marginBottom: scaleSize(20),
     color: ThemeTextColors.orange,
   },
   closedCardContainer: {
     backgroundColor: ThemeTextColors.darkGray1,
-    borderRadius: 14,
-    paddingVertical: 20,
+    borderRadius: scaleSize(14),
+    paddingVertical: scaleSize(20),
   },
-  TextContainer: { flexDirection: "row", gap: 5 },
+  TextContainer: { flexDirection: "row", gap: scaleSize(5) },
   orderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.white,
   },
   openOrderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
   },
   title: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.white,
-    maxWidth: 220,
+    maxWidth: scaleSize(220),
   },
   openedCardContainer: {
     backgroundColor: ThemeBgColors.docsBg,
-    borderRadius: 14,
-    paddingVertical: 20,
+    borderRadius: scaleSize(14),
+    paddingVertical: scaleSize(20),
   },
   openedCardtitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
-    maxWidth: 220,
+    maxWidth: scaleSize(220),
   },
 });

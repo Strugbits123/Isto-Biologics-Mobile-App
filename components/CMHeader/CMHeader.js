@@ -7,9 +7,19 @@ import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
 
-// SplashScreen.preventAutoHideAsync();
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
   const navigation = useNavigation();
@@ -19,12 +29,6 @@ const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
     PlusJakartaSans_600SemiBold,
   });
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -33,7 +37,7 @@ const CMHeader = ({ headerTitle, titleStyle, iconColor }) => {
     <View style={styles.container}>
       <View>
         <TouchableOpacity onPress={() => navigation.navigate("home")}>
-          <BackIcon color={iconColor} width={10} height={17} />
+          <BackIcon color={iconColor} width={scaleSize(10)} height={scaleSize(17)} />
         </TouchableOpacity>
       </View>
       <View style={styles.headerTitleContainer}>
@@ -50,9 +54,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 52,
+    height: scaleSize(52),
     width: "100%",
-    paddingHorizontal: 29,
+    paddingHorizontal: scaleSize(29),
   },
   headerTitleContainer: {
     flex: 1,
@@ -61,6 +65,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 28,
+    fontSize: scaleFontSize(28),
   },
 });

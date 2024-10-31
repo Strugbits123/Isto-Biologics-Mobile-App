@@ -11,9 +11,18 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMProductLine = ({
   checkboxes,
@@ -83,12 +92,6 @@ const CMProductLine = ({
     setVisibleCategory(visibleCategory === categoryName ? null : categoryName);
   };
 
-  // useEffect(() => {
-  //   if (fontsLoaded || errorFonts) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, errorFonts]);
-
   if (!fontsLoaded && !errorFonts) {
     return null;
   }
@@ -113,7 +116,7 @@ const CMProductLine = ({
             <TouchableOpacity
               onPress={() => toggleDropdown(category.categoryName)}
             >
-              <DownArrowIcon width={13} height={12} />
+              <DownArrowIcon width={scaleSize(13)} height={scaleSize(12)} />
             </TouchableOpacity>
           </View>
 
@@ -135,7 +138,7 @@ const CMProductLine = ({
                   checkoxStyle={{ borderColor: ThemeTextColors.gray1 }}
                   lableStyle={{
                     fontFamily: "PlusJakartaSans_400Regular",
-                    fontSize: 14,
+                    fontSize: scaleFontSize(14),
                     color: ThemeTextColors.gray1,
                   }}
                 />
@@ -154,29 +157,29 @@ export default CMProductLine;
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
-    paddingHorizontal: 5,
+    marginVertical: scaleSize(20),
+    paddingHorizontal: scaleSize(5),
   },
   titleHeading: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
+    fontSize: scaleFontSize(21),
     color: ThemeTextColors.darkOrange,
   },
   containerSelectCategory: {
-    padding: 0,
+    padding: scaleSize(0),
   },
   dropDownContainer: {
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingHorizontal: 10,
-    paddingBottom: 10,
+    paddingHorizontal: scaleSize(10),
+    paddingBottom: scaleSize(10),
     backgroundColor: "white",
     width: "100%",
   },
   selectorInput: {
-    paddingHorizontal: 2,
-    paddingVertical: 12,
+    paddingHorizontal: scaleSize(2),
+    paddingVertical: scaleSize(12),
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
   },
   selectorTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
   },
 });

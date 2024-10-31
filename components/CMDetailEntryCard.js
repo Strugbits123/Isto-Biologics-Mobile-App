@@ -17,9 +17,18 @@ import {
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMDetailEntryCard = () => {
   const route = useRoute();
@@ -162,12 +171,6 @@ const CMDetailEntryCard = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -183,12 +186,11 @@ const CMDetailEntryCard = () => {
 
           <View style={styles.dropDownContainer}>
             {products.map((product, index) => (
-              <View style={{ paddingVertical: 2 }} key={index}>
+              <View style={{ paddingVertical: scaleSize(2) }} key={index}>
                 <Text style={styles.productText}>{product}</Text>
               </View>
             ))}
           </View>
-
           <CMline />
         </View>
       )
@@ -201,22 +203,22 @@ const CMDetailEntryCard = () => {
         <View style={styles.EntryTitleIcon}>
           {item.data.doctor_firstname ? (
             <>
-              <DoctorIcon width={40} height={40} />
+              <DoctorIcon width={scaleSize(40)} height={scaleSize(40)} />
               <Text style={styles.EntryTitleText}>Doctor</Text>
             </>
           ) : (
             <>
-              <HospitalIcon width={40} height={40} />
+              <HospitalIcon width={scaleSize(40)} height={scaleSize(40)} />
               <Text style={styles.EntryTitleText}>Hospital/Facility</Text>
             </>
           )}
         </View>
         <TouchableOpacity onPress={() => hanleThreeDotPress(item)}>
-          <ThreeDotIcon width={8} height={20} />
+          <ThreeDotIcon width={scaleSize(8)} height={scaleSize(20)} />
         </TouchableOpacity>
       </View>
 
-      <View style={{ paddingTop: 10 }}>
+      <View style={{ paddingTop: scaleSize(10) }}>
         {item.data.doctor_firstname && (
           <>
             <View style={styles.fieldContainer}>
@@ -246,11 +248,11 @@ const CMDetailEntryCard = () => {
         <CMline />
       </View>
 
-      <View style={{ paddingTop: 10 }}>
+      <View style={{ paddingTop: scaleSize(10) }}>
         <View>
           <Text style={styles.titleHeading}>Product Line</Text>
         </View>
-        <View style={{ paddingTop: 10 }}>
+        <View style={{ paddingTop: scaleSize(10) }}>
           {/* Reuse the renderCategory function for each category */}
           {renderCategory("Magellan", item.data.magellan_category)}
           {renderCategory("Influx", item.data.influx_category)}
@@ -267,8 +269,8 @@ const CMDetailEntryCard = () => {
           isVisible={modalVisible}
           modalStyle={{
             position: "absolute",
-            right: 40,
-            top: 40,
+            right: scaleSize(40),
+            top: scaleSize(40),
           }}
         />
       )}
@@ -292,11 +294,11 @@ export default CMDetailEntryCard;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
-    paddingVertical: 25,
-    paddingHorizontal: 30,
+    paddingVertical: scaleSize(25),
+    paddingHorizontal: scaleSize(30),
   },
   headerContainer: {
     flexDirection: "row",
@@ -305,54 +307,54 @@ const styles = StyleSheet.create({
   },
   EntryTitleIcon: {
     flexDirection: "row",
-    gap: 10,
+    gap: scaleSize(10),
     alignItems: "center",
   },
   EntryTitleText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
+    fontSize: scaleFontSize(21),
     color: ThemeTextColors.darkGray1,
   },
   fieldContainer: {
-    paddingVertical: 12,
-    gap: 5,
+    paddingVertical: scaleSize(12),
+    gap: scaleSize(5),
   },
   fieldTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkGray1,
   },
   fieldValue: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.placeholder,
   },
   titleHeading: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
+    fontSize: scaleFontSize(21),
     color: ThemeTextColors.darkOrange,
   },
   selectorTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
   },
   containerSelectCategory: {
-    paddingVertical: 5,
+    paddingVertical: scaleSize(5),
   },
   dropDownContainer: {
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingHorizontal: 10,
-    paddingBottom: 10,
+    paddingHorizontal: scaleSize(10),
+    paddingBottom: scaleSize(10),
     backgroundColor: "white",
     width: "100%",
-    paddingVertical: 10,
+    paddingVertical: scaleSize(10),
   },
   productText: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.lightGray,
   },
 });

@@ -17,9 +17,18 @@ import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMDateInput = ({
   title,
@@ -53,12 +62,6 @@ const CMDateInput = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (fontsLoaded || errorFonts) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, errorFonts]);
-
   if (!fontsLoaded && !errorFonts) {
     return null;
   }
@@ -76,8 +79,8 @@ const CMDateInput = ({
           placeholderTextColor={ThemeTextColors.placeholder}
           editable={false} // Disable manual editing, date is picked via picker
         />
-        <View style={{ position: "absolute", paddingHorizontal: 17 }}>
-          <CalenderIcon width={19} height={19} />
+        <View style={{ position: "absolute", paddingHorizontal: scaleSize(17) }}>
+          <CalenderIcon width={scaleSize(19)} height={scaleSize(19)} />
         </View>
       </TouchableOpacity>
 
@@ -103,23 +106,23 @@ export default CMDateInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 10,
+    marginTop: scaleSize(10),
   },
   input: {
     fontFamily: "PlusJakartaSans_400Regular",
     minWidth: "100%",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
+    paddingHorizontal: scaleSize(15),
+    paddingVertical: scaleSize(8),
     borderColor: "#E8ECF4",
-    borderWidth: 1,
-    fontSize: 14,
-    borderRadius: 8,
+    borderWidth: scaleSize(1),
+    fontSize: scaleFontSize(14),
+    borderRadius: scaleSize(8),
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkGray1,
-    marginBottom: 10,
+    marginBottom: scaleSize(10),
   },
 });

@@ -9,9 +9,19 @@ import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import Toast from "../../components/Toast/Toast";
 import {useFonts, PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
 
-// SplashScreen.preventAutoHideAsync();
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const HomeScreen = ({ isLoggedIn }) => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -98,12 +108,6 @@ const HomeScreen = ({ isLoggedIn }) => {
     );
   }
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -126,7 +130,7 @@ const HomeScreen = ({ isLoggedIn }) => {
       </View>
       {/* Scrollable content section */}
       <ScrollView
-        style={{ top: 90 }}
+        style={{ top: scaleSize(90) }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
@@ -167,22 +171,22 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.mainBg,
   },
   headerContainer: {
-    top: 60,
+    top: scaleSize(60),
   },
   headingContainer: {
     flexDirection: "row",
-    paddingHorizontal: 27,
+    paddingHorizontal: scaleSize(27),
   },
   headingText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 28,
+    fontSize: scaleFontSize(28),
     color: ThemeTextColors.darkGray1,
   },
   cardContainer: {
-    paddingHorizontal: 29,
-    top: 30,
+    paddingHorizontal: scaleSize(29),
+    top: scaleSize(30),
   },
   scrollViewContent: {
-    paddingBottom: 190,
+    paddingBottom: scaleSize(190),
   },
 });

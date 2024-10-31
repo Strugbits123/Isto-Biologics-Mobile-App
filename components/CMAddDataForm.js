@@ -9,7 +9,18 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { myWixClient } from "../utils/createClient";
 import { PointsContext } from "./PointsHandler";
 import Toast from "./Toast/Toast";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 const CMAddDataForm = ({
   submisionType,
   checkedForms,
@@ -550,12 +561,12 @@ const CMAddDataForm = ({
       />
 
       {/* Submit button */}
-      <View style={{ width: "100%", height: 45 }}>
+      <View style={{ width: "100%", height: scaleSize(45) }}>
         <CMThemedButton
-          gradientStyle={{ paddingVertical: 10 }}
+          gradientStyle={{ paddingVertical: scaleSize(10) }}
           title={isUpdateItem ? "Update" : "Submit"}
           onPress={handleSubmit}
-          icon={<ArrowRight width={20} height={20} />}
+          icon={<ArrowRight width={scaleSize(20)} height={scaleSize(20)} />}
           loading={isLoading}
         />
       </View>

@@ -4,11 +4,8 @@ import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import MenIcon from "../Icons/MenIcon";
 import BagdeHomeCardIcon from "../Icons/BagdeHomeCardIcon";
 import { LinearGradient } from "expo-linear-gradient";
-import CMThemedButton from "./CMThemedButton";
-import { stubArray } from "lodash";
 import CMButton from "./CMButton";
 import CMGradientButton from "./CMGradientButton";
-import { max } from "date-fns/max";
 import CMLoader from "./CMLoader";
 import { useNavigation } from "@react-navigation/native";
 import CMline from "./CMline";
@@ -31,9 +28,20 @@ import {
   PlusJakartaSans_700Bold_Italic,
   PlusJakartaSans_800ExtraBold_Italic,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
 
-// SplashScreen.preventAutoHideAsync();
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMHomeCard = ({
   totalPointsProducts = "00",
@@ -69,11 +77,6 @@ const CMHomeCard = ({
     PlusJakartaSans_700Bold_Italic,
     PlusJakartaSans_800ExtraBold_Italic,
   });
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -87,24 +90,24 @@ const CMHomeCard = ({
           {/* when this condition got true so render image and must size is 110 110  */}
           {profileImage ? (
             <Image
-              style={{ borderRadius: 60, borderWidth: 1 }}
+              style={{ borderRadius: scaleSize(70) }}
               source={{ uri: profileImage }}
-              width={110}
-              height={110}
+              width={scaleSize(105)}
+              height={scaleSize(105)}
             />
           ) : (
-            <MenIcon width={50} height={50} />
+            <MenIcon width={scaleSize(50)} height={scaleSize(50)} />
           )}
         </View>
         <Text style={styles.nameText}>{fullName ? fullName : name}</Text>
       </View>
       {/* Container of badge container in card */}
       <View style={styles.pointsContainer}>
-        <BagdeHomeCardIcon width={26} height={30} />
+        <BagdeHomeCardIcon width={scaleSize(26)} height={scaleSize(30)} />
         <Text style={styles.TotalPointsText}>Total Points </Text>
         <LinearGradient colors={["#F87655", "#EF5128"]} style={styles.gradient}>
           {isLoading ? (
-            <CMLoader color={"#ffffff"} size={20} />
+            <CMLoader color={"#ffffff"} size={scaleSize(20)} />
           ) : (
             <Text style={styles.pointsText}>
               {totalPoints.total_leaderboard_points !== 0
@@ -115,9 +118,22 @@ const CMHomeCard = ({
         </LinearGradient>
       </View>
       {/* Container of Points Information for doctor and hospital in card*/}
-      <View style={{ width: "100%", gap: 15, paddingHorizontal: 2 }}>
-        <View>
+      <View
+        style={{
+          width: "100%",
+          gap: scaleSize(15),
+          paddingHorizontal: scaleSize(2),
+        }}
+      >
+        <View style={{ flex: 1, flexDirection: "row", alignItems:"center", gap:scaleSize(15)}}>
           <Text style={styles.pointsInfoHeading}>Points Break down</Text>
+          <Text
+            style={{
+              backgroundColor: ThemeTextColors.lineColor,
+              height: 1,
+              width: scaleSize(160)
+            }}
+          ></Text>
         </View>
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>New Doctor</Text>
@@ -146,7 +162,7 @@ const CMHomeCard = ({
         <CMline />
       </View>
       {/* Container of Buttons in card add Data btn & View Entires btn & Leaderboard */}
-      <View style={{ gap: 8 }}>
+      <View style={{ gap: scaleSize(8) }}>
         <View style={styles.buttonsContainer}>
           <CMGradientButton
             title="Add Data "
@@ -181,47 +197,47 @@ export default CMHomeCard;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: ThemeTextColors.white,
-    borderRadius: 20,
+    borderRadius: scaleSize(20),
     width: "100%",
     height: "auto",
-    paddingVertical: 20,
-    paddingHorizontal: 30,
+    paddingVertical: scaleSize(20),
+    paddingHorizontal: scaleSize(30),
     alignItems: "center",
-    gap: 15,
+    gap: scaleSize(15),
   },
   profileContainer: {
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: scaleSize(10),
   },
   avatarContainer: {
-    width: 110,
-    height: 110,
+    width: scaleSize(110),
+    height: scaleSize(110),
     backgroundColor: ThemeBgColors.mainBg,
-    borderRadius: 60,
-    borderWidth: 2,
+    borderRadius: scaleSize(70),
+    borderWidth: scaleSize(3),
     borderColor: ThemeTextColors.darkGray1,
     alignItems: "center",
     justifyContent: "center",
   },
   nameText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 21,
+    fontSize: scaleFontSize(21),
     color: ThemeTextColors.darkGray1,
   },
   pointsInfoHeading: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.darkGray1,
   },
   pointsTextInfo: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.extraLightGray,
   },
   pointsNumber: {
     fontFamily: "PlusJakartaSans_800ExtraBold",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.extraLightGray,
   },
   pointsInfoContainer: {
@@ -233,48 +249,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: ThemeBgColors.lightOrange,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 50,
-    gap: 8,
+    paddingHorizontal: scaleSize(20),
+    paddingVertical: scaleSize(12),
+    borderRadius: scaleSize(50),
+    gap: scaleSize(8),
   },
   TotalPointsText: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkOrange,
   },
   gradient: {
-    borderRadius: 15,
-    paddingHorizontal: 10,
+    borderRadius: scaleSize(15),
+    paddingHorizontal: scaleSize(10),
     justifyContent: "center", // Center content horizontally
     alignItems: "center", // Center content vertically
-    paddingBottom: 2,
+    paddingBottom: scaleSize(2),
   },
   pointsText: {
     color: ThemeTextColors.white,
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     fontFamily: "PlusJakartaSans_700Bold_Italic",
   },
   buttonsContainer: {
     flexDirection: "row",
     width: "100%",
-    height: 44,
-    gap: 10,
+    height: scaleSize(44),
+    gap: scaleSize(10),
   },
   themeButton: {
     flex: 1,
-    borderRadius: 10,
+    borderRadius: scaleSize(10),
     justifyContent: "center",
     alignContent: "center",
   },
   themeButtonText: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.white,
   },
   buttonText: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.orange,
   },
   simpleButton: {

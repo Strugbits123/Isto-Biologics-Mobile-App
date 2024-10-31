@@ -2,7 +2,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CMLoader from "./CMLoader";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 const CMThemedButton = ({
   title = "Button", // default title if none is passed
   onPress, // function to handle button press
@@ -28,7 +39,7 @@ const CMThemedButton = ({
       >
         <View style={styles.content}>
           {loading ? (
-            <CMLoader size={22} color="#ffffff" />
+            <CMLoader size={scaleSize(22)} color="#ffffff" />
           ) : (
             <View style={styles.content}>
               <Text style={[styles.buttonText, textStyle]}>{title}</Text>
@@ -45,13 +56,13 @@ export default CMThemedButton;
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 8,
+    borderRadius: scaleSize(8),
     overflow: "hidden",
   },
   gradient: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    paddingVertical: scaleSize(15),
+    paddingHorizontal: scaleSize(20),
+    borderRadius: scaleSize(8),
     justifyContent: "center",
     alignItems: "center",
   },
@@ -60,11 +71,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: "#ffffff",
     fontWeight: "bold",
   },
   iconContainer: {
-    marginLeft: 6, // space between text and icon
+    marginLeft: scaleSize(6), // space between text and icon
   },
 });

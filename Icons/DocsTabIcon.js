@@ -25,6 +25,7 @@ export const DocsTabIcon = ({ width, height }) => (
 
 export const UnActiveDocsTabIcon = ({ width, height }) => (
   <Svg
+    viewBox="0 0 20 24"
     xmlns="http://www.w3.org/2000/svg"
     width={width}
     height={height}

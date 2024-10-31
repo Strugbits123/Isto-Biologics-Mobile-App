@@ -6,6 +6,18 @@ import {
   useFonts,
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMClosedPointCard = ({ onPress, listNumber, title }) => {
   let [fontsLoaded, error] = useFonts({
@@ -22,8 +34,7 @@ const CMClosedPointCard = ({ onPress, listNumber, title }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          paddingHorizontal: 15,
-          paddingRight: 30,
+          paddingHorizontal: scaleSize(15),
         }}
       >
         <View style={styles.TextContainer}>
@@ -31,7 +42,11 @@ const CMClosedPointCard = ({ onPress, listNumber, title }) => {
           <Text style={styles.title}>{title}</Text>
         </View>
         <TouchableOpacity onPress={onPress}>
-          <DownArrowIcon color="white" width={20} height={15} />
+          <DownArrowIcon
+            color="white"
+            width={scaleSize(20)}
+            height={scaleSize(15)}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -43,25 +58,24 @@ export default CMClosedPointCard;
 const styles = StyleSheet.create({
   closedCardContainer: {
     backgroundColor: ThemeTextColors.darkGray1,
-    borderRadius: 14,
-    paddingVertical: 20,
+    borderRadius: scaleSize(14),
+    paddingVertical: scaleSize(20),
   },
-  TextContainer: { flexDirection: "row", gap: 5 },
+  TextContainer: { flexDirection: "row", gap: scaleSize(5) },
   orderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.white,
   },
   openOrderListNumber: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.darkGray1,
   },
   title: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     color: ThemeTextColors.white,
-    maxWidth: 220,
-    flexShrink: 1,
+    maxWidth: scaleSize(220),
   },
 });

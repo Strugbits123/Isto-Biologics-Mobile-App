@@ -5,20 +5,24 @@ import {
   useFonts,
   PlusJakartaSans_500Medium,
 } from "@expo-google-fonts/plus-jakarta-sans";
-// import * as SplashScreen from "expo-splash-screen";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMModal = ({ options, modalStyle }) => {
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_500Medium,
   });
-
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
     return null;
@@ -30,6 +34,7 @@ const CMModal = ({ options, modalStyle }) => {
           <Text style={[styles.modalText, option.textStyle]}>
             {option.label}
           </Text>
+          <CMline/>
         </TouchableOpacity>
       ))}
     </View>
@@ -41,10 +46,10 @@ export default CMModal;
 const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
-    padding: 2,
-    borderRadius: 10,
+    padding: scaleSize(2),
+    borderRadius: scaleSize(10),
     justifyContent: "center",
-    paddingRight: 20,
+    paddingRight: scaleSize(20),
     // Shadow for iOS
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontFamily: "PlusJakartaSans_500Medium",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     paddingHorizontal: 10,
     paddingVertical: 5,
   },

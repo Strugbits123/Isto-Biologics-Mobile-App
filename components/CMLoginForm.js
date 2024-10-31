@@ -18,7 +18,6 @@ import Checkbox from "expo-checkbox";
 import { Link, useNavigation } from "@react-navigation/native";
 import { useLoginHandler } from "../authentication/LoginHandler";
 import Toast from "./Toast/Toast";
-// import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
   PlusJakartaSans_400Regular,
@@ -26,8 +25,18 @@ import {
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-// SplashScreen.preventAutoHideAsync();
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 
 const CMLoginForm = () => {
   const navigation = useNavigation();
@@ -102,12 +111,6 @@ const CMLoginForm = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (fontsLoaded || error) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, error]);
-
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -156,13 +159,16 @@ const CMLoginForm = () => {
               />
               {/* input icon of eye close and open */}
               <TouchableOpacity
-                style={{ position: "absolute", paddingHorizontal: 17 }}
+                style={{
+                  position: "absolute",
+                  paddingHorizontal: scaleSize(17),
+                }}
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               >
                 {isPasswordVisible ? (
-                  <OpenEyeIcon width={20} height={12} />
+                  <OpenEyeIcon width={scaleSize(20)} height={scaleSize(12)} />
                 ) : (
-                  <ClosedEyeIcon width={20} height={15} />
+                  <ClosedEyeIcon width={scaleSize(20)} height={scaleSize(15)} />
                 )}
               </TouchableOpacity>
             </View>
@@ -191,7 +197,7 @@ const CMLoginForm = () => {
         </View>
         <CMThemedButton
           title="Login"
-          icon={<ArrowRight width={20} height={20} />}
+          icon={<ArrowRight width={scaleSize(20)} height={scaleSize(20)} />}
           loading={isLoading}
           onPress={handleLogin}
         />
@@ -204,31 +210,31 @@ export default CMLoginForm;
 
 const styles = StyleSheet.create({
   container: {
-    gap: 18,
+    gap: scaleSize(18),
   },
   LoginText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 36,
+    fontSize: scaleFontSize(36),
   },
   inputContainer: {
-    marginTop: 15,
+    marginTop: scaleSize(15),
   },
   input: {
     fontFamily: "PlusJakartaSans_400Regular",
     minWidth: "100%",
-    paddingHorizontal: 15,
-    paddingVertical: 9,
+    paddingHorizontal: scaleSize(15),
+    paddingVertical: scaleSize(9),
     borderColor: "#E8ECF4",
-    borderWidth: 1,
-    fontSize: 14,
-    borderRadius: 8,
+    borderWidth: scaleSize(1),
+    fontSize: scaleFontSize(14),
+    borderRadius: scaleSize(8),
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
   },
   inputTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: ThemeTextColors.darkGray1,
-    marginBottom: 10,
+    marginBottom: scaleSize(10),
   },
   forgotPasswordAndCheckboxConatiner: {
     flexDirection: "row",
@@ -238,24 +244,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    left: 5,
+    left: scaleSize(5),
   },
   checkbox: {
     alignSelf: "center",
-    width: 13,
-    height: 13,
+    width: scaleSize(13),
+    height: scaleSize(13),
   },
   checkboxlabel: {
-    paddingHorizontal: 8,
-    paddingBottom: 4,
+    paddingHorizontal: scaleSize(8),
+    paddingBottom: scaleSize(4),
     fontFamily: "PlusJakartaSans_400Regular",
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     color: ThemeTextColors.gray1,
     justifyContent: "center",
     alignItems: "center",
   },
   forgotPasswordText: {
-    fontSize: 14,
+    fontSize: scaleFontSize(14),
     fontFamily: "PlusJakartaSans_400Regular",
     color: ThemeTextColors.gray,
   },

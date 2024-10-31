@@ -9,6 +9,20 @@ import {
   useFonts,
   PlusJakartaSans_700Bold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Dimensions, PixelRatio } from "react-native";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const scaleFontSize = (size) => {
+  const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
+
+
 
 const DocsScreen = () => {
   const { currentMemberData, updateCurrentMemberData } =
@@ -16,7 +30,7 @@ const DocsScreen = () => {
   const { profile } = currentMemberData || {};
 
   if (!currentMemberData) {
-    return <CMLoader size={30} />;
+    return <CMLoader size={scaleSize(30)} />;
   }
 
   let [fontsLoaded, error] = useFonts({
@@ -37,7 +51,7 @@ const DocsScreen = () => {
       </View>
 
       <ScrollView
-        style={{ top: 90 }}
+        style={{ top: scaleSize(90) }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
@@ -63,22 +77,22 @@ const styles = StyleSheet.create({
     backgroundColor: ThemeBgColors.mainBg,
   },
   headerContainer: {
-    top: 60,
+    top: scaleSize(60),
   },
   cardContainer: {
-    paddingHorizontal: 29,
-    top: 30,
+    paddingHorizontal: scaleSize(29),
+    top: scaleSize(30),
   },
   headingContainer: {
     flexDirection: "row",
-    paddingHorizontal: 27,
+    paddingHorizontal: scaleSize(27),
   },
   headingText: {
     fontFamily: "PlusJakartaSans_700Bold",
-    fontSize: 27,
+    fontSize: scaleFontSize(27),
     color: ThemeTextColors.darkGray1,
   },
   scrollViewContent: {
-    paddingBottom: 150, // Add some bottom padding to prevent content being hidden
+    paddingBottom: scaleSize(150), // Add some bottom padding to prevent content being hidden
   },
 });
