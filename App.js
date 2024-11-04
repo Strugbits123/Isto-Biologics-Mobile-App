@@ -9,24 +9,11 @@ import { LoginHandler } from "./authentication/LoginHandler";
 import App_Navigation from "./config/App_Navigation";
 import { PointsProvider } from "./components/PointsHandler";
 import { CurrentMemberProvider } from "./components/CurrentMemberHandler";
-import * as SplashScreen from "expo-splash-screen";
-import {
-  PlusJakartaSans_700Bold,
-  useFonts,
-} from "@expo-google-fonts/plus-jakarta-sans";
 
 // Prevent auto-hiding of the splash screen
-SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function App() {
-  const [fontsLoaded, fontsError] = useFonts({ PlusJakartaSans_700Bold });
-
-  React.useEffect(() => {
-    if (fontsLoaded || fontsError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontsError]);
   return (
     <>
       <QueryClientProvider client={queryClient}>
