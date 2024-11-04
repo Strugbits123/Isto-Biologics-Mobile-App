@@ -94,7 +94,7 @@ const HomeScreen = ({ isLoggedIn }) => {
   if (getCurrentMemberRes.isError) {
     setToastVisible(true);
     setIconType("error");
-    setErrorMessage(getCurrentMemberRes.error.message);
+    setErrorMessage(getCurrentMemberRes.error.message?.toString() || "An error occurred");
     setTimeout(() => setToastVisible(false), 5000);
     return;
   }

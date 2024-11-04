@@ -101,7 +101,7 @@ const CMLoginForm = () => {
     } catch (error) {
       setToastVisible(true);
       setIconType("error");
-      setErrorMessage(error);
+      setErrorMessage(error.message);
       setTimeout(() => {
         setToastVisible(false);
       }, 5000);
