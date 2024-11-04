@@ -166,7 +166,7 @@ const CMLoginForm = () => {
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               >
                 {isPasswordVisible ? (
-                  <OpenEyeIcon width={scaleSize(20)} height={scaleSize(12)} />
+                  <OpenEyeIcon width={scaleSize(20)} height={scaleSize(15)} />
                 ) : (
                   <ClosedEyeIcon width={scaleSize(20)} height={scaleSize(15)} />
                 )}
