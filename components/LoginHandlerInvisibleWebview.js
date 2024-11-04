@@ -1,4 +1,3 @@
-// import WebView from "expo-web-view";
 import { WebView } from "react-native-webview";
 import * as Linking from "expo-linking";
 import { useWixSession } from "../authentication/session";
