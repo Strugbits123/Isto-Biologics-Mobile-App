@@ -21,19 +21,19 @@ export function LoginHandler(props) {
       const data = myWixClient.auth.generateOAuthData(
         Linking.createURL("/oauth/wix/callback"),
       );
-      // console.log("data", data)
+      console.log("data", data)
       const { authUrl } = await myWixClient.auth.getAuthUrl(data, {
         prompt: "none",
         sessionToken,
       });
-      // console.log("authUrl", authUrl)
+      console.log("authUrl", authUrl)
       const result = await fetch(authUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      // console.log("result", result)
+      console.log("result", result)
       if (result.status === 400) {
         setSessionLoading(false);
         return Promise.reject(
