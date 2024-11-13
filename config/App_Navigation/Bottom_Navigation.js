@@ -77,8 +77,8 @@ const Bottom_Navigation = () => {
           tabBarIcon: ({ focused, color, size }) =>
             focused ? (
               <UnActiveDocsTabIcon
-                width={scaleSize(18)}
-                height={scaleSize(21)}
+                width={scaleSize(20)}
+                height={scaleSize(23)}
               />
             ) : (
               <DocsTabIcon width={scaleSize(18)} height={scaleSize(21)} />
