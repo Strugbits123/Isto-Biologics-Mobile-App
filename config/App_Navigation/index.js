@@ -64,7 +64,8 @@ const App_Navigation = () => {
     </View>
   ) : (
     <NavigationContainer>
-      <StatusBar style="auto" />
+      {/* <StatusBar style="auto" /> */}
+      <StatusBar style="dark" translucent backgroundColor="transparent" />
       {isLoggedIn ? (
         <Stack.Navigator
           screenOptions={{
