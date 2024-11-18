@@ -15,6 +15,16 @@
             "node_modules/@expo-google-fonts/plus-jakarta-sans/PlusJakartaSans_800ExtraBold.ttf"
           ]
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+
+        {
+          "organization": "strugbits",
+          "note": "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",
+          "project": "react-native",
+          "url": "https://sentry.io/"
+        }
       ]
     ],
     "splash": {

@@ -27,6 +27,7 @@ import {
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { Dimensions, PixelRatio } from "react-native";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+import * as Sentry from "@sentry/react-native";
 
 const scaleFontSize = (size) => {
   const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
@@ -105,6 +106,7 @@ const CMLoginForm = () => {
       setTimeout(() => {
         setToastVisible(false);
       }, 5000);
+      Sentry.captureException(error);
       console.log("error in handle login", error);
     } finally {
       setIsLoading(false);

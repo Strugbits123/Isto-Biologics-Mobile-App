@@ -4,7 +4,7 @@ import { useWixSession } from "./session";
 import validator from "validator";
 import WebView from "react-native-webview";
 import { myWixClient } from "../utils/createClient";
-
+import * as Sentry from "@sentry/react-native";
 const LoginHandlerContext = React.createContext(null);
 
 export function useLoginHandler() {
@@ -21,19 +21,22 @@ export function LoginHandler(props) {
       const data = myWixClient.auth.generateOAuthData(
         Linking.createURL("/oauth/wix/callback"),
       );
-      // console.log("data", data)
+      console.log("data", data)
+      Sentry.captureException(data);
       const { authUrl } = await myWixClient.auth.getAuthUrl(data, {
         prompt: "none",
         sessionToken,
       });
-      // console.log("authUrl", authUrl)
+      console.log("authUrl", authUrl)
+      Sentry.captureException(authUrl);
       const result = await fetch(authUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      // console.log("result", result)
+      console.log("result", result)
+      Sentry.captureException(result);
       if (result.status === 400) {
         setSessionLoading(false);
         return Promise.reject(
@@ -62,7 +65,8 @@ export function LoginHandler(props) {
         email,
         password,
       });
-      console.log("result", result)
+      console.log("Login result", result)
+      Sentry.captureException(result);
       if (!result?.data?.sessionToken) {
         setSessionLoading(false);
         if (result?.loginState === "FAILURE") {
@@ -110,7 +114,7 @@ function LoginHandlerInvisibleWebview(props) {
     return (
       <WebView
         source={{ uri: props.loginState.url }}
-        originWhitelist={["exp://*", "wixmobileheadless://*"]}
+        originWhitelist={["exp://*", "istobiologics://*"]}
         containerStyle={{ display: "none" }}
         onShouldStartLoadWithRequest={(request) => {
           if (
@@ -120,6 +124,8 @@ function LoginHandlerInvisibleWebview(props) {
               request.url,
               props.loginState.data,
             );
+            console.log("code & state in invisible Webview", code, state)
+            Sentry.captureException(code);
             myWixClient.auth
               .getMemberTokens(code, state, props.loginState.data)
               .then((tokens) => {
