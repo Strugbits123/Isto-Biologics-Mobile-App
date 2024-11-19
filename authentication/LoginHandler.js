@@ -22,7 +22,7 @@ export function LoginHandler(props) {
         Linking.createURL("/oauth/wix/callback"),
       );
       console.log("data", data)
-      Sentry.captureException(data);
+      Sentry.captureException(JSON.stringify(data));
       const { authUrl } = await myWixClient.auth.getAuthUrl(data, {
         prompt: "none",
         sessionToken,
@@ -36,7 +36,7 @@ export function LoginHandler(props) {
         },
       });
       console.log("result", result)
-      Sentry.captureException(result);
+      Sentry.captureException(JSON.stringify(result));
       if (result.status === 400) {
         setSessionLoading(false);
         return Promise.reject(
