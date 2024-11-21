@@ -42,7 +42,6 @@ const scaleSize = (size) => {
   return PixelRatio.roundToNearestPixel(size * scale);
 };
 
-
 const CMProfileCard = () => {
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
@@ -141,6 +140,7 @@ const CMProfileCard = () => {
         // Update only name if no image is selected
         updatedMemberDataToSend = {
           contact: { firstName: name },
+          profile: { nickname: name },
         };
       } else {
         imageResponse = await uploadMyFile(image);
@@ -151,6 +151,7 @@ const CMProfileCard = () => {
               _id: imageResponse?.file?.id,
               url: imageResponse?.file?.url,
             },
+            nickname: name,
           },
         };
       }
@@ -264,7 +265,6 @@ const CMProfileCard = () => {
 
   // Hide the modal dialog
   const hideDialog = () => setVisible(false);
-
 
   if (!fontsLoaded && !errorFonts) {
     return null;

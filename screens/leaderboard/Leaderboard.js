@@ -181,7 +181,7 @@ const Leaderboard = () => {
   }, [productCategory]);
 
   // Render a single leaderboard item
-  console.log("leaderboardData==>",LeaderboardData[2]?.data.user_id);
+  console.log("leaderboardData==>", LeaderboardData[1]?.data.user_id);
 
   //flatlist rederItem function for render list
   const renderItem = ({ item, index }) => {
@@ -302,7 +302,9 @@ const Leaderboard = () => {
               {LeaderboardData.length > 1 &&
               LeaderboardData[1]?.data?.user_id?.profilePhoto ? (
                 <Image
-                  source={{ uri: LeaderboardData[1]?.data?.user_id?.profilePhoto }}
+                  source={{
+                    uri: LeaderboardData[1]?.data?.user_id?.profilePhoto,
+                  }}
                   style={styles.positionsProfileImage}
                 />
               ) : (
@@ -435,7 +437,9 @@ const Leaderboard = () => {
               {LeaderboardData.length > 2 &&
               LeaderboardData[2]?.data?.user_id?.profilePhoto ? (
                 <Image
-                  source={{ uri: LeaderboardData[2]?.data?.user_id?.profilePhoto }}
+                  source={{
+                    uri: LeaderboardData[2]?.data?.user_id?.profilePhoto,
+                  }}
                   style={styles.positionsProfileImage}
                 />
               ) : (
@@ -517,17 +521,25 @@ const Leaderboard = () => {
               }}
               ListEmptyComponent={
                 // Show a message when the list is empty
-                <Text
+                <View
                   style={{
                     flex: 1,
-                    fontSize: scaleFontSize(16),
-                    color: ThemeTextColors.placeholder,
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  Users available. Pull down to refresh.
-                </Text>
+                  <Text
+                    style={{
+                      flex: 1,
+                      fontSize: scaleFontSize(16),
+                      color: ThemeTextColors.placeholder,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    Users unavailable!
+                  </Text>
+                </View>
               }
               showsVerticalScrollIndicator={false}
               refreshing={refreshing} // Bind refreshing state to FlatList
@@ -572,8 +584,8 @@ const styles = StyleSheet.create({
     borderWidth: scaleSize(2),
   },
   imageContainerCrown: {
-    width: scaleSize(73),
-    height: scaleSize(73),
+    width: scaleSize(72),
+    height: scaleSize(72),
     backgroundColor: ThemeBgColors.white,
     borderRadius: scaleSize(60),
     alignItems: "center",

@@ -134,6 +134,7 @@ const CMProductLine = ({
             <View style={styles.dropDownContainer}>
               {category.products.map((product) => (
                 <Pressable
+                  key={product.value}
                   onPress={() =>
                     onCheckboxChange(category.categoryName, product.value)
                   }
