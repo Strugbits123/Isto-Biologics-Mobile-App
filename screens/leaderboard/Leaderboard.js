@@ -181,7 +181,7 @@ const Leaderboard = () => {
   }, [productCategory]);
 
   // Render a single leaderboard item
-  console.log("leaderboardData==>",LeaderboardData[1]?.data.user_id);
+  console.log("leaderboardData==>",LeaderboardData[2]?.data.user_id);
 
   //flatlist rederItem function for render list
   const renderItem = ({ item, index }) => {
