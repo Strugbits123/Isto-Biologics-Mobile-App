@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Pressable
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { HelperText } from "react-native-paper";
 import OpenEyeIcon from "../Icons/OpenEyeIcon";
@@ -50,6 +51,8 @@ const CMLoginForm = () => {
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
 
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_400Regular,
@@ -127,6 +130,7 @@ const CMLoginForm = () => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputTitle}>Email</Text>
             <TextInput
+              ref={emailInputRef} // Assign ref
               style={styles.input}
               onChangeText={(text) => {
                 handle_onChange_Text("email", text);
@@ -136,6 +140,8 @@ const CMLoginForm = () => {
               autoCorrect={false}
               autoCapitalize="none"
               placeholder={"Enter your email"}
+              returnKeyType="next" // Specify "next" button on keyboard
+              onSubmitEditing={() => passwordInputRef.current?.focus()} // Move focus to password
             />
             {errors.email && (
               <HelperText type="error" visible={true}>
@@ -148,6 +154,7 @@ const CMLoginForm = () => {
             <Text style={styles.inputTitle}>Password</Text>
             <View style={{ justifyContent: "center", alignItems: "flex-end" }}>
               <TextInput
+                ref={passwordInputRef} // Assign ref
                 style={styles.input}
                 secureTextEntry={isPasswordVisible}
                 value={data.password}
@@ -158,6 +165,8 @@ const CMLoginForm = () => {
                 autoCorrect={false}
                 autoCapitalize="none"
                 placeholder={"Enter your password"}
+                returnKeyType="done" // Specify "done" button on keyboard
+                onSubmitEditing={handleLogin} // Trigger login on "done"
               />
               {/* input icon of eye close and open */}
               <TouchableOpacity
@@ -183,17 +192,20 @@ const CMLoginForm = () => {
         </View>
         {/* This is the container of Remember me checkbox and forgot password */}
         <View style={styles.forgotPasswordAndCheckboxConatiner}>
-          <View style={styles.checkboxContainer}>
-            <Checkbox
-              value={isChecked}
-              onValueChange={() => {
-                setIsChecked(!isChecked);
-              }}
-              style={styles.checkbox}
-              color={isChecked ? ThemeTextColors.darkOrange : undefined}
-            />
-            <Text style={styles.checkboxlabel}>Remember me</Text>
-          </View>
+            <Pressable
+              style={styles.checkboxContainer}
+              onPress={() => setIsChecked(!isChecked)} // Toggle checkbox state on container click
+            >
+              <Checkbox
+                value={isChecked}
+                onValueChange={() => {
+                  setIsChecked(!isChecked);
+                }}
+                style={styles.checkbox}
+                color={isChecked ? ThemeTextColors.darkOrange : undefined}
+              />
+              <Text style={styles.checkboxlabel}>Remember me</Text>
+            </Pressable>
           {/* This link tag for forgot password */}
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </View>
@@ -250,8 +262,8 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     alignSelf: "center",
-    width: scaleSize(13),
-    height: scaleSize(13),
+    width: scaleSize(14),
+    height: scaleSize(14),
   },
   checkboxlabel: {
     paddingHorizontal: scaleSize(8),

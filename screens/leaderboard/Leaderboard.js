@@ -113,7 +113,7 @@ const Leaderboard = () => {
   const [LeaderboardData, setLeaderboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const { profile } = currentMemberData || {};
+  const { profile, contact } = currentMemberData || {};
 
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
@@ -181,20 +181,20 @@ const Leaderboard = () => {
   }, [productCategory]);
 
   // Render a single leaderboard item
-  // console.log("leaderboardData==>", LeaderboardData);
+  console.log("leaderboardData==>",LeaderboardData[1]?.data.user_id);
 
   //flatlist rederItem function for render list
   const renderItem = ({ item, index }) => {
     // Example: Define your ID to compare for checking if it's "myRank"
     const myRankId = currentMemberData?._id || id;
     // console.log("myRankId",myRankId)
-    const isMyRank = item.data.user_id._id === myRankId;
+    const isMyRank = item?.data?.user_id?._id === myRankId;
 
     // Adjust the index to start ranking from 4
     const rank = index + 1; // Start rank from 4 instead of 1
 
     return (
-      <View key={item.data.user_id._id}>
+      <View key={item?.data?.user_id?._id}>
         {/* Apply gradient only if it's my rank */}
         {isMyRank ? (
           <LinearGradient
@@ -208,9 +208,9 @@ const Leaderboard = () => {
           >
             {/* Render adjusted rank using rank variable */}
             <Text style={[styles.rankText, styles.myRankText]}>{rank}</Text>
-            {item.data.user_id?.profilePhoto ? (
+            {item?.data?.user_id?.profilePhoto ? (
               <Image
-                source={{ uri: item.data.user_id.profilePhoto }}
+                source={{ uri: item?.data?.user_id?.profilePhoto }}
                 style={styles.profileImage}
               />
             ) : (
@@ -219,7 +219,7 @@ const Leaderboard = () => {
               </View>
             )}
             <Text style={[styles.nameText, styles.myRankText]}>
-              {item.data.user_id.firstName || item.data.user_id.nickname}
+              {item?.data?.user_id?.firstName || item?.data?.user_id?.nickname}
             </Text>
             <Text style={[styles.scoreText, styles.myRankText]}>
               {item.data[headerData.points_field]}
@@ -230,9 +230,9 @@ const Leaderboard = () => {
           <View style={styles.itemContainer}>
             {/* Render adjusted rank using rank variable */}
             <Text style={styles.rankText}>{rank}</Text>
-            {item.data.user_id.profilePhoto ? (
+            {item?.data?.user_id?.profilePhoto ? (
               <Image
-                source={{ uri: item.data.user_id.profilePhoto }}
+                source={{ uri: item?.data?.user_id?.profilePhoto }}
                 style={styles.profileImage}
               />
             ) : (
@@ -241,7 +241,7 @@ const Leaderboard = () => {
               </View>
             )}
             <Text style={styles.nameText}>
-              {item.data.user_id.firstName || item.data.user_id.nickname}
+              {item?.data?.user_id?.firstName || item?.data?.user_id?.nickname}
             </Text>
             <Text style={styles.scoreText}>
               {item.data[headerData.points_field]}
@@ -300,9 +300,9 @@ const Leaderboard = () => {
             {/* Profile image or placeholder for Rank 02 */}
             <View style={styles.imageContainer}>
               {LeaderboardData.length > 1 &&
-              LeaderboardData[1].data.user_id.profilePhoto ? (
+              LeaderboardData[1]?.data?.user_id?.profilePhoto ? (
                 <Image
-                  source={{ uri: LeaderboardData[1].data.user_id.profilePhoto }}
+                  source={{ uri: LeaderboardData[1]?.data?.user_id?.profilePhoto }}
                   style={styles.positionsProfileImage}
                 />
               ) : (
@@ -319,8 +319,8 @@ const Leaderboard = () => {
               }}
             >
               {LeaderboardData.length > 1
-                ? LeaderboardData[1].data.user_id.firstName ||
-                  LeaderboardData[1].data.user_id.nickname
+                ? LeaderboardData[1]?.data?.user_id?.firstName ||
+                  LeaderboardData[1]?.data?.user_id?.nickname
                 : "User"}
             </Text>
           </View>
@@ -358,10 +358,10 @@ const Leaderboard = () => {
               >
                 <View style={styles.imageContainerCrown}>
                   {LeaderboardData.length > 0 &&
-                  LeaderboardData[0].data.user_id.profilePhoto ? (
+                  LeaderboardData[0]?.data?.user_id?.profilePhoto ? (
                     <Image
                       source={{
-                        uri: LeaderboardData[0].data.user_id.profilePhoto,
+                        uri: LeaderboardData[0]?.data?.user_id?.profilePhoto,
                       }}
                       style={{
                         justifyContent: "center",
@@ -394,8 +394,8 @@ const Leaderboard = () => {
               }}
             >
               {LeaderboardData.length > 0
-                ? LeaderboardData[0].data.user_id.firstName ||
-                  LeaderboardData[0].data.user_id.nickname
+                ? LeaderboardData[0]?.data?.user_id?.firstName ||
+                  LeaderboardData[0]?.data?.user_id?.nickname
                 : "User"}
             </Text>
           </View>
@@ -433,9 +433,9 @@ const Leaderboard = () => {
             {/* Profile image or placeholder for Rank 03 */}
             <View style={styles.imageContainer}>
               {LeaderboardData.length > 2 &&
-              LeaderboardData[2].data.user_id.profilePhoto ? (
+              LeaderboardData[2]?.data?.user_id?.profilePhoto ? (
                 <Image
-                  source={{ uri: LeaderboardData[2].data.user_id.profilePhoto }}
+                  source={{ uri: LeaderboardData[2]?.data?.user_id?.profilePhoto }}
                   style={styles.positionsProfileImage}
                 />
               ) : (
@@ -452,8 +452,8 @@ const Leaderboard = () => {
               }}
             >
               {LeaderboardData.length > 2
-                ? LeaderboardData[2].data.user_id.firstName ||
-                  LeaderboardData[2].data.user_id.nickname
+                ? LeaderboardData[2]?.data?.user_id?.firstName ||
+                  LeaderboardData[2]?.data?.user_id?.nickname
                 : "User"}
             </Text>
           </View>

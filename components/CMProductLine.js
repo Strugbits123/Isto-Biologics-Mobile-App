@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Pressable,
+} from "react-native";
 import React, { useState } from "react";
 import CMCheckbox from "./CMCheckbox";
 import DownArrowIcon from "../Icons/DownArrowIcon";
@@ -111,37 +117,46 @@ const CMProductLine = ({
           key={category.categoryName}
           style={styles.containerSelectCategory}
         >
-          <View style={styles.selectorInput}>
+          <Pressable
+            onPress={() => toggleDropdown(category.categoryName)}
+            style={styles.selectorInput}
+          >
             <Text style={styles.selectorTitle}>{category.categoryName}</Text>
             <TouchableOpacity
               onPress={() => toggleDropdown(category.categoryName)}
             >
               <DownArrowIcon width={scaleSize(13)} height={scaleSize(12)} />
             </TouchableOpacity>
-          </View>
+          </Pressable>
 
           {/* Render checkboxes for the products if the category is visible */}
           {visibleCategory === category.categoryName && (
             <View style={styles.dropDownContainer}>
               {category.products.map((product) => (
-                <CMCheckbox
-                  key={product.value}
-                  value={
-                    checkboxes[category.categoryName]?.includes(
-                      product.value,
-                    ) || false
-                  }
-                  onValueChange={() =>
+                <Pressable
+                  onPress={() =>
                     onCheckboxChange(category.categoryName, product.value)
                   }
-                  lable={product.label}
-                  checkoxStyle={{ borderColor: ThemeTextColors.gray1 }}
-                  lableStyle={{
-                    fontFamily: "PlusJakartaSans_400Regular",
-                    fontSize: scaleFontSize(14),
-                    color: ThemeTextColors.gray1,
-                  }}
-                />
+                >
+                  <CMCheckbox
+                    key={product.value}
+                    value={
+                      checkboxes[category.categoryName]?.includes(
+                        product.value,
+                      ) || false
+                    }
+                    onValueChange={() =>
+                      onCheckboxChange(category.categoryName, product.value)
+                    }
+                    lable={product.label}
+                    checkoxStyle={{ borderColor: ThemeTextColors.gray1 }}
+                    lableStyle={{
+                      fontFamily: "PlusJakartaSans_400Regular",
+                      fontSize: scaleFontSize(14),
+                      color: ThemeTextColors.gray1,
+                    }}
+                  />
+                </Pressable>
               ))}
             </View>
           )}

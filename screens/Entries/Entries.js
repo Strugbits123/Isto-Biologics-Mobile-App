@@ -60,7 +60,7 @@ const Entries = () => {
         >
           {/*  heading of Entries page  */}
           <View style={styles.headingContainer}>
-            <Text style={styles.headingText}>Entires</Text>
+            <Text style={styles.headingText}>Entries</Text>
           </View>
         </View>
         {/*  Entries Card Component  */}

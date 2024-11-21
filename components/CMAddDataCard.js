@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CMline from "./CMline";
@@ -74,7 +74,7 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
       </View>
 
       <View style={styles.selectionContainer}>
-        <View style={styles.insideSelectionContainer}>
+        <Pressable  onPress={() => handleCheckboxChange("hospital")}  style={styles.insideSelectionContainer}>
           {/* Hospital Checkbox */}
           <CMCheckbox
             lable={"Hospital/Facility"}
@@ -84,9 +84,9 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
           <View>
             <HospitalIcon width={scaleSize(40)} height={scaleSize(40)} />
           </View>
-        </View>
+        </Pressable>
         <CMline />
-        <View style={styles.insideSelectionContainer}>
+        <Pressable onPress={() => handleCheckboxChange("doctor")} style={styles.insideSelectionContainer}>
           {/* Doctor Checkbox */}
           <CMCheckbox
             lable={"Doctor"}
@@ -96,7 +96,7 @@ const CMAddDataCard = ({ isUpdateItem, currentMember }) => {
           <View>
             <DoctorIcon width={scaleSize(40)} height={scaleSize(40)} />
           </View>
-        </View>
+        </Pressable>
         <CMline />
       </View>
       {/* Always render the Doctor form */}

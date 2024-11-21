@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Pressable } from "react-native";
 import React from "react";
 import DownArrowIcon from "../../Icons/DownArrowIcon";
 import { ThemeTextColors } from "../../theme/theme";
@@ -29,7 +29,8 @@ const CMClosedPointCard = ({ onPress, listNumber, title }) => {
   }
   return (
     <View style={styles.closedCardContainer}>
-      <View
+      <Pressable
+      onPress={onPress}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -48,7 +49,7 @@ const CMClosedPointCard = ({ onPress, listNumber, title }) => {
             height={scaleSize(15)}
           />
         </TouchableOpacity>
-      </View>
+      </Pressable>
     </View>
   );
 };

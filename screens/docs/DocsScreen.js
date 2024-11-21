@@ -22,8 +22,6 @@ const scaleSize = (size) => {
   return PixelRatio.roundToNearestPixel(size * scale);
 };
 
-
-
 const DocsScreen = () => {
   const { currentMemberData, updateCurrentMemberData } =
     useContext(CurrentMemberContext);
@@ -50,16 +48,16 @@ const DocsScreen = () => {
         />
       </View>
 
+      {/*  heading of Entries page  */}
+      <View style={styles.headingContainer}>
+        <Text style={styles.headingText}>Contest Rules & Guidelines</Text>
+      </View>
+
       <ScrollView
         style={{ top: scaleSize(90) }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of Entries page  */}
-        <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>Contest Rules & Guidelines</Text>
-        </View>
-
         {/*  Entries Card Component  */}
         <View style={styles.cardContainer}>
           <CMDocsCard />
@@ -86,6 +84,7 @@ const styles = StyleSheet.create({
   headingContainer: {
     flexDirection: "row",
     paddingHorizontal: scaleSize(27),
+    top: scaleSize(80)
   },
   headingText: {
     fontFamily: "PlusJakartaSans_700Bold",

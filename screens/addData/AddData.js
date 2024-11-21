@@ -5,9 +5,11 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMAddDataCard from "../../components/CMAddDataCard";
 import { useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
-import { useFonts,PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 import { Dimensions, PixelRatio } from "react-native";
-
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -55,19 +57,18 @@ const AddData = () => {
           name={profile?.nickname}
         />
       </View>
+      {/*  heading of Add data */}
+      <View style={styles.headingContainer}>
+        <Text style={styles.headingText}>
+          {isUpdate ? "Update Data" : "Add Data"}
+        </Text>
+      </View>
 
       <ScrollView
         style={{ top: scaleSize(90) }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of Add data */}
-        <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>
-            {isUpdate ? "Update Data" : "Add Data"}
-          </Text>
-        </View>
-
         {/*  add data Card Component  */}
         <View style={styles.cardContainer}>
           <CMAddDataCard
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
   headingContainer: {
     flexDirection: "row",
     paddingHorizontal: scaleSize(27),
+    top: scaleSize(80)
   },
   headingText: {
     fontFamily: "PlusJakartaSans_700Bold",

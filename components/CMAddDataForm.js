@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import CMInput from "./CMInput";
 import CMDateInput from "./CMDateInput";
 import CMProductLine from "./CMProductLine";
@@ -35,6 +35,10 @@ const CMAddDataForm = ({
   const [toastVisible, setToastVisible] = useState(false); // Toast visibility state
   const [iconType, setIconType] = useState(""); // Icon type for toast
   const [errorMessage, setErrorMessage] = useState(""); // Error or success message for toast
+
+  const doctorFirstNameRef = useRef(null);
+  const doctorLastNameRef = useRef(null);
+  const hospitalNameRef = useRef(null);
 
   // Checkbox product selection state categorized by product
   const [selectedProducts, setSelectedProducts] = useState({
@@ -515,26 +519,33 @@ const CMAddDataForm = ({
         {submisionType === "doctor" ? (
           <>
             <CMInput
+              ref={doctorFirstNameRef}
               title={"Doctor First Name"}
               placeholderText={"Enter"}
               value={data.doctorFirstName || ""}
               onChange={(text) => handle_onChange_Text("doctorFirstName", text)}
               error={!!errors.doctorFirstName}
               errorMessage={errors.doctorFirstName}
+              onSubmitEditing={() => doctorLastNameRef.current.focus()}
+              returnKeyType="next"
             />
             <CMInput
+              ref={doctorLastNameRef}
               title={"Doctor Last Name"}
               placeholderText={"Enter"}
               value={data.doctorLastName || ""}
               onChange={(text) => handle_onChange_Text("doctorLastName", text)}
               error={!!errors.doctorLastName}
               errorMessage={errors.doctorLastName}
+              onSubmitEditing={() => hospitalNameRef.current.focus()}
+              returnKeyType="next"
             />
           </>
         ) : (
           <></>
         )}
         <CMInput
+          ref={hospitalNameRef}
           title={"Hospital/Facility"}
           placeholderText={"Enter"}
           value={data.hospitalName || ""}

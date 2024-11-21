@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Pressable,
+} from "react-native";
 import React from "react";
 import UpArrowIcon from "../../Icons/UpArrowIcon";
 import { ThemeBgColors, ThemeTextColors } from "../../theme/theme";
@@ -31,7 +37,8 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
   }
   return (
     <View style={styles.openedCardContainer}>
-      <View
+      <Pressable
+        onPress={onPress}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -46,7 +53,7 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
         <TouchableOpacity onPress={onPress}>
           <UpArrowIcon width={scaleSize(20)} height={scaleSize(15)} />
         </TouchableOpacity>
-      </View>
+      </Pressable>
       {/* points list dynamic showing  */}
       <View style={styles.listContainer}>
         {points.map((point, index) => (

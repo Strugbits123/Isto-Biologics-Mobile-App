@@ -5,7 +5,10 @@ import CMHomeHeader from "../../components/CMHeader/CMHomeHeader";
 import CMDetailEntryCard from "../../components/CMDetailEntryCard";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import CMLoader from "../../components/CMLoader";
-import {useFonts, PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 import { Dimensions, PixelRatio } from "react-native";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -48,16 +51,16 @@ const DetailedEntry = () => {
         />
       </View>
 
+      {/*  heading of entires detailes page  */}
+      <View style={styles.headingContainer}>
+        <Text style={styles.headingText}>Entry Details</Text>
+      </View>
+
       <ScrollView
         style={{ top: scaleSize(90) }}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/*  heading of entires detailes page  */}
-        <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>Entry Details</Text>
-        </View>
-
         {/*  add data Card Component  */}
         <View style={styles.cardContainer}>
           <CMDetailEntryCard />
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
   headingContainer: {
     flexDirection: "row",
     paddingHorizontal: scaleSize(27),
+    top:scaleSize(80)
   },
   headingText: {
     fontFamily: "PlusJakartaSans_700Bold",

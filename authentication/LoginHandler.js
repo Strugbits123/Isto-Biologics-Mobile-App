@@ -21,13 +21,13 @@ export function LoginHandler(props) {
       const data = myWixClient.auth.generateOAuthData(
         Linking.createURL("/oauth/wix/callback"),
       );
-      console.log("data", data)
+      // console.log("data", data)
       Sentry.captureException(JSON.stringify(data));
       const { authUrl } = await myWixClient.auth.getAuthUrl(data, {
         prompt: "none",
         sessionToken,
       });
-      console.log("authUrl", authUrl)
+      // console.log("authUrl", authUrl)
       Sentry.captureException(authUrl);
       const result = await fetch(authUrl, {
         method: "GET",
@@ -35,7 +35,7 @@ export function LoginHandler(props) {
           "Content-Type": "application/json",
         },
       });
-      console.log("result", result)
+      // console.log("result", result)
       Sentry.captureException(JSON.stringify(result));
       if (result.status === 400) {
         setSessionLoading(false);
@@ -65,7 +65,7 @@ export function LoginHandler(props) {
         email,
         password,
       });
-      console.log("Login result", result)
+      // console.log("Login result", result)
       Sentry.captureException(result);
       if (!result?.data?.sessionToken) {
         setSessionLoading(false);
@@ -124,7 +124,7 @@ function LoginHandlerInvisibleWebview(props) {
               request.url,
               props.loginState.data,
             );
-            console.log("code & state in invisible Webview", code, state)
+            // console.log("code & state in invisible Webview", code, state)
             Sentry.captureException(code);
             myWixClient.auth
               .getMemberTokens(code, state, props.loginState.data)
