@@ -123,7 +123,7 @@ const CMLoginForm = () => {
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.LoginText}>Login</Text>
+        <Text style={styles.LoginText}>Log in</Text>
         {/* inputs under this container */}
         <View>
           {/* This is container of email input */}

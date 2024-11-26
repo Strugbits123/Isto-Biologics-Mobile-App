@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     fontSize: scaleFontSize(14),
     borderRadius: scaleSize(8),
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
+    color: ThemeTextColors.darkGray1,
   },
   inputTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",

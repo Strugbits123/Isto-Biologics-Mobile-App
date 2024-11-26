@@ -55,11 +55,11 @@ const productCategoryConfig = {
   },
   Influx: {
     colors: [productsBgColors.influx, productsBgColors.influx],
-    iconColor: ThemeTextColors.darkGray1,
+    iconColor: ThemeTextColors.white,
     headerTitle: "Influx",
     points_field: "total_influx_points",
-    rankingName: ThemeTextColors.darkGray1,
-    headerTitleStyle: { color: ThemeTextColors.darkGray1 },
+    rankingName: ThemeTextColors.white,
+    headerTitleStyle: { color: ThemeTextColors.white },
   },
   SPARC: {
     colors: [productsBgColors.sparc1, productsBgColors.sparc2],
@@ -211,10 +211,10 @@ const Leaderboard = () => {
             {item?.data?.user_id?.profilePhoto ? (
               <Image
                 source={{ uri: item?.data?.user_id?.profilePhoto }}
-                style={styles.profileImage}
+                style={styles.myProfileImage}
               />
             ) : (
-              <View style={styles.profileImage}>
+              <View style={styles.myProfileImage}>
                 <MenIcon width={scaleSize(25)} height={scaleSize(21)} />
               </View>
             )}
@@ -656,6 +656,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: scaleSize(10),
+    borderLeftColor: ThemeTextColors.white,
+    borderLeftWidth: scaleSize(3),
   },
   topRankContainer: {
     backgroundColor: "#FFF4E0", // Light background for top ranks
@@ -676,7 +678,16 @@ const styles = StyleSheet.create({
     height: scaleSize(50),
     borderRadius: scaleSize(25),
     borderColor: ThemeTextColors.darkGray1,
-    borderWidth: scaleSize(1),
+    borderWidth: scaleSize(2),
+  },
+  myProfileImage: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: scaleSize(50),
+    height: scaleSize(50),
+    borderRadius: scaleSize(25),
+    borderColor: ThemeTextColors.orange,
+    borderWidth: scaleSize(2),
   },
   positionsProfileImage: {
     justifyContent: "center",

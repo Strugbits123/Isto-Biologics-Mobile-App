@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Image,
+  Pressable,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
@@ -22,6 +23,7 @@ import * as FileSystem from "expo-file-system";
 import { Buffer } from "buffer";
 import { CurrentMemberContext } from "./CurrentMemberHandler";
 import Toast from "./Toast/Toast";
+import CMLine from "./CMline";
 import {
   useFonts,
   PlusJakartaSans_700Bold,
@@ -273,7 +275,7 @@ const CMProfileCard = () => {
   return (
     <View style={styles.container}>
       {/* Container of profile in card  */}
-      <View style={styles.profileContainer}>
+      <Pressable onPress={() => setVisible(true)} style={styles.profileContainer}>
         <View style={styles.avatarContainer}>
           {/* when this condition got true so render image and must size is 110 110  */}
           {imageUri ? (
@@ -288,15 +290,15 @@ const CMProfileCard = () => {
           )}
         </View>
         <TouchableOpacity onPress={() => setVisible(true)}>
-          <Text style={styles.nameText}>Change photo</Text>
+          <Text style={styles.nameText}>Change Photo</Text>
         </TouchableOpacity>
-      </View>
+      </Pressable>
 
       {/* Container of Input fields in card*/}
       <View style={{ width: "100%", gap: 0, paddingHorizontal: scaleSize(2) }}>
         {/* This is container of full name or team name input */}
         <View style={styles.inputContainer}>
-          <Text style={styles.inputTitle}>Full Name</Text>
+          <Text style={styles.inputTitle}>Full Name/Team Name </Text>
           <TextInput
             style={styles.input}
             value={name}
@@ -345,7 +347,10 @@ const CMProfileCard = () => {
       <Modal transparent={true} animationType="slide" visible={visible}>
         <View style={styles.modalContainer}>
           <View>
-            <View style={styles.modalContent}>
+            <Pressable
+              onPress={pickImageFromGallery}
+              style={styles.modalContent}
+            >
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
@@ -358,8 +363,11 @@ const CMProfileCard = () => {
                 <GalleryIcon width={scaleSize(20)} height={scaleSize(20)} />
                 <Text style={styles.modalButton}>Gallery</Text>
               </TouchableOpacity>
-            </View>
-            <View style={styles.modalContent}>
+            </Pressable>
+            <Pressable
+              onPress={takeImageWithCamera}
+              style={styles.modalContent}
+            >
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
@@ -372,13 +380,13 @@ const CMProfileCard = () => {
                 <CameraIcon width={scaleSize(20)} height={scaleSize(20)} />
                 <Text style={styles.modalButton}>Camera</Text>
               </TouchableOpacity>
-            </View>
+            </Pressable>
           </View>
-          <View style={styles.modalContent}>
+          <Pressable onPress={hideDialog} style={styles.modalContent}>
             <TouchableOpacity onPress={hideDialog}>
               <Text style={styles.modalButton}>Cancel</Text>
             </TouchableOpacity>
-          </View>
+          </Pressable>
         </View>
       </Modal>
       <Toast visible={toastVisible} type={iconType} message={message} />
@@ -450,6 +458,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: scaleSize(10),
+    borderBottomWidth:scaleSize(1),
+    borderBottomColor:ThemeTextColors.lineColor
+    
   },
   modalButton: {
     fontFamily: "PlusJakartaSans_500Medium",

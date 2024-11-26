@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
@@ -248,7 +249,7 @@ const CMEntryCard = ({ currentMember, id }) => {
   }
   // Render each entry card
   const renderItem = ({ item, index }) => (
-    <View style={styles.cardContainer}>
+    <Pressable  onPress={() => handleThreeDotPress(item, index)} style={styles.cardContainer}>
       <View style={styles.headerContainer}>
         <View style={styles.EntryTitleIcon}>
           {item.data.doctor_firstname ? (
@@ -318,7 +319,7 @@ const CMEntryCard = ({ currentMember, id }) => {
           }}
         />
       )}
-    </View>
+    </Pressable>
   );
 
   return isLoading ? (

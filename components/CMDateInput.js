@@ -7,7 +7,7 @@ import {
   Modal,
   Platform,
 } from "react-native";
-import React, { useState, useRef  } from "react";
+import React, { useState, useRef } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CalenderIcon from "../Icons/CalenderIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -49,10 +49,17 @@ const CMDateInput = ({
     PlusJakartaSans_600SemiBold,
   });
   const onChangeDate = (event, selectedDate) => {
-    setShowPicker(Platform.OS === "ios");
+    if (event.type === "dismissed") {
+      // Handle cancellation
+      setShowPicker(false); // Close the picker
+      onChange(""); // Set the value to an empty string
+      return;
+    }
+
+    setShowPicker(Platform.OS === "ios"); // Keep it open only for iOS in inline mode
     if (selectedDate) {
       setDate(selectedDate);
-      onChange(selectedDate.toDateString()); // Formatting the date as per your needs
+      onChange(selectedDate.toDateString()); // Format the date as needed
     }
   };
 
@@ -75,11 +82,14 @@ const CMDateInput = ({
       >
         <TextInput
           style={[styles.input, inputStyle]}
-          value={value ? value : date.toDateString()}
+          value={value ? value : ""}
+          placeholder={placeholderText}
           placeholderTextColor={ThemeTextColors.placeholder}
           editable={false} // Disable manual editing, date is picked via picker
         />
-        <View style={{ position: "absolute", paddingHorizontal: scaleSize(17) }}>
+        <View
+          style={{ position: "absolute", paddingHorizontal: scaleSize(17) }}
+        >
           <CalenderIcon width={scaleSize(19)} height={scaleSize(19)} />
         </View>
       </TouchableOpacity>
@@ -90,6 +100,7 @@ const CMDateInput = ({
           mode="date"
           display="default"
           onChange={onChangeDate}
+          maximumDate={new Date()}
         />
       )}
 
@@ -118,6 +129,7 @@ const styles = StyleSheet.create({
     fontSize: scaleFontSize(14),
     borderRadius: scaleSize(8),
     backgroundColor: ThemeBgColors.lightGrayPlaceholders,
+    color: ThemeTextColors.darkGray1,
   },
   inputTitle: {
     fontFamily: "PlusJakartaSans_600SemiBold",

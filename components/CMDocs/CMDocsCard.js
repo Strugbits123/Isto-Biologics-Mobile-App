@@ -44,7 +44,7 @@ const CMDocsCard = () => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.mainHeadingText}>How do I get points?</Text>
+        <Text style={styles.mainHeadingText}>How Do I Get Points?</Text>
       </View>
       {/* this container use for list down cards for points */}
       <View style={{ gap: scaleSize(20) }}>
@@ -101,7 +101,7 @@ const CMDocsCard = () => {
           >
             *New doctors and/or new product approvals do not count until the
             first case has taken place. Case information is required for
-            submission
+            submission.
           </Text>
         </View>
       </View>

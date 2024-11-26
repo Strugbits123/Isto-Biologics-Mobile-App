@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Pressable } from "react-native";
 import React, { useContext, useState } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CMline from "./CMline";
@@ -198,7 +198,7 @@ const CMDetailEntryCard = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable    onPress={() => hanleThreeDotPress(item)} style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.EntryTitleIcon}>
           {item.data.doctor_firstname ? (
@@ -241,6 +241,7 @@ const CMDetailEntryCard = () => {
               <Text style={styles.fieldTitle}>Doctor Last Name</Text>
               <Text style={styles.fieldValue}>{item.data.doctor_lastname}</Text>
             </View>
+            <CMline />
           </>
         )}
 
@@ -294,7 +295,7 @@ const CMDetailEntryCard = () => {
         />
       )}
       <Toast visible={toastVisible} type={iconType} message={errorMessage} />
-    </View>
+    </Pressable>
   );
 };
 

@@ -201,8 +201,19 @@ const CMAddDataForm = ({
       const { doctorFirstName, doctorLastName, firstCaseDate, hospitalName } =
         data;
 
-      const dateString = firstCaseDate;
-      const firstCaseDateObject = new Date(dateString);
+        const dateString = firstCaseDate;
+
+        // console.log("firstCaseDate", firstCaseDate);
+        const firstCaseDateObject = new Date(dateString);
+        
+        const formattedDate = firstCaseDateObject.toLocaleString("en-US", {
+          weekday: "short",
+          month: "short",  // "short" for abbreviated month (e.g., "Nov")
+          day: "numeric",  // Numeric day (e.g., 21)
+          year: "numeric", // Full year (e.g., 2024)
+        });
+        
+        // console.log("Formatted Date:", formattedDate);
 
       //de structure products
       const { Magellan, Influx, SPARC, InQu, Fibrant, ProteiOS } =
@@ -268,7 +279,7 @@ const CMAddDataForm = ({
         doctor_firstname: doctorFirstNameToSend,
         doctor_lastname: doctorLastNameToSend,
         hospital_name: hospitalName,
-        first_case_date: firstCaseDateObject,
+        first_case_date: formattedDate,
         magellan_category: Magellan,
         magellan_points: magellanPoints,
         influx_category: Influx,

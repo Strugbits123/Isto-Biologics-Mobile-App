@@ -56,11 +56,16 @@ const CMHomeHeader = ({
     PlusJakartaSans_600SemiBold,
   });
   useEffect(() => {
-    const currentHour = new Date().getHours();
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+    const currentMinute = currentDate.getMinutes();
 
     if (currentHour < 12) {
       setGreeting("Good Morning,");
-    } else if (currentHour < 18) {
+    } else if (
+      currentHour < 18 ||
+      (currentHour === 18 && currentMinute === 0)
+    ) {
       setGreeting("Good Afternoon,");
     } else {
       setGreeting("Good Evening,");

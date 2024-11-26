@@ -37,7 +37,7 @@ const Entries = () => {
   }
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
-  })
+  });
 
   if (!fontsLoaded && !error) {
     return null;
@@ -65,6 +65,22 @@ const Entries = () => {
         </View>
         {/*  Entries Card Component  */}
         <View style={styles.cardContainer}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "flex-end",
+              paddingBottom:scaleSize(3)
+            }}
+          >
+            <Text
+              style={{
+                fontSize: scaleFontSize(12),
+                color: ThemeTextColors.lightGray,
+              }}
+            >
+              Pull down to refresh the data.
+            </Text>
+          </View>
           <CMEntryCard
             id={currentMemberData?._id}
             currentMember={currentMemberData}

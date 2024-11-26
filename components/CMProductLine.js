@@ -77,7 +77,6 @@ const CMProductLine = ({
         { label: "Bullet", value: "bullet" },
         { label: "Liberty", value: "liberty" },
         { label: "Wrap", value: "wrap" },
-        { label: "Strip", value: "strip" },
         { label: "Boat", value: "boat" },
       ],
     },

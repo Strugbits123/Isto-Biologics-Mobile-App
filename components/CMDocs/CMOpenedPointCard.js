@@ -59,7 +59,24 @@ const CMOpenedPointCard = ({ onPress, listNumber, title, points = [] }) => {
         {points.map((point, index) => (
           <View key={index} style={styles.listItem}>
             <Text style={styles.bulletPoint}>•</Text>
-            <Text style={styles.listText}>{point}</Text>
+            <Text style={styles.listText}>
+              {/* Check for the specific sentence to apply italic styling */}
+              {point.includes("Dr. Smith has been a consistent Magellan user")
+                ? point.split("e.g., ").map((chunk, idx) =>
+                    idx === 1 ? (
+                      <Text key={idx}>
+                        e.g.,{" "}
+                        <Text style={styles.italicText}>
+                          {chunk.split("...")[0]}
+                        </Text>
+                        {" ..."} {chunk.split("...")[1]}
+                      </Text>
+                    ) : (
+                      chunk
+                    ),
+                  )
+                : point}
+            </Text>
           </View>
         ))}
       </View>
@@ -118,4 +135,9 @@ const styles = StyleSheet.create({
     fontSize: scaleFontSize(16),
     color: ThemeTextColors.extraLightGray,
   },
+  italicText: {
+    fontFamily: "PlusJakartaSans_400Regular",
+    fontStyle:"italic"
+  },
+  
 });

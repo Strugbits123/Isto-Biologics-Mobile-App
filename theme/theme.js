@@ -26,7 +26,7 @@ export const productsBgColors = {
   leaderboard2: "#006BA5",
   magellan1: "#3C2359",
   magellan2: "#814BBF",
-  influx: "#EFF8FE",
+  influx: "#00283F",
   sparc1: "#B0C03D",
   sparc2: "#7D863D",
   inqu: "#00BCE4",
