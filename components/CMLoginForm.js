@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Pressable
+  Pressable,
 } from "react-native";
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
@@ -29,6 +29,8 @@ import {
 import { Dimensions, PixelRatio } from "react-native";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 import * as Sentry from "@sentry/react-native";
+import { myWixClient } from "../utils/createClient";
+import CMForgotPasswordModal from "./CMForgotPasswordModal";
 
 const scaleFontSize = (size) => {
   const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
@@ -51,6 +53,7 @@ const CMLoginForm = () => {
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isModalVisible, setModalVisible] = useState(false);
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
@@ -192,22 +195,24 @@ const CMLoginForm = () => {
         </View>
         {/* This is the container of Remember me checkbox and forgot password */}
         <View style={styles.forgotPasswordAndCheckboxConatiner}>
-            <Pressable
-              style={styles.checkboxContainer}
-              onPress={() => setIsChecked(!isChecked)} // Toggle checkbox state on container click
-            >
-              <Checkbox
-                value={isChecked}
-                onValueChange={() => {
-                  setIsChecked(!isChecked);
-                }}
-                style={styles.checkbox}
-                color={isChecked ? ThemeTextColors.darkOrange : undefined}
-              />
-              <Text style={styles.checkboxlabel}>Remember me</Text>
-            </Pressable>
+          <Pressable
+            style={styles.checkboxContainer}
+            onPress={() => setIsChecked(!isChecked)} // Toggle checkbox state on container click
+          >
+            <Checkbox
+              value={isChecked}
+              onValueChange={() => {
+                setIsChecked(!isChecked);
+              }}
+              style={styles.checkbox}
+              color={isChecked ? ThemeTextColors.darkOrange : undefined}
+            />
+            <Text style={styles.checkboxlabel}>Remember me</Text>
+          </Pressable>
           {/* This link tag for forgot password */}
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          <Pressable onPress={() => setModalVisible(true)}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </Pressable>
         </View>
         <CMThemedButton
           title="Login"
@@ -216,6 +221,10 @@ const CMLoginForm = () => {
           onPress={handleLogin}
         />
         <Toast visible={toastVisible} type={iconType} message={errorMessage} />
+        <CMForgotPasswordModal
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+        />
       </View>
     </>
   );
