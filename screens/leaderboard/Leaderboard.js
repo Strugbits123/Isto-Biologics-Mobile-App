@@ -134,18 +134,28 @@ const Leaderboard = () => {
           },
         ],
       };
-      //get all leaderboard data
+  
+      // Fetch leaderboard data
       const getLeaderboardData = await myWixClient.items
         .queryDataItems(options)
         .find();
-      // console.log("getLeaderboardData", getLeaderboardData._items);
-
-      //sort highest to lowest according to the point
-      const sortedData = getLeaderboardData.items.sort(
-        (a, b) =>
-          b.data[headerData.points_field] - a.data[headerData.points_field],
-      );
-
+  
+      // Sort by points (highest to lowest) and then by creation date (newest first)
+      const sortedData = getLeaderboardData.items.sort((a, b) => {
+        // Compare points first
+        const pointsDifference =
+          b.data[headerData.points_field] - a.data[headerData.points_field];
+  
+        // If points are equal, sort by creation date (newest first)
+        if (pointsDifference === 0) {
+          const dateA = new Date(a.data._updatedDate?.$date).getTime() || 0;
+          const dateB = new Date(b.data._updatedDate?.$date).getTime() || 0;
+          return dateB - dateA;
+        }
+  
+        return pointsDifference;
+      });
+  
       setLeaderboardData(sortedData);
     } catch (error) {
       console.log("error in queryDataItems", error);
@@ -153,6 +163,7 @@ const Leaderboard = () => {
       setIsLoading(false);
     }
   };
+  
 
   // Pull-to-refresh handler
   const onRefresh = async () => {
