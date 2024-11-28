@@ -44,45 +44,46 @@ const CMProductLine = ({
     {
       categoryName: "Magellan",
       products: [
-        { label: "PRP Kit", value: "prpkit" },
-        { label: "Mar0 Kit", value: "marokit" },
-        { label: "Machine", value: "machine" },
+        { label: "PRP Kit", value: "Prpkit" },
+        { label: "Mar0 Kit", value: "Marokit" },
+        { label: "Machine", value: "Machine" },
       ],
     },
     {
       categoryName: "Influx",
       products: [
-        { label: "Cortical Fibers", value: "corticalFibers" },
-        { label: "PLUS Flow", value: "plusFlow" },
-        { label: "PLUS Crunch", value: "plusCrunch" },
+        { label: "Cortical Fibers", value: "CorticalFibers" },
+        { label: "PLUS Flow", value: "PlusFlow" },
+        { label: "PLUS Crunch", value: "PlusCrunch" },
       ],
     },
     {
       categoryName: "SPARC",
-      products: [{ label: "SPARC", value: "sparc" }],
+      products: [{ label: "SPARC", value: "SPARC" }],
     },
     {
       categoryName: "InQu",
       products: [
-        { label: "Granules", value: "granules" },
-        { label: "PMP", value: "pmp" },
-        { label: "Matrix", value: "matrix" },
+        { label: "Granules", value: "Granules" },
+        { label: "PMP", value: "Pmp" },
+        { label: "Matrix", value: "Matrix" },
       ],
     },
     {
       categoryName: "Fibrant",
       products: [
-        { label: "Anchor", value: "anchor" },
-        { label: "Pak", value: "pak" },
-        { label: "Bullet", value: "bullet" },
-        { label: "Liberty", value: "liberty" },
-        { label: "Wrap", value: "wrap" },
-        { label: "Boat", value: "boat" },
+        { label: "Anchor", value: "Anchor" },
+        { label: "Pak", value: "Pak" },
+        { label: "Bullet", value: "Bullet" },
+        { label: "Liberty", value: "Liberty" },
+        { label: "Wrap", value: "Wrap" },
+        { label: "Strip", value: "Strip" },
+        { label: "Boat", value: "Boat" },
       ],
     },
     {
       categoryName: "ProteiOS",
-      products: [{ label: "ProteiOS", value: "proteios" }],
+      products: [{ label: "ProteiOS", value: "Proteios" }],
     },
   ];
 

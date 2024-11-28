@@ -81,6 +81,7 @@ const CMHomeCard = ({
   if (!fontsLoaded && !error) {
     return null;
   }
+  // console.log("totalPoints",totalPoints)
 
   return (
     <View style={styles.container}>
@@ -138,7 +139,7 @@ const CMHomeCard = ({
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>New Doctor</Text>
           <Text style={styles.pointsNumber}>
-            {totalPoints.total_doctor_points !== 0
+            {totalPoints.total_doctor_points !== 0 
               ? totalPoints.total_doctor_points
               : totalDoctorPoints}
           </Text>

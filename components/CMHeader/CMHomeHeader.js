@@ -63,8 +63,8 @@ const CMHomeHeader = ({
     if (currentHour < 12) {
       setGreeting("Good Morning,");
     } else if (
-      currentHour < 18 ||
-      (currentHour === 18 && currentMinute === 0)
+      currentHour < 17 ||
+      (currentHour === 17 && currentMinute === 0)
     ) {
       setGreeting("Good Afternoon,");
     } else {

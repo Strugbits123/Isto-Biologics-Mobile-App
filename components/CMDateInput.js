@@ -7,7 +7,7 @@ import {
   Modal,
   Platform,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import CalenderIcon from "../Icons/CalenderIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -42,17 +42,20 @@ const CMDateInput = ({
   editable = true,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
-  const [date, setDate] = useState(value ? new Date(value) : new Date());
-
+  const [date, setDate] = useState(new Date());
+  console.log("date", date);
   let [fontsLoaded, errorFonts] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_600SemiBold,
   });
+
+
   const onChangeDate = (event, selectedDate) => {
     if (event.type === "dismissed") {
       // Handle cancellation
       setShowPicker(false); // Close the picker
       onChange(""); // Set the value to an empty string
+      setDate(new Date());
       return;
     }
 

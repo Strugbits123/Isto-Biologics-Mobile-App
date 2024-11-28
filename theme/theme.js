@@ -18,12 +18,12 @@ export const ThemeBgColors = {
   lightGrayPlaceholders: "#F7F8F9",
   mainBg: "#EFF8FE",
   lightOrange: "#F2603A1A",
-  docsBg:"#E9F2F8"
+  docsBg: "#E9F2F8",
 };
 
 export const productsBgColors = {
-  leaderboard1: "#00293F",
-  leaderboard2: "#006BA5",
+  leaderboard1: "#F87656",
+  leaderboard2: "#EF5128",
   magellan1: "#3C2359",
   magellan2: "#814BBF",
   influx: "#00283F",

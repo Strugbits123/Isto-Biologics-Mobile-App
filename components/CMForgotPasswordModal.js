@@ -17,6 +17,7 @@ import {
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { ThemeBgColors, ThemeTextColors } from "../theme/theme";
 import { myWixClient } from "../utils/createClient";
+import CMThemedButton from "./CMThemedButton"
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -25,11 +26,16 @@ const scaleFontSize = (size) => {
   const scale = SCREEN_WIDTH / 430;
   return PixelRatio.roundToNearestPixel(size * scale);
 };
-
+// Adjusts dimensions based on iPhone 14 Plus width
+const scaleSize = (size) => {
+  const scale = SCREEN_WIDTH / 430;
+  return PixelRatio.roundToNearestPixel(size * scale);
+};
 const CMForgotPasswordModal = ({ visible, onClose }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // 'success' or 'error'
+  const [isLoading, setIsLoading] = useState(false); // Loading state for submission
 
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
@@ -54,6 +60,7 @@ const CMForgotPasswordModal = ({ visible, onClose }) => {
     // Simulate API call
     if (email.includes("@")) {
       try {
+        setIsLoading(true)
         await myWixClient.auth.sendPasswordResetEmail(
           email,
           "https://strugbitstech.wixstudio.com/isto-biologics",
@@ -81,6 +88,9 @@ const CMForgotPasswordModal = ({ visible, onClose }) => {
           }, 5000);
         }
       }
+      finally{
+        setIsLoading(false)
+      }
     } else {
       setMessageType("error");
       setMessage("Invalid email address.");
@@ -105,7 +115,7 @@ const CMForgotPasswordModal = ({ visible, onClose }) => {
             onChangeText={setEmail}
             keyboardType="email-address"
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.button}
             onPress={() => handleForgotPassword(email)}
           >
@@ -117,7 +127,16 @@ const CMForgotPasswordModal = ({ visible, onClose }) => {
             >
               Submit
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          {/* Submit button */}
+          <View style={{ width: "100%", height: scaleSize(45) }}>
+            <CMThemedButton
+              gradientStyle={{ paddingVertical: scaleSize(10) }}
+              title={"Submit"}
+              onPress={() => handleForgotPassword(email)}
+              loading={isLoading}
+            />
+          </View>
           {message ? (
             <Text
               style={[

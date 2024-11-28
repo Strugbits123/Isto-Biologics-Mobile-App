@@ -120,9 +120,9 @@ const Leaderboard = () => {
     PlusJakartaSans_800ExtraBold,
     PlusJakartaSans_600SemiBold,
   });
-
   // let leaderboardData = [];
   const getLeaderboardData = async () => {
+    console.log("run");
     setIsLoading(true);
     try {
       const options = {
@@ -164,15 +164,18 @@ const Leaderboard = () => {
     }
   };
   
-
   // Pull-to-refresh handler
   const onRefresh = async () => {
     setRefreshing(true);
     await getLeaderboardData(); // Refresh data
     setRefreshing(false); // End refreshing state
   };
+
   useEffect(() => {
-    getLeaderboardData();
+    // Fetch data only if headerData.points_field is set
+    if (headerData.points_field) {
+      getLeaderboardData();
+    }
   }, [headerData]);
 
   //product categories for filter or navigation in screen

@@ -88,6 +88,9 @@ const CMAddDataForm = ({
   // Reset form fields
   const resetForm = () => {
     setData({});
+    setData({
+      firstCaseDate: new Date()
+    });
     setSelectedProducts({
       Magellan: [],
       Influx: [],
@@ -201,19 +204,19 @@ const CMAddDataForm = ({
       const { doctorFirstName, doctorLastName, firstCaseDate, hospitalName } =
         data;
 
-        const dateString = firstCaseDate;
+      const dateString = firstCaseDate;
 
-        // console.log("firstCaseDate", firstCaseDate);
-        const firstCaseDateObject = new Date(dateString);
-        
-        const formattedDate = firstCaseDateObject.toLocaleString("en-US", {
-          weekday: "short",
-          month: "short",  // "short" for abbreviated month (e.g., "Nov")
-          day: "numeric",  // Numeric day (e.g., 21)
-          year: "numeric", // Full year (e.g., 2024)
-        });
-        
-        // console.log("Formatted Date:", formattedDate);
+      // console.log("firstCaseDate", firstCaseDate);
+      const firstCaseDateObject = new Date(dateString);
+
+      const formattedDate = firstCaseDateObject.toLocaleString("en-US", {
+        weekday: "short",
+        month: "short", // "short" for abbreviated month (e.g., "Nov")
+        day: "numeric", // Numeric day (e.g., 21)
+        year: "numeric", // Full year (e.g., 2024)
+      });
+
+      // console.log("Formatted Date:", formattedDate);
 
       //de structure products
       const { Magellan, Influx, SPARC, InQu, Fibrant, ProteiOS } =
@@ -522,7 +525,7 @@ const CMAddDataForm = ({
       setIsLoading(false);
     }
   };
-
+console.log("data.firstCaseDate",data.firstCaseDate)
   return (
     <View>
       {/* Inputs container */}

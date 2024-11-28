@@ -64,6 +64,8 @@ const HomeScreen = ({ isLoggedIn }) => {
         .eq("user_id", memberId)
         .find();
       setLeaderboardData(response?._items[0]?.data);
+      
+  // console.log("leaderboardData",response?._items[0]?.data);
     } catch (error) {
       console.error("Error in getLeaderboardDataByUserId:", error);
     } finally {

@@ -193,6 +193,7 @@ const CMEntryCard = ({ currentMember, id }) => {
         getLeaderboardUsers._items[0]._id,
         updateLeaderboardOptions,
       );
+      // console.log("resLeaderboardUpdate.dataItem.data",resLeaderboardUpdate.dataItem.data);
       updatePoints({
         total_leaderboard_points:
           resLeaderboardUpdate.dataItem.data.total_entries_points,
@@ -203,7 +204,6 @@ const CMEntryCard = ({ currentMember, id }) => {
         total_products_points:
           resLeaderboardUpdate.dataItem.data.total_products_points,
       });
-      // updatePoints(resLeaderboardUpdate.dataItem.data.total_entries_points);
       setToastVisible(true);
       setIconType("success");
       setErrorMessage("Entry Deleted Successfully!");
@@ -345,6 +345,7 @@ const CMEntryCard = ({ currentMember, id }) => {
               color: ThemeTextColors.placeholder,
               justifyContent: "center",
               alignItems: "center",
+              top: scaleSize(20)
             }}
           >
             No entries available. Pull down to refresh.
