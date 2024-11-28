@@ -122,7 +122,7 @@ const Leaderboard = () => {
   });
   // let leaderboardData = [];
   const getLeaderboardData = async () => {
-    console.log("run");
+    // console.log("run");
     setIsLoading(true);
     try {
       const options = {

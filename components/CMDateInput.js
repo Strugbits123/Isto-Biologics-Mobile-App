@@ -43,7 +43,7 @@ const CMDateInput = ({
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
-  console.log("date", date);
+  // console.log("date", date);
   let [fontsLoaded, errorFonts] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_600SemiBold,

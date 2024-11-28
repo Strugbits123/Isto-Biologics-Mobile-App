@@ -525,7 +525,7 @@ const CMAddDataForm = ({
       setIsLoading(false);
     }
   };
-console.log("data.firstCaseDate",data.firstCaseDate)
+// console.log("data.firstCaseDate",data.firstCaseDate)
   return (
     <View>
       {/* Inputs container */}
