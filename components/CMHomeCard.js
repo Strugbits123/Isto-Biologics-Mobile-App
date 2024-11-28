@@ -111,9 +111,7 @@ const CMHomeCard = ({
             <CMLoader color={"#ffffff"} size={scaleSize(20)} />
           ) : (
             <Text style={styles.pointsText}>
-              {totalPoints.total_leaderboard_points !== 0
-                ? totalPoints.total_leaderboard_points
-                : totalPointsLeaderboard}
+              {totalPoints.total_leaderboard_points}
             </Text>
           )}
         </LinearGradient>
@@ -139,25 +137,19 @@ const CMHomeCard = ({
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>New Doctor</Text>
           <Text style={styles.pointsNumber}>
-            {totalPoints.total_doctor_points !== 0 
-              ? totalPoints.total_doctor_points
-              : totalDoctorPoints}
+          {totalPoints.total_doctor_points}
           </Text>
         </View>
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>New Hospital</Text>
           <Text style={styles.pointsNumber}>
-            {totalPoints.total_hospital_points !== 0
-              ? totalPoints.total_hospital_points
-              : totalHospitalPoints}
+            {totalPoints.total_hospital_points}
           </Text>
         </View>
         <View style={styles.pointsInfoContainer}>
           <Text style={styles.pointsTextInfo}>Product Line</Text>
           <Text style={styles.pointsNumber}>
-            {totalPoints.total_products_points !== 0
-              ? totalPoints.total_products_points
-              : totalPointsProducts}
+            {totalPoints.total_products_points}
           </Text>
         </View>
         <CMline />

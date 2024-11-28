@@ -8,8 +8,12 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { myWixClient } from "../../utils/createClient";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import Toast from "../../components/Toast/Toast";
-import {useFonts, PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 import { Dimensions, PixelRatio } from "react-native";
+import { PointsContext } from "../../components/PointsHandler";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -34,6 +38,8 @@ const HomeScreen = ({ isLoggedIn }) => {
   const [toastVisible, setToastVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const { totalPoints, updatePoints } = useContext(PointsContext);
 
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
@@ -64,8 +70,14 @@ const HomeScreen = ({ isLoggedIn }) => {
         .eq("user_id", memberId)
         .find();
       setLeaderboardData(response?._items[0]?.data);
-      
-  // console.log("leaderboardData",response?._items[0]?.data);
+      updatePoints({
+        total_products_points: response?._items[0]?.data?.total_products_points,
+        total_doctor_points: response?._items[0]?.data?.total_doctor_points,
+        total_hospital_points: response?._items[0]?.data?.total_hospital_points,
+        total_leaderboard_points:
+          response?._items[0]?.data?.total_entries_points,
+      });
+      // console.log("leaderboardData",response?._items[0]?.data);
     } catch (error) {
       console.error("Error in getLeaderboardDataByUserId:", error);
     } finally {
@@ -96,7 +108,9 @@ const HomeScreen = ({ isLoggedIn }) => {
   if (getCurrentMemberRes.isError) {
     setToastVisible(true);
     setIconType("error");
-    setErrorMessage(getCurrentMemberRes.error.message?.toString() || "An error occurred");
+    setErrorMessage(
+      getCurrentMemberRes.error.message?.toString() || "An error occurred",
+    );
     setTimeout(() => setToastVisible(false), 5000);
     return;
   }
