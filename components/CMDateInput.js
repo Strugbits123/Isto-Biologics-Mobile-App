@@ -49,6 +49,12 @@ const CMDateInput = ({
     PlusJakartaSans_600SemiBold,
   });
 
+    // Synchronize `date` state with `value` prop
+    useEffect(() => {
+      if (value) {
+        setDate(new Date(value)); // Update the state when the prop changes
+      }
+    }, [value]);
  
   const onChangeDate = (event, selectedDate) => {
     if (event.type === "dismissed") {

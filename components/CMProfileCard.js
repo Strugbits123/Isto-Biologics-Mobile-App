@@ -250,11 +250,11 @@ const CMProfileCard = () => {
     if (!result.canceled) {
       const fileSizeInMB = result.assets[0].fileSize / (1024 * 1024); // Convert file size from bytes to MB
 
-      if (fileSizeInMB > 2) {
+      if (fileSizeInMB > 5) {
         showToast(
           true,
           "error",
-          "Captured image exceeds 2MB, please reduce the image size.",
+          "Captured image exceeds 5MB, please reduce the image size.",
         );
         setTimeout(() => setToastVisible(false), 5000);
         return;
