@@ -18,6 +18,7 @@ import {
   PlusJakartaSans_600SemiBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { Dimensions, PixelRatio } from "react-native";
+import { parse } from "date-fns";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const scaleFontSize = (size) => {
@@ -40,6 +41,7 @@ const CMDateInput = ({
   error,
   errorMessage,
   editable = true,
+  isUpdate
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -49,19 +51,20 @@ const CMDateInput = ({
     PlusJakartaSans_600SemiBold,
   });
 
-    // Synchronize `date` state with `value` prop
-    useEffect(() => {
-      if (value) {
-        setDate(new Date(value)); // Update the state when the prop changes
-      }
-    }, [value]);
- 
+  // console.log("value in date input",value)
+  //value from add data form
+  useEffect(() => {
+    if(value){
+      setDate(new Date());
+    }
+  }, [value]);
+
   const onChangeDate = (event, selectedDate) => {
     if (event.type === "dismissed") {
-      // Handle cancellation
-      setShowPicker(false); // Close the picker
-      onChange(""); // Set the value to an empty string
-      setDate(new Date());
+        // Handle cancellation
+        setShowPicker(false); // Close the picker
+        onChange(""); // Set the value to an empty string
+        setDate(new Date());
       return;
     }
 

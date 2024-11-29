@@ -50,29 +50,30 @@ const CMAddDataForm = ({
     ProteiOS: [],
   });
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Reset form only if not updating an item
-      if (!isUpdateItem) {
-        setData({});
-        setSelectedProducts({
-          Magellan: [],
-          Influx: [],
-          SPARC: [],
-          InQu: [],
-          Fibrant: [],
-          ProteiOS: [],
-        });
-      }
-      return () => {};
-    }, [isUpdateItem]),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Reset form only if not updating an item
+  //     if (!isUpdateItem) {
+  //       setData({});
+  //       setSelectedProducts({
+  //         Magellan: [],
+  //         Influx: [],
+  //         SPARC: [],
+  //         InQu: [],
+  //         Fibrant: [],
+  //         ProteiOS: [],
+  //       });
+  //     }
+  //     return () => {};
+  //   }, [isUpdateItem]),
+  // );
 
   // Reset form if not updating an item when screen refocuses
   useFocusEffect(
     React.useCallback(() => {
       if (!isUpdateItem) {
         resetForm();
+        // console.log("reset form run")
       }
       return () => {};
     }, [isUpdateItem]),
@@ -87,9 +88,11 @@ const CMAddDataForm = ({
 
   // Reset form fields
   const resetForm = () => {
-    setData({});
     setData({
-      firstCaseDate: new Date()
+      doctorFirstName: "",
+      doctorLastName: "",
+      hospitalName: "",
+      firstCaseDate: new Date(),
     });
     setSelectedProducts({
       Magellan: [],
@@ -188,6 +191,7 @@ const CMAddDataForm = ({
     return validationErrors;
   };
 
+  // console.log("isUpdateItem",isUpdateItem)
   // Handle form submission
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -525,7 +529,7 @@ const CMAddDataForm = ({
       setIsLoading(false);
     }
   };
-// console.log("data.firstCaseDate",data.firstCaseDate)
+
   return (
     <View>
       {/* Inputs container */}
@@ -575,6 +579,7 @@ const CMAddDataForm = ({
           onChange={(date) => handle_onChange_Text("firstCaseDate", date)}
           error={!!errors.firstCaseDate}
           errorMessage={errors.firstCaseDate}
+          isUpdate={isUpdateItem}
         />
       </View>
       {/* Product Line container */}
