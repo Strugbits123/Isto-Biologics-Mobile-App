@@ -44,17 +44,17 @@ const CMProductLine = ({
     {
       categoryName: "Magellan",
       products: [
-        { label: "PRP Kit", value: "Prpkit" },
-        { label: "Mar0 Kit", value: "Marokit" },
-        { label: "Machine", value: "Machine" },
+        { label: "PRP Kit", value: "PRP Kit" },
+        { label: "Mar0 Kit", value: "Mar0 Kit" },
+        { label: "Machine", value: "Machine"},
       ],
     },
     {
       categoryName: "Influx",
       products: [
-        { label: "Cortical Fibers", value: "CorticalFibers" },
-        { label: "PLUS Flow", value: "PlusFlow" },
-        { label: "PLUS Crunch", value: "PlusCrunch" },
+        { label: "Cortical Fibers", value: "Cortical Fibers" },
+        { label: "PLUS Flow", value: "PLUS Flow" },
+        { label: "PLUS Crunch", value: "PLUS Crunch" },
       ],
     },
     {
@@ -65,7 +65,7 @@ const CMProductLine = ({
       categoryName: "InQu",
       products: [
         { label: "Granules", value: "Granules" },
-        { label: "PMP", value: "Pmp" },
+        { label: "PMP", value: "PMP" },
         { label: "Matrix", value: "Matrix" },
       ],
     },
@@ -83,7 +83,7 @@ const CMProductLine = ({
     },
     {
       categoryName: "ProteiOS",
-      products: [{ label: "ProteiOS", value: "Proteios" }],
+      products: [{ label: "ProteiOS", value: "ProteiOS" }],
     },
   ];
 

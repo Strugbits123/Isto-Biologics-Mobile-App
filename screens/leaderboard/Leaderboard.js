@@ -31,8 +31,8 @@ import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { CurrentMemberContext } from "../../components/CurrentMemberHandler";
 import { Dimensions, PixelRatio } from "react-native";
 import CrownFrameIcon from "../../Icons/CrownFrameIcon";
+import { PointsContext } from "../../components/PointsHandler";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
 const scaleFontSize = (size) => {
   const scale = SCREEN_WIDTH / 430; // iPhone 14 Plus width as the base
   return PixelRatio.roundToNearestPixel(size * scale);
@@ -114,6 +114,7 @@ const Leaderboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { profile, contact } = currentMemberData || {};
+  const { totalPoints, updatePoints } = useContext(PointsContext);
 
   let [fontsLoaded, error] = useFonts({
     PlusJakartaSans_700Bold,
@@ -176,7 +177,7 @@ const Leaderboard = () => {
     if (headerData.points_field) {
       getLeaderboardData();
     }
-  }, [headerData]);
+  }, [headerData,totalPoints]);
 
   //product categories for filter or navigation in screen
   const productCategories = [

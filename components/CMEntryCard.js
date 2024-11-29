@@ -96,7 +96,7 @@ const CMEntryCard = ({ currentMember, id }) => {
 
   useEffect(() => {
     getUserEntries();
-  }, [refresh, currentMemberData]);
+  }, [refresh, currentMemberData,totalPoints]);
 
   // Three dot press opens a dropdown for view entry, update, and delete
   const handleThreeDotPress = (item, index) => {
@@ -209,7 +209,6 @@ const CMEntryCard = ({ currentMember, id }) => {
       setErrorMessage("Entry Deleted Successfully!");
       setTimeout(() => {
         setToastVisible(false);
-        setRefresh(!refresh);
       }, 1000);
     } catch (error) {
       console.log("error in handleDeleteEntry", error);
